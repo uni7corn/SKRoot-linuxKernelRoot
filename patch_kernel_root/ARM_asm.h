@@ -67,7 +67,7 @@ std::string AsmToBytes(const std::string& strArm64Asm) {
 				if (n == 3) {
 					ssOutput << word;
 				}
-				word.empty();
+				word.clear();
 			}
 
 
@@ -87,7 +87,7 @@ const char HEX[16] = {
 };
 
 /* Convert byte array to hex string. */
-std::string bytesToHexString(const unsigned char* input, size_t length) {
+std::string bytes_2_hex_str(const unsigned char* input, size_t length) {
 
 	std::string str;
 	str.reserve(length << 1);
