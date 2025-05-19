@@ -94,7 +94,7 @@ Java_com_linux_permissionmanager_MainActivity_rootExecProcessCmd(
     ssize_t  err = kernel_root::safe_root_exec_process(strRootKey.c_str(), strCmd.c_str());
 
     stringstream sstr;
-    sstr << "runInit64Cmd err:" << err;
+    sstr << "root_exec_process err:" << err;
     return env->NewStringUTF(sstr.str().c_str());
 }
 

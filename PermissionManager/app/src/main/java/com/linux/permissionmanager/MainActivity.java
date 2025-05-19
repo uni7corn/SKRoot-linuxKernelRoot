@@ -57,7 +57,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private String rootKey = "";
-    private String suBasePath = "/data";
+    private String suBasePath = "/data/system";
     private String lastInputCmd = "id";
     private String lastInputRootExecPath = "";
     private SharedPreferences m_shareSave;
@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 super.handleMessage(msg);
             }
         };
-        showInputDlg(lastInputRootExecPath, "请输入可执行程序的位置", inputCallback);
+        showInputDlg(lastInputRootExecPath, "请输入Linux可执行程序的文件位置", inputCallback);
         showMsgDlg("提示", "本功能是以ROOT身份直接运行程序，可避免产生su、sh等多余驻留后台进程，能最大程度上避免侦测", null);
     }
 
