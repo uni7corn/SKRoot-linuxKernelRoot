@@ -1,5 +1,5 @@
 ﻿#include "patch_base.h"
-#include "analyze/ARM_asm.h"
+#include "analyze/Arm64_asm.h"
 PatchBase::PatchBase(const std::vector<char>& file_buf, const KernelSymbolOffset& sym,
 	const SymbolAnalyze& symbol_analyze) : m_file_buf(file_buf), m_sym(sym), m_symbol_analyze(symbol_analyze) {
 

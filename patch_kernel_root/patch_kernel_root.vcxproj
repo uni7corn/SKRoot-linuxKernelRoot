@@ -97,7 +97,7 @@
     <ClCompile Include="patch_kernel_root.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="analyze\ARM_asm.h" />
+    <ClInclude Include="analyze\Arm64_asm.h" />
     <ClInclude Include="analyze\base_func.h" />
     <ClInclude Include="analyze\kallsyms_lookup_name.h" />
     <ClInclude Include="analyze\kallsyms_lookup_name_4_6_0.h" />

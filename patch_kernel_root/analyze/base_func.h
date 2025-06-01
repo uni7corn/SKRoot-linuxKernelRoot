@@ -108,3 +108,15 @@ static void replace_all_distinct(std::string& str, const std::string& old_value,
 		}
 	}
 }
+
+static std::vector<std::string> splite_lines(const std::string& s) {
+	std::vector<std::string> lines;
+	std::istringstream iss(s);
+	std::string line;
+	while (std::getline(iss, line)) {
+		if (!line.empty() && line.back() == '\r')
+			line.pop_back();
+		lines.push_back(line);
+	}
+	return lines;
+}

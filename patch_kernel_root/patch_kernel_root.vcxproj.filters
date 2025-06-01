@@ -71,7 +71,7 @@
     <ClInclude Include="patch_kernel_root.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="analyze\ARM_asm.h">
+    <ClInclude Include="analyze\Arm64_asm.h">
       <Filter>analyze</Filter>
     </ClInclude>
     <ClInclude Include="analyze\base_func.h">

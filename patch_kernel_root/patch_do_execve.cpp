@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "patch_do_execve.h"
 #include "analyze/base_func.h"
-#include "analyze/ARM_asm.h"
+#include "analyze/Arm64_asm.h"
 PatchDoExecve::PatchDoExecve(const std::vector<char>& file_buf, const KernelSymbolOffset& sym,
 	const SymbolAnalyze& symbol_analyze) : PatchBase(file_buf, sym, symbol_analyze) {
 
@@ -121,11 +121,11 @@ size_t PatchDoExecve::patch_do_execve(const std::string& str_root_key, size_t ho
 		size_t end_order_len = count_endl(sstrAsm.str()) * 4;
 		sstrAsm << "B #" << (int64_t)(do_execve_entry_hook_jump_back_addr - (hook_func_start_addr + end_order_len)) << std::endl;
 
-	std::string strAsmCode = AsmLabelToOffset(sstrAsm.str(), "LABEL_END:", "JUMP_END");
-	strAsmCode = AsmLabelToOffset(strAsmCode, "LABEL_CYCLE_NAME:", "JUMP_CYCLE_NAME");
+	std::string strAsmCode = Arm64AsmLabelToOffset(sstrAsm.str(), "LABEL_END:", "JUMP_END");
+	strAsmCode = Arm64AsmLabelToOffset(strAsmCode, "LABEL_CYCLE_NAME:", "JUMP_CYCLE_NAME");
 	std::cout << std::endl << strAsmCode << std::endl;
 
-	std::string strBytes = AsmToBytes(strAsmCode);
+	std::string strBytes = Arm64AsmToBytes(strAsmCode);
 	if (!strBytes.length()) {
 		return 0;
 	}
@@ -142,7 +142,7 @@ size_t PatchDoExecve::patch_do_execve(const std::string& str_root_key, size_t ho
 	std::stringstream sstrAsm2;
 	sstrAsm2
 		<< "B #" << (int64_t)(hook_func_start_addr - do_execve_addr) << std::endl;
-	std::string strBytes2 = AsmToBytes(sstrAsm2.str());
+	std::string strBytes2 = Arm64AsmToBytes(sstrAsm2.str());
 	if (!strBytes2.length()) {
 		return 0;
 	}

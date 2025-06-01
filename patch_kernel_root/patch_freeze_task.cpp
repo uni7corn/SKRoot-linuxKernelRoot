@@ -1,6 +1,6 @@
 ﻿#include "patch_freeze_task.h"
 #include "analyze/base_func.h"
-#include "analyze/ARM_asm.h"
+#include "analyze/Arm64_asm.h"
 PatchFreezeTask::PatchFreezeTask(const std::vector<char>& file_buf, const KernelSymbolOffset& sym,
 	const SymbolAnalyze& symbol_analyze) : PatchBase(file_buf, sym, symbol_analyze) {
 
@@ -55,11 +55,11 @@ size_t PatchFreezeTask::patch_freeze_task(size_t hook_func_start_addr, const std
 		size_t end_order_len = count_endl(sstrAsm.str()) * 4;
 		sstrAsm <<  "B #" << freeze_task_entry_hook_jump_back_addr - (hook_func_start_addr + end_order_len) << std::endl;
 
-	std::string strAsmCode = AsmLabelToOffset(sstrAsm.str(), "LABEL_END:", "JUMP_END");
-	strAsmCode = AsmLabelToOffset(strAsmCode, "LABEL_CYCLE_UID:", "JUMP_CYCLE_UID");
+	std::string strAsmCode = Arm64AsmLabelToOffset(sstrAsm.str(), "LABEL_END:", "JUMP_END");
+	strAsmCode = Arm64AsmLabelToOffset(strAsmCode, "LABEL_CYCLE_UID:", "JUMP_CYCLE_UID");
 	std::cout << std::endl << strAsmCode << std::endl;
 
-	std::string strBytes = AsmToBytes(strAsmCode);
+	std::string strBytes = Arm64AsmToBytes(strAsmCode);
 	if (!strBytes.length()) {
 		return 0;
 	}
@@ -77,7 +77,7 @@ size_t PatchFreezeTask::patch_freeze_task(size_t hook_func_start_addr, const std
 	std::stringstream sstrAsm2;
 	sstrAsm2
 		<< "B #" << (int64_t)(hook_func_start_addr - freeze_task_addr) << std::endl;
-	std::string strBytes2 = AsmToBytes(sstrAsm2.str());
+	std::string strBytes2 = Arm64AsmToBytes(sstrAsm2.str());
 	if (!strBytes2.length()) {
 		return 0;
 	}
