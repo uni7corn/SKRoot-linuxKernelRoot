@@ -25,9 +25,11 @@
 2. 其中【**注入su到指定进程**】**只支持授权su到64位的APP**，老式32位APP不再进行支持，因市面上几乎所有APP都是64位，例如MT文件管理器、Root Explorer文件管理器等等。
 
 ## 使用流程：
-1.将内核文件拖拽置`patch_kernel_root.exe`即可一键自动化流程补丁内核，同时会自动生成ROOT密匙。
+1.编译产物下载： [patch_kernel_root.exe](https://github.com/abcz316/SKRoot-linuxKernelRoot/blob/master/patch_kernel_root/exe/patch_kernel_root.exe)、 [PermissionManager.apk](https://github.com/abcz316/SKRoot-linuxKernelRoot/blob/master/PermissionManager/build_apk/PermissionManager.apk)
+ 
+2.将内核kernel文件拖拽置`patch_kernel_root.exe`即可一键自动化流程补丁内核，同时会自动生成ROOT密匙。
 
-2.编译并启动`PermissionManager`或者`testRoot`，输入ROOT密匙值，开始享受舒爽的ROOT环境。
+3.安装并启动`PermissionManager.apk`或者`testRoot`，输入ROOT密匙值，开始享受舒爽的ROOT环境。
 
 ## 更新日志：
 
