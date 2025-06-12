@@ -128,3 +128,28 @@ static bool aarch64_asm_adr_x(std::unique_ptr<asmjit::a64::Assembler>& a, asmjit
 	a->embed((const uint8_t*)data, 4);
 	return true;
 }
+
+static void aarch64_asm_mov_x(std::unique_ptr<asmjit::a64::Assembler>& a, asmjit::a64::GpX x, uint64_t value) {
+	bool isInitialized = false;
+	for (int idx = 0; idx < 4; ++idx) {
+		uint16_t imm16 = (value >> (idx * 16)) & 0xFFFF;
+		if (imm16 == 0)
+			continue;
+
+		if (!isInitialized) {
+			a->movz(x, imm16, idx * 16);
+			isInitialized = true;
+		} else {
+			a->movk(x, imm16, idx * 16);
+		}
+	}
+	if (!isInitialized) {
+		a->movz(x, 0, 0);
+	}
+}
+
+static std::string print_aarch64_asm(const aarch64_asm_info& asm_info) {
+	std::string text = asm_info.logger->data();
+	transform(text.begin(), text.end(), text.begin(), ::toupper);
+	return text;
+}

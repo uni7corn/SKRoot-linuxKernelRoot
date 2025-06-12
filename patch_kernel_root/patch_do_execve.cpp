@@ -151,6 +151,7 @@ size_t PatchDoExecve::patch_do_execve(const std::string& str_root_key, size_t ho
 	a->ldp(x9, x10, ptr(sp).post(16));
 	a->ldp(x7, x8, ptr(sp).post(16));
 	aarch64_asm_b(a, (int32_t)(do_execve_entry_hook_jump_back_addr - (hook_func_start_addr + a->offset())));
+	std::cout << print_aarch64_asm(asm_info) << std::endl;
 	std::string strBytes = aarch64_asm_to_bytes(asm_info);
 	if (!strBytes.length()) {
 		return 0;

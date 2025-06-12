@@ -50,6 +50,7 @@ size_t PatchFilldir64::patch_filldir64(size_t root_key_addr_offset, size_t hook_
 	a->bind(label_direct_end);
 	a->mov(x0, x0);
 	aarch64_asm_b(a, (int32_t)(filldir64_entry_hook_jump_back_addr - (hook_func_start_addr + a->offset())));
+	std::cout << print_aarch64_asm(asm_info) << std::endl;
 	std::string strBytes = aarch64_asm_to_bytes(asm_info);
 	if (!strBytes.length()) {
 		return 0;

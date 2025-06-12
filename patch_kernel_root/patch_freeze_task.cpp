@@ -61,6 +61,7 @@ size_t PatchFreezeTask::patch_freeze_task(size_t hook_func_start_addr, const std
 	a->ldp(x7, x8, ptr(sp).post(16));
 	a->mov(x0, x0);
 	aarch64_asm_b(a, (int32_t)(freeze_task_entry_hook_jump_back_addr - (hook_func_start_addr + a->offset())));
+	std::cout << print_aarch64_asm(asm_info) << std::endl;
 	std::string strBytes = aarch64_asm_to_bytes(asm_info);
 	if (!strBytes.length()) {
 		return 0;
