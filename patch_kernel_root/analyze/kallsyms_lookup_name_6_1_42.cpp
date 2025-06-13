@@ -312,8 +312,8 @@ bool KallsymsLookupName_6_1_42::find_kallsyms_token_index(size_t kallsyms_token_
 }
 
 bool KallsymsLookupName_6_1_42::find_kallsyms_sym_func_entry_offset(size_t& kallsyms_sym_func_entry_offset) {
-	size_t _text_offset = __kallsyms_lookup_name("_text");
-	size_t _stext_offset = __kallsyms_lookup_name("_stext");
+	size_t _text_offset = kallsyms_lookup_name("_text");
+	size_t _stext_offset = kallsyms_lookup_name("_stext");
 	if (_text_offset != 0) {
 		return false;
 	}
@@ -393,136 +393,6 @@ tail:
 	return off;
 }
 
-/*
- * Find the offset on the compressed stream given and index in the
- * kallsyms array.
- */
-unsigned int KallsymsLookupName_6_1_42::get_symbol_offset(unsigned long pos) {
-	const uint8_t* name;
-	int i, len;
-
-	/*
-	 * Use the closest marker we have. We have markers every 256 positions,
-	 * so that should be close enough.
-	 */
-	uint8_t* kallsyms_names = (uint8_t*)&m_file_buf[m_kallsyms_names.offset];
-	unsigned int markers_index = *(unsigned int*)&m_file_buf[m_kallsyms_markers.offset + (pos >> 8) * sizeof(unsigned int)];
-	name = &kallsyms_names[markers_index];
-
-	/*
-	 * Sequentially scan all the symbols up to the point we're searching
-	 * for. Every symbol is stored in a [<len>][<len> bytes of data] format,
-	 * so we just need to add the len to the current pointer for every
-	 * symbol we wish to skip.
-	 */
-	for (i = 0; i < (pos & 0xFF); i++) {
-		len = *name;
-
-		/*
-		 * If MSB is 1, it is a "big" symbol, so we need to look into
-		 * the next byte (and skip it, too).
-		 */
-		if ((len & 0x80) != 0)
-			len = ((len & 0x7F) | (name[1] << 7)) + 1;
-
-		name = name + len + 1;
-	}
-
-	return name - kallsyms_names;
-}
-
-bool KallsymsLookupName_6_1_42::cleanup_symbol_name(char* s) {
-	char* res;
-
-	//TODO:
-	//if (!IS_ENABLED(CONFIG_LTO_CLANG))
-	//	return false;
-
-	/*
-	 * LLVM appends various suffixes for local functions and variables that
-	 * must be promoted to global scope as part of LTO.  This can break
-	 * hooking of static functions with kprobes. '.' is not a valid
-	 * character in an identifier in C. Suffixes only in LLVM LTO observed:
-	 * - foo.llvm.[0-9a-f]+
-	 */
-	res = strstr(s, ".llvm.");
-	if (res) {
-		*res = '\0';
-		return true;
-	}
-
-	return false;
-}
-
-int KallsymsLookupName_6_1_42::compare_symbol_name(const char* name, char* namebuf) {
-	int ret;
-
-	ret = strcmp(name, namebuf);
-	if (!ret)
-		return ret;
-
-	if (cleanup_symbol_name(namebuf) && !strcmp(name, namebuf))
-		return 0;
-
-	return ret;
-}
-
-#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
-
-int KallsymsLookupName_6_1_42::kallsyms_lookup_names(const char* name, unsigned int* start, unsigned int* end) {
-	int ret;
-	int low, mid, high;
-	unsigned int seq, off;
-	char namebuf[KSYM_NAME_LEN];
-	unsigned int* kallsyms_seqs_of_names = (unsigned int*)& m_file_buf[m_kallsyms_seqs_of_names.offset];
-
-	low = 0;
-	high = m_kallsyms_num - 1;
-
-	while (low <= high) {
-		mid = low + (high - low) / 2;
-		seq = kallsyms_seqs_of_names[mid];
-		off = get_symbol_offset(seq);
-		kallsyms_expand_symbol(off, namebuf, ARRAY_SIZE(namebuf));
-		ret = compare_symbol_name(name, namebuf);
-		if (ret > 0)
-			low = mid + 1;
-		else if (ret < 0)
-			high = mid - 1;
-		else
-			break;
-	}
-
-	if (low > high)
-		return -ESRCH;
-
-	low = mid;
-	while (low) {
-		seq = kallsyms_seqs_of_names[low - 1];
-		off = get_symbol_offset(seq);
-		kallsyms_expand_symbol(off, namebuf, ARRAY_SIZE(namebuf));
-		if (compare_symbol_name(name, namebuf))
-			break;
-		low--;
-	}
-	*start = low;
-
-	if (end) {
-		high = mid;
-		while (high < m_kallsyms_num - 1) {
-			seq = kallsyms_seqs_of_names[high + 1];
-			off = get_symbol_offset(seq);
-			kallsyms_expand_symbol(off, namebuf, ARRAY_SIZE(namebuf));
-			if (compare_symbol_name(name, namebuf))
-				break;
-			high++;
-		}
-		*end = high;
-	}
-
-	return 0;
-}
-
 uint64_t KallsymsLookupName_6_1_42::kallsyms_sym_address(int idx)
 {
 	int* kallsyms_offsets = (int*)&m_file_buf[m_kallsyms_offsets.offset];
@@ -545,23 +415,26 @@ uint64_t KallsymsLookupName_6_1_42::kallsyms_sym_address(int idx)
 }
 
 /* Lookup the address for this symbol. Returns 0 if not found. */
-uint64_t KallsymsLookupName_6_1_42::__kallsyms_lookup_name(const char* name, bool include_str_mode) {
-	int ret;
-	unsigned int i;
-	unsigned int* kallsyms_seqs_of_names = (unsigned int*)&m_file_buf[m_kallsyms_seqs_of_names.offset];
-
-	/* Skip the search for empty string. */
-	if (!*name)
+uint64_t KallsymsLookupName_6_1_42::kallsyms_lookup_name(const char* name) {
+	std::unordered_map<std::string, uint64_t> syms = kallsyms_on_each_symbol();
+	auto iter = syms.find(name);
+	if (iter == syms.end()) {
 		return 0;
-
-	ret = kallsyms_lookup_names(name, &i, NULL);
-	if (!ret)
-		return kallsyms_sym_address(kallsyms_seqs_of_names[i]);
-
-	return 0;
+	}
+	return iter->second;
 }
 
-uint64_t KallsymsLookupName_6_1_42::kallsyms_lookup_name(const char* name, bool include_str_mode) {
-	if (!m_inited) { return 0;  }
-	return __kallsyms_lookup_name(name, include_str_mode);
+std::unordered_map<std::string, uint64_t> KallsymsLookupName_6_1_42::kallsyms_on_each_symbol() {
+	if (!m_inited) { return {}; }
+	if (!m_kallsyms_symbols_cache.size()) {
+		for (auto i = 0, off = 0; i < m_kallsyms_num; i++) {
+			char namebuf[KSYM_NAME_LEN] = { 0 };
+			off = kallsyms_expand_symbol(off, namebuf, sizeof(namebuf));
+
+			uint64_t offset = kallsyms_sym_address(i);
+			offset += m_kallsyms_sym_func_entry_offset;
+			m_kallsyms_symbols_cache[namebuf] = offset;
+		}
+	}
+	return m_kallsyms_symbols_cache;
 }

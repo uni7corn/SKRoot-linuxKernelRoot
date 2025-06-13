@@ -58,20 +58,41 @@ bool KernelSymbolParser::init_kallsyms_lookup_name() {
 	return true;
 }
 
-uint64_t KernelSymbolParser::kallsyms_lookup_name(const char* name, bool include_str_mode) {
+uint64_t KernelSymbolParser::kallsyms_lookup_name(const char* name) {
 	if (m_kallsyms_lookup_name_6_6_30.is_inited()) {
-		return m_kallsyms_lookup_name_6_6_30.kallsyms_lookup_name(name, include_str_mode);
+		return m_kallsyms_lookup_name_6_6_30.kallsyms_lookup_name(name);
 	} else if (m_kallsyms_lookup_name_6_1_60.is_inited()) {
-		return m_kallsyms_lookup_name_6_1_60.kallsyms_lookup_name(name, include_str_mode);
+		return m_kallsyms_lookup_name_6_1_60.kallsyms_lookup_name(name);
 	} else if (m_kallsyms_lookup_name_6_1_42.is_inited()) {
-		return m_kallsyms_lookup_name_6_1_42.kallsyms_lookup_name(name, include_str_mode);
+		return m_kallsyms_lookup_name_6_1_42.kallsyms_lookup_name(name);
 	} else if (m_kallsyms_lookup_name_4_6_0.is_inited()) {
-		return m_kallsyms_lookup_name_4_6_0.kallsyms_lookup_name(name, include_str_mode);
+		return m_kallsyms_lookup_name_4_6_0.kallsyms_lookup_name(name);
 	} else if (m_kallsyms_lookup_name.is_inited()) {
-		return m_kallsyms_lookup_name.kallsyms_lookup_name(name, include_str_mode);
-	} else {
-		return 0;
+		return m_kallsyms_lookup_name.kallsyms_lookup_name(name);
 	}
+	return 0;
+}
+
+std::unordered_map<std::string, uint64_t> KernelSymbolParser::kallsyms_lookup_names_like(const char* name) {
+	std::unordered_map<std::string, uint64_t> all_symbols;
+	if (m_kallsyms_lookup_name_6_6_30.is_inited()) {
+		all_symbols = m_kallsyms_lookup_name_6_6_30.kallsyms_on_each_symbol();
+	} else if (m_kallsyms_lookup_name_6_1_60.is_inited()) {
+		all_symbols = m_kallsyms_lookup_name_6_1_60.kallsyms_on_each_symbol();
+	} else if (m_kallsyms_lookup_name_6_1_42.is_inited()) {
+		all_symbols = m_kallsyms_lookup_name_6_1_42.kallsyms_on_each_symbol();
+	} else if (m_kallsyms_lookup_name_4_6_0.is_inited()) {
+		all_symbols = m_kallsyms_lookup_name_4_6_0.kallsyms_on_each_symbol();
+	} else if (m_kallsyms_lookup_name.is_inited()) {
+		all_symbols = m_kallsyms_lookup_name.kallsyms_on_each_symbol();
+	}
+	std::unordered_map<std::string, uint64_t> result;
+	for (const auto& [sym_name, addr] : all_symbols) {
+		if (sym_name.find(name) != std::string::npos) {
+			result[sym_name] = addr;
+		}
+	}
+	return result;
 }
 
 bool KernelSymbolParser::is_kernel_version_less(const std::string& ver) const {

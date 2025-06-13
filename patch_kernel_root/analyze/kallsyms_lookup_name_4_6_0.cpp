@@ -268,8 +268,8 @@ bool KallsymsLookupName_4_6_0::find_kallsyms_token_index(size_t kallsyms_token_t
 }
 
 bool KallsymsLookupName_4_6_0::find_kallsyms_sym_func_entry_offset(size_t& kallsyms_sym_func_entry_offset) {
-	size_t _text_offset = __kallsyms_lookup_name("_text");
-	size_t _stext_offset = __kallsyms_lookup_name("_stext");
+	size_t _text_offset = kallsyms_lookup_name("_text");
+	size_t _stext_offset = kallsyms_lookup_name("_stext");
 	if (_text_offset != 0) {
 		return false;
 	}
@@ -344,23 +344,48 @@ tail:
 	return off;
 }
 
-/* Lookup the address for this symbol. Returns 0 if not found. */
-uint64_t KallsymsLookupName_4_6_0::__kallsyms_lookup_name(const char* name, bool include_str_mode) {
-	for (auto i = 0, off = 0; i < m_kallsyms_num; i++) {
-		char namebuf[KSYM_NAME_LEN] = { 0 };
-		off = kallsyms_expand_symbol(off, namebuf, sizeof(namebuf));
+uint64_t KallsymsLookupName_4_6_0::kallsyms_sym_address(int idx)
+{
+	int* kallsyms_offsets = (int*)&m_file_buf[m_kallsyms_offsets.offset];
 
-		if (strcmp(namebuf, name) == 0 || (include_str_mode && strstr(namebuf, name))) {
-			auto pos = m_kallsyms_offsets.offset + i * sizeof(int);
-			uint64_t offset = *(long*)&m_file_buf[pos];
-			offset += m_kallsyms_sym_func_entry_offset;
-			return offset;
-		}
-	}
+	//if (!IS_ENABLED(CONFIG_KALLSYMS_BASE_RELATIVE))
+	//	return kallsyms_addresses[idx];
+
+	///* values are unsigned offsets if --absolute-percpu is not in effect */
+	//if (!IS_ENABLED(CONFIG_KALLSYMS_ABSOLUTE_PERCPU))
+	//	return kallsyms_relative_base + (u32)kallsyms_offsets[idx];
+
+	/* ...otherwise, positive offsets are absolute values */
+	if (kallsyms_offsets[idx] >= 0)
+		return kallsyms_offsets[idx];
+
+	/* ...and negative offsets are relative to kallsyms_relative_base - 1 */
+	//return m_kallsyms_relative_base - 1 - kallsyms_offsets[idx];
 	return 0;
 }
 
-uint64_t KallsymsLookupName_4_6_0::kallsyms_lookup_name(const char* name, bool include_str_mode) {
-	if (!m_inited) { return 0;  }
-	return __kallsyms_lookup_name(name, include_str_mode);
+/* Lookup the address for this symbol. Returns 0 if not found. */
+uint64_t KallsymsLookupName_4_6_0::kallsyms_lookup_name(const char* name) {
+	std::unordered_map<std::string, uint64_t> syms = kallsyms_on_each_symbol();
+	auto iter = syms.find(name);
+	if (iter == syms.end()) {
+		return 0;
+	}
+	return iter->second;
 }
+
+std::unordered_map<std::string, uint64_t> KallsymsLookupName_4_6_0::kallsyms_on_each_symbol() {
+	if (!m_inited) { return {}; }
+	if (!m_kallsyms_symbols_cache.size()) {
+		for (auto i = 0, off = 0; i < m_kallsyms_num; i++) {
+			char namebuf[KSYM_NAME_LEN] = { 0 };
+			off = kallsyms_expand_symbol(off, namebuf, sizeof(namebuf));
+
+			uint64_t offset = kallsyms_sym_address(i);
+			offset += m_kallsyms_sym_func_entry_offset;
+			m_kallsyms_symbols_cache[namebuf] = offset;
+		}
+	}
+	return m_kallsyms_symbols_cache;
+}
+

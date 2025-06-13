@@ -259,13 +259,13 @@ bool KallsymsLookupName::find_kallsyms_token_index(size_t kallsyms_token_table_e
 }
 
 bool KallsymsLookupName::find_kallsyms_sym_func_entry_offset(size_t& kallsyms_sym_func_entry_offset) {
-	size_t _text_offset = __kallsyms_lookup_name("_text");
+	size_t _text_offset = kallsyms_lookup_name("_text");
 	if (_text_offset == 0) {
 		return false;
 	}
 	m_text_offset = _text_offset;
 
-	size_t _stext_offset = __kallsyms_lookup_name("_stext");
+	size_t _stext_offset = kallsyms_lookup_name("_stext");
 	const int var_len = sizeof(int);
 	for (auto x = _stext_offset; x + var_len < m_file_buf.size(); x += var_len) {
 		int val1 = *(int*)&m_file_buf[x];
@@ -338,24 +338,28 @@ tail:
 }
 
 /* Lookup the address for this symbol. Returns 0 if not found. */
-uint64_t KallsymsLookupName::__kallsyms_lookup_name(const char* name, bool include_str_mode) {
-	for (auto i = 0, off = 0; i < m_kallsyms_num; i++) {
-		char namebuf[KSYM_NAME_LEN] = { 0 };
-		off = kallsyms_expand_symbol(off, namebuf, sizeof(namebuf));
+uint64_t KallsymsLookupName::kallsyms_lookup_name(const char* name) {
+	std::unordered_map<std::string, uint64_t> syms = kallsyms_on_each_symbol();
+	auto iter = syms.find(name);
+	if (iter == syms.end()) {
+		return 0;
+	}
+	return iter->second;
+}
 
-		//std::cout << namebuf << std::endl;
-		if (strcmp(namebuf, name) == 0 || (include_str_mode && strstr(namebuf, name))) {
+std::unordered_map<std::string, uint64_t> KallsymsLookupName::kallsyms_on_each_symbol() {
+	if (!m_inited) { return {}; }
+	if (!m_kallsyms_symbols_cache.size()) {
+		for (auto i = 0, off = 0; i < m_kallsyms_num; i++) {
+			char namebuf[KSYM_NAME_LEN] = { 0 };
+			off = kallsyms_expand_symbol(off, namebuf, sizeof(namebuf));
+
 			auto pos = m_kallsyms_addresses.offset + i * sizeof(uint64_t);
 			uint64_t offset = *(uint64_t*)&m_file_buf[pos];
 			offset -= m_text_offset;
 			offset += m_kallsyms_sym_func_entry_offset;
-			return offset;
+			m_kallsyms_symbols_cache[namebuf] = offset;
 		}
 	}
-	return 0;
-}
-
-uint64_t KallsymsLookupName::kallsyms_lookup_name(const char* name, bool include_str_mode) {
-	if (!m_inited) { return 0; }
-	return __kallsyms_lookup_name(name, include_str_mode);
+	return m_kallsyms_symbols_cache;
 }

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 class KallsymsLookupName_6_1_60
 {
 public:
@@ -10,7 +11,8 @@ public:
 public:
 	bool init();
 	bool is_inited();
-	uint64_t kallsyms_lookup_name(const char* name, bool include_str_mode = false);
+	uint64_t kallsyms_lookup_name(const char* name);
+	std::unordered_map<std::string, uint64_t> kallsyms_on_each_symbol();
 	int get_kallsyms_num();
 
 private:
@@ -25,13 +27,7 @@ private:
 	bool find_kallsyms_sym_func_entry_offset(size_t& kallsyms_sym_func_entry_offset);
 
 	unsigned int kallsyms_expand_symbol(unsigned int off, char* result, size_t maxlen);
-	uint64_t __kallsyms_lookup_name(const char* name, bool include_str_mode = false);
-	int kallsyms_lookup_names(const char* name, unsigned int* start, unsigned int* end);
-	unsigned int get_symbol_seq(int index);
-	unsigned int get_symbol_offset(unsigned long pos);
 	uint64_t kallsyms_sym_address(int idx);
-	int compare_symbol_name(const char* name, char* namebuf);
-	bool cleanup_symbol_name(char* s);
 
 	const std::vector<char>& m_file_buf;
 	uint64_t m_kallsyms_relative_base = 0;
@@ -80,4 +76,6 @@ private:
 			std::cout << std::hex << "kallsyms_token_index offset: 0x" << offset << std::endl;
 		}
 	} m_kallsyms_token_index;
+
+	std::unordered_map<std::string, uint64_t> m_kallsyms_symbols_cache;
 };
