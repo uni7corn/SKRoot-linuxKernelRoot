@@ -55,7 +55,8 @@
 1、如遇到Linux 6.0以上内核无法开机，请阅读：
 * **请不要使用Android.Image.Kitchen进行打包，该工具不支持Linux 6.0以上内核！**
 * **可使用magiskboot进行打包。**
-* **magiskboot的快速获取方式：使用7z解压Magisk apk，把lib文件夹里的libmagiskboot.so直接改名magiskboot即可使用。因为这是个可执行文件，并不是动态库，不要被名字带so字样所迷惑。**
+* **magiskboot的快速获取方式：使用7z解压[Magisk.apk](https://github.com/topjohnwu/Magisk/releases)，把lib/x86_64文件夹里的libmagiskboot.so直接改名magiskboot即可使用。因为这是个Linux可执行文件，并不是动态库，不要被名字带so字样所迷惑。**
+* **magiskboot官方没有提供Windows版本，请安装Linux系统使用它。不建议使用非官方的Windows版本，因为代码版本可能太旧。**
 * **解包命令：./magiskboot unpack boot.img**
 * **打包命令：./magiskboot repack boot.img**
 
