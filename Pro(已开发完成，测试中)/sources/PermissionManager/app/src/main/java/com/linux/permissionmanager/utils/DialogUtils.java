@@ -1,6 +1,8 @@
 package com.linux.permissionmanager.utils;
 
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
@@ -15,6 +17,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -129,8 +132,7 @@ public class DialogUtils {
         dialog.show();
     }
 
-
-    public static void showLogDialog(Context context,String logs) {
+    public static void showLogDialog(Context context, String logs) {
         // 创建全屏 Dialog
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -163,17 +165,42 @@ public class DialogUtils {
             scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
         });
 
+        // === 底部按钮区域：复制 + 关闭 ===
+        LinearLayout buttonBar = new LinearLayout(context);
+        buttonBar.setOrientation(LinearLayout.HORIZONTAL);
+        buttonBar.setGravity(Gravity.END);
 
-        // 创建一个底部的“关闭”按钮
-        Button closeButton = new Button(context);
-        closeButton.setText("关闭");
-        closeButton.setOnClickListener(v -> {
-            dialog.dismiss();
+        LinearLayout.LayoutParams btnLp = new LinearLayout.LayoutParams(
+                0,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                1f
+        );
+        btnLp.setMargins(10, 30, 10, 0); // 按钮之间稍微留点间距
+
+        // 【复制】按钮
+        Button copyButton = new Button(context);
+        copyButton.setText("复制");
+        copyButton.setLayoutParams(btnLp);
+        copyButton.setOnClickListener(v -> {
+            ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            if (cm != null) {
+                cm.setPrimaryClip(ClipData.newPlainText("logs", logs));
+                Toast.makeText(context, "日志已复制到剪贴板", Toast.LENGTH_SHORT).show();
+            }
         });
 
-        // 将 ScrollView 和按钮添加到主布局
+        // 【关闭】按钮
+        Button closeButton = new Button(context);
+        closeButton.setText("关闭");
+        closeButton.setLayoutParams(btnLp);
+        closeButton.setOnClickListener(v -> dialog.dismiss());
+
+        buttonBar.addView(copyButton);
+        buttonBar.addView(closeButton);
+
+        // 将 ScrollView 和按钮栏添加到主布局
         layout.addView(scrollView);
-        layout.addView(closeButton);
+        layout.addView(buttonBar);
 
         // 设置 Dialog 的内容
         dialog.setContentView(layout);
@@ -187,4 +214,5 @@ public class DialogUtils {
 
         dialog.show();
     }
+
 }

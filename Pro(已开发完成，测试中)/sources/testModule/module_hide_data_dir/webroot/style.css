@@ -1,0 +1,242 @@
+﻿:root {
+  /* 明亮主题 */
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --text: #0b1220;
+  --muted: #5f6b7a;
+  --line: #e7eaf0;
+  --ok: #34c759;
+  /* iOS 绿色 */
+  --danger: #ff3b30;
+  /* iOS 红 */
+  --warn: #ffcc00;
+  /* iOS 黄 */
+  --blue: #0a84ff;
+  /* iOS 蓝 */
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(0, 0, 0, .08);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang SC", "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif;
+}
+
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: env(safe-area-inset-top) 14px calc(64px + env(safe-area-inset-bottom)) 14px;
+}
+
+/* 顶部栏（明亮） */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  margin: 0 -14px 16px;
+  padding: calc(env(safe-area-inset-top) + 10px) 14px 10px;
+  background: rgba(255, 255, 255, .85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  box-shadow: 0 0 12px rgba(14, 165, 233, .6);
+}
+
+.sub {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.warn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: #fff8e1;
+  border: 1px solid #ffe08a;
+  border-radius: 12px;
+  color: #8a6d00;
+  font-size: 13px;
+}
+
+/* 面板 */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+  background: #fafbff;
+}
+
+.toolbar input {
+  appearance: none;
+  outline: none;
+  flex: 1;
+  background: #fff;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.toolbar input::placeholder {
+  color: #9aa5b1;
+}
+
+.btn {
+  appearance: none;
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: .2px;
+  box-shadow: 0 6px 18px rgba(99, 102, 241, .25);
+}
+
+.btn:active {
+  transform: translateY(1px);
+  opacity: .95;
+}
+
+/* 列表（表格风） */
+.list {
+  width: 100%;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 14px;
+  border-bottom: 1px dashed var(--line);
+  background: #fff;
+}
+
+.row:nth-child(odd) {
+  background: #fbfcff;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  letter-spacing: .2px;
+}
+
+.badge {
+  font-size: 11px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 8px;
+  margin-left: 8px;
+  background: #f7f9fc;
+}
+
+.del {
+  appearance: none;
+  border: 1px solid rgba(255, 59, 48, .35);
+  background: rgba(255, 59, 48, .06);
+  color: #d32f2f;
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-weight: 600;
+}
+
+.del:active {
+  transform: translateY(1px);
+  opacity: .9;
+}
+
+/* 错误提示（明亮） */
+.error {
+  margin: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: #b00020;
+  background: #fff1f2;
+  border: 1px solid #ffcdd2;
+  display: none;
+  font-size: 13px;
+}
+
+.error.show {
+  display: block;
+}
+
+/* 页脚（明亮） */
+.footer {
+  margin-top: 16px;
+  padding: 14px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.footer a {
+  color: #0066cc;
+  text-decoration: underline;
+}
+
+/* 浮动 + */
+.fab {
+  position: fixed;
+  right: 18px;
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  color: #fff;
+  font-size: 30px;
+  line-height: 0;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  box-shadow: 0 12px 30px rgba(99, 102, 241, .28);
+}

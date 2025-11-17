@@ -8,7 +8,7 @@
 #include "module_base_kernel_mem.h"
 #include "module_base_kernel_asm_func_executor.h"
 #include "module_base_kernel_func_hook.h"
-#include "module_base_kernel_runtime_storage.h"
+#include "module_base_disk_storage.h"
 #include "module_base_kernel_export_symbol.h"
 #include "module_base_kernel_string_ops.h"
 #include "module_base_kernel_symbol_addr.h"

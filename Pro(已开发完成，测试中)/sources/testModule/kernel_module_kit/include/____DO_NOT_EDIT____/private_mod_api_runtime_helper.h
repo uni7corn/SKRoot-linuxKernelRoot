@@ -16,24 +16,31 @@ inline KModErr execute_kernel_asm_func(const char* root_key, const std::vector<u
     return execute_kernel_asm_func_with_buf(root_key, func_bytes.data(), func_bytes.size(), output_result);
 }
 
-inline KModErr read_string_kernel_runtime_storage(const char* root_key, const char* app_name, const char* key_name, std::string& out_string) {
-    int cap = 4096;
-    std::vector<char> buf(cap);
-    for (;;) {
-        KModErr read_string_kernel_runtime_storage_with_buf(const char* root_key, const char* app_name, const char* key_name, char* out_buf, int out_buf_size);
-        KModErr err = read_string_kernel_runtime_storage_with_buf(root_key, app_name, key_name, buf.data(), cap);
-        if (is_ok(err)) {
-            out_string.assign(buf.data());
-            return KModErr::OK;
-        }
-        if (err != KModErr::ERR_MODULE_BUFFER_TOO_SMALL) {
-            return err; // 其他错误直接返回
-        }
+inline KModErr read_string_disk_storage(const char* root_key, const char* key, std::string& out) {
+    thread_local std::string* tls_out = nullptr;
+    auto cb = [](const char* out_str) {
+        if (!tls_out || !out_str) return;
+        (*tls_out) = out_str;
+    };
+    tls_out = &out;
+    KModErr read_string_disk_storage_with_cb(const char* root_key, const char* key, void (*cb)(const char* out_str));
+    KModErr err = read_string_disk_storage_with_cb(root_key, key, cb);
+    tls_out = nullptr; 
+    return err;
+}
 
-        // 缓冲不够：翻倍扩容继续
-        cap <<= 1;
-        buf.resize(cap);
-    }
+inline KModErr read_blob_disk_storage(const char* root_key, const char* key, std::vector<uint8_t>& out) {
+    thread_local std::vector<uint8_t>* tls_out = nullptr;
+    auto cb = [](const void* data, uint64_t size) {
+        if (!tls_out || !data) return;
+        const uint8_t* p = static_cast<const uint8_t*>(data);
+        tls_out->assign(p, p + size);
+    };
+    tls_out = &out;
+    KModErr read_blob_disk_storage_with_cb(const char* root_key, const char* key, void (*cb)(const void* data, uint64_t size));
+    KModErr err = read_blob_disk_storage_with_cb(root_key, key, cb);
+    tls_out = nullptr; 
+    return err;
 }
 
 inline KModErr install_kernel_function_before_hook(const char* root_key, uint64_t kernel_func_addr, const std::vector<uint8_t>& my_shellcode_func) {

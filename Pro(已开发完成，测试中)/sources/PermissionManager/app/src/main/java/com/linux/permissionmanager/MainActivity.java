@@ -31,7 +31,7 @@ import com.linux.permissionmanager.utils.GetSdcardPermissionsHelper;
 
 
 public class MainActivity extends AppCompatActivity {
-    private String mRootKey = "JPYUf2wRhu5rjvphjXIF5zjxNxLVu5lopes5UlOpgXI1UuoU";
+    private String mRootKey = "";
 
     private RadioGroup mNavigateRadioGroup;
     private MenuItem mMainMenu;

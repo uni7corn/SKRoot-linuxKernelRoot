@@ -1,0 +1,46 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>/data 隐藏目录配置</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="toast.css">
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="title"><span class="dot"></span>/data 隐藏目录</div>
+     <div class="sub">请避免与系统目录重名，如 system、vendor、data 等关键词，否则无法开机。</div>
+      <div class="warn">提示：请输入 /data 下的目录名称（仅名称，如 myfolder）。目录将被隐藏，但内部程序可正常运行。配置将在重启后生效。</div>
+     
+    </div>
+
+    <div class="panel">
+      <!-- 工具栏：输入 + 添加 -->
+      <div class="toolbar">
+        <input id="inputName" placeholder="输入目录名，如：myfolder" maxlength="80" />
+        <button class="btn" id="btnAdd">＋新增</button>
+      </div>
+
+      <!-- 错误提示 -->
+      <div id="error" class="error"></div>
+
+      <!-- 列表 -->
+      <div id="list" class="list"></div>
+    </div>
+
+    <div class="footer">
+      模块版本：<span id="ver">加载中...</span>&nbsp;&nbsp;
+      官网：<a href="https://github.com/abcz316/SKRoot-linuxKernelRoot" target="_blank" rel="noopener">https://github.com/abcz316/SKRoot-linuxKernelRoot</a>
+    </div>
+  </div>
+
+  <!-- 浮动新增 -->
+  <button class="fab" id="fabAdd" aria-label="新增">＋</button>
+  <script src="request.js"></script>
+  <script src="toast.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
+

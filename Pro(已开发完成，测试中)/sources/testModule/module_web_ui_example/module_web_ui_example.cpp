@@ -1,11 +1,4 @@
-﻿#include "module_web_ui_example.h"
-#include "kernel_module_kit_umbrella.h"
-
-#define CONFIG_FILE_NAME "config123.txt"
-
-static std::string get_config_file_path(const char* module_private_dir) {
-    return std::string(module_private_dir) + CONFIG_FILE_NAME;
-}
+﻿#include "kernel_module_kit_umbrella.h"
 
 // SKRoot模块入口函数
 int skroot_module_main(const char* root_key, const char* module_private_dir) {
@@ -14,12 +7,12 @@ int skroot_module_main(const char* root_key, const char* module_private_dir) {
     printf("[module_web_ui_example] module_private_dir=%s\n", module_private_dir);
 
     //读取配置文件内容
-    std::string config_file_path = get_config_file_path(module_private_dir);
     std::string value;
-    if(read_text_file(config_file_path.c_str(), value)) {
-        printf("[module_web_ui_example] read file succeed: %s, value: %s\n", config_file_path.c_str(), value.c_str());
+    KModErr err = kernel_module::read_string_disk_storage(root_key, "myKey", value);
+    if(is_ok(err)) {
+        printf("[module_web_ui_example] read storage succeed: value: %s\n", value.c_str());
     } else {
-        printf("[module_web_ui_example] read file failed: %s\n", config_file_path.c_str());
+        printf("[module_web_ui_example] read storage failed: %s\n", to_string(err).c_str());
     }
     return 0;
 }
@@ -33,7 +26,6 @@ public:
         printf("[module_web_ui_example] MyHttpHandler module_private_dir=%s\n", module_private_dir);
         printf("[module_web_ui_example] MyHttpHandler port=%d\n", port);
         m_root_key = root_key;
-        m_config_file_path = get_config_file_path(module_private_dir);
     }
 
     bool handleGet(CivetServer* server, struct mg_connection* conn) override {
@@ -54,8 +46,9 @@ public:
         std::string resp;
         if(path == "/getPid") resp = std::to_string(getpid());
         else if(path == "/getUid") resp = std::to_string(getuid());
-        else if(path == "/getValue") read_text_file(m_config_file_path.c_str(), resp);
-        else if(path == "/setValue") resp = write_text_file(m_config_file_path.c_str(), body) ? "OK" : "FAILED";
+        else if(path == "/getValue") kernel_module::read_string_disk_storage(m_root_key.c_str(), "myKey", resp);
+        else if(path == "/setValue") resp = 
+                is_ok(kernel_module::write_string_disk_storage(m_root_key.c_str(), "myKey", body.c_str())) ? "OK" : "FAILED";
         
         mg_printf(conn,
                   "HTTP/1.1 200 OK\r\n"
@@ -66,7 +59,6 @@ public:
     }
 private:
     std::string m_root_key;
-    std::string m_config_file_path;
 };
 
 // SKRoot 模块名片
