@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.linux.permissionmanager.R;
 import com.linux.permissionmanager.bridge.NativeBridge;
 import com.linux.permissionmanager.model.SkrModItem;
+import com.linux.permissionmanager.model.SkrModUpdateInfo;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class SkrModAdapter extends RecyclerView.Adapter<SkrModAdapter.ViewHolder
 
     public interface OnItemClickListener {
         void onOpenWebUIBtnClick(View v, SkrModItem skrmod);
+        void onNewVersionBtnClick(View v, SkrModItem skrmod);
         void onMoreBtnClick(View v, SkrModItem skrmod);
     }
 
@@ -49,9 +51,11 @@ public class SkrModAdapter extends RecyclerView.Adapter<SkrModAdapter.ViewHolder
         holder.tvDesc.setText(skrmod.getDesc());
         holder.tvVer.setText(skrmod.getVer());
         holder.tvAuthor.setText(skrmod.getAuthor());
-        holder.tvStatus.setText(skrmod.isRunning() ? "已运行" : "未运行");
+        holder.tvStatus.setText(skrmod.isRunning() ? "运行中" : "未运行");
         holder.tvStatus.setTextColor(skrmod.isRunning() ? SkrModRunningColor : SkrModNotRunningColor);
         holder.btnWebUI.setVisibility(skrmod.isWebUi() ? View.VISIBLE : View.GONE);
+        boolean hasNewVer = skrmod.getUpdateInfo() != null && skrmod.getUpdateInfo().isHasNewVersion();
+        holder.btnNewVersion.setVisibility(hasNewVer ? View.VISIBLE : View.GONE);
         holder.btnWebUI.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onOpenWebUIBtnClick(v, skrmod);
@@ -62,6 +66,23 @@ public class SkrModAdapter extends RecyclerView.Adapter<SkrModAdapter.ViewHolder
                 listener.onMoreBtnClick(v, skrmod);
             }
         });
+        holder.btnNewVersion.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onNewVersionBtnClick(v, skrmod);
+            }
+        });
+    }
+
+    public void updateModuleUpdateInfo(String uuid, SkrModUpdateInfo updateInfo) {
+        if (uuid == null) return;
+        for (int i = 0; i < skrmods.size(); i++) {
+            SkrModItem item = skrmods.get(i);
+            if (uuid.equals(item.getUuid())) {
+                item.setUpdateInfo(updateInfo);
+                notifyItemChanged(i);
+                break;
+            }
+        }
     }
 
     @Override
@@ -76,6 +97,7 @@ public class SkrModAdapter extends RecyclerView.Adapter<SkrModAdapter.ViewHolder
         public TextView tvAuthor;
         public TextView tvStatus;
         public Button btnWebUI;
+        public Button btnNewVersion;
         public Button btnMore;
 
         public ViewHolder(View itemView) {
@@ -87,15 +109,8 @@ public class SkrModAdapter extends RecyclerView.Adapter<SkrModAdapter.ViewHolder
             tvStatus = itemView.findViewById(R.id.status_tv);
             btnMore = itemView.findViewById(R.id.more_btn);
             btnWebUI = itemView.findViewById(R.id.web_ui_btn);
-
+            btnNewVersion = itemView.findViewById(R.id.new_version_btn);
         }
     }
 
-    private long versionCode(String v) {
-        String[] p = v.split("\\.");
-        long major = Long.parseLong(p[0]);
-        long minor = Long.parseLong(p[1]);
-        long patch = Long.parseLong(p[2]);
-        return major * 1_000_000L + minor * 1_000L + patch; // 1000 * 1000
-    }
 }

@@ -67,19 +67,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkGetAppListPermission() {
-        if(!GetAppListPermissionHelper.getPermissions(this)) {
-            DialogUtils.showCustomDialog(
-                    this,
-                    "权限申请",
-                    "请授予读取APP列表权限，再重新打开",
-                    null,
-                    "确定", (dialog, which) -> {
-                        dialog.dismiss();
-                        finish();
-                    },
-                    null, null
-            );
-        }
+        if(GetAppListPermissionHelper.getPermissions(this)) return;
+        DialogUtils.showCustomDialog(
+                this,"权限申请","请授予读取APP列表权限，再重新打开",null,"确定",
+                (dialog, which) -> {
+                    dialog.dismiss();
+                    finish();
+                },null, null);
     }
 
     private void setupFragment() {

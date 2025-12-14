@@ -42,59 +42,10 @@ public class FileUtils {
         return path;
     }
 
-    public static String readFileFromAssets(Context context, String fileName) {
-        StringBuilder stringBuilder = new StringBuilder();
+    public static void deleteFile(File destFile) {
         try {
-            // 获取 AssetManager
-            InputStream inputStream = null;
-            try {
-                inputStream = context.getAssets().open(fileName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line).append("\n");  // 保持换行符
-            }
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return stringBuilder.toString();
-    }
-
-    /**
-     * 复制 assets 文件到私有 files 目录
-     * @param context 上下文
-     * @param assetFileName assets 目录下的文件名
-     * @return 目标文件路径
-     */
-    public static String copyAssetToFile(Context context, String assetFileName) {
-        AssetManager assetManager = context.getAssets();
-        File outFile = new File(context.getFilesDir(), assetFileName); // 目标文件路径
-
-        try (InputStream in = assetManager.open(assetFileName);
-             OutputStream out = new FileOutputStream(outFile)) {
-            byte[] buffer = new byte[4096];
-            int bytesRead;
-            while ((bytesRead = in.read(buffer)) != -1) {
-                out.write(buffer, 0, bytesRead);
-            }
-            return outFile.getAbsolutePath(); // 返回目标文件路径
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null; // 失败返回 null
-        }
-    }
-
-    public static void deleteDirectory(File directory) {
-        if (directory.exists()) {
-            Stream.of(Objects.requireNonNull(directory.listFiles()))
-                    .forEach(file -> { if (file.isDirectory()) deleteDirectory(file); file.delete(); });
-            directory.delete();
-        }
+            if (destFile != null && destFile.exists()) destFile.delete();
+        } catch (Exception ignore) {}
     }
 
     public static String formatFileSize(long size) {

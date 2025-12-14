@@ -49,13 +49,8 @@ public class DialogUtils {
 
     public static void showNeedPermissionDialog(Context context) {
         DialogUtils.showCustomDialog(
-                context,
-                "权限申请",
-                "请授予权限后重新操作",
-                null,
-                "确定", (dialog, which) -> {
-                    dialog.dismiss();
-                },
+                context, "权限申请", "请授予权限后重新操作", null, "确定",
+                (dialog, which) -> dialog.dismiss(),
                 null, null
         );
     }

@@ -48,6 +48,7 @@ static cJSON * moduleDescToJsonObj(skroot_env::module_desc & desc) {
     std::string encodeDesc = urlEncodeToStr(desc.desc);
     std::string encodeAuthor = urlEncodeToStr(desc.author);
     std::string encodeUuid = urlEncodeToStr(desc.uuid);
+    std::string encodeUpdateJson = urlEncodeToStr(desc.update_json);
     std::stringstream ss;
     ss << desc.min_sdk_ver.major << "." << desc.min_sdk_ver.minor << "." << desc.min_sdk_ver.patch;
     std::string encodeMiniSDK = urlEncodeToStr(ss.str().c_str());
@@ -56,6 +57,7 @@ static cJSON * moduleDescToJsonObj(skroot_env::module_desc & desc) {
     cJSON_AddStringToObject(item, "desc", encodeDesc.c_str());
     cJSON_AddStringToObject(item, "author", encodeAuthor.c_str());
     cJSON_AddStringToObject(item, "uuid", encodeUuid.c_str());
+    cJSON_AddStringToObject(item, "update_json", encodeUpdateJson.c_str());
     cJSON_AddBoolToObject(item, "web_ui", desc.web_ui);
     cJSON_AddStringToObject(item, "min_sdk_ver", encodeMiniSDK.c_str());
     return item;
@@ -118,14 +120,14 @@ Java_com_linux_permissionmanager_bridge_NativeBridge_getSdkSkrootEnvVersion(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_linux_permissionmanager_bridge_NativeBridge_readSkrootLogs(
+Java_com_linux_permissionmanager_bridge_NativeBridge_readSkrootLog(
         JNIEnv* env,
         jclass /* this */,
         jstring rootKey) {
     string strRootKey = jstringToStr(env, rootKey);
 
     std::string log;
-    KModErr err = skroot_env::read_skroot_autorun_log(strRootKey.c_str(), log);
+    KModErr err = skroot_env::read_skroot_log(strRootKey.c_str(), log);
     if(is_failed(err)) log = to_string(err);
     return env->NewStringUTF(log.c_str());
 }
@@ -155,15 +157,27 @@ Java_com_linux_permissionmanager_bridge_NativeBridge_isEnableSkrootLog(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_linux_permissionmanager_bridge_NativeBridge_testSkrootShellcodeChannel(
+Java_com_linux_permissionmanager_bridge_NativeBridge_testSkrootBasics(
         JNIEnv* env,
         jclass /* this */,
-        jstring rootKey) {
+        jstring rootKey,
+        jstring item) {
     string strRootKey = jstringToStr(env, rootKey);
+    string strItem = jstringToStr(env, item);
 
-    KModErr err = skroot_env::test_skroot_shellcode_channel(strRootKey.c_str());
+    skroot_env::BasicItem basicItem;
+    if(strItem == "Channel") basicItem = skroot_env::BasicItem::Channel;
+    else if(strItem == "KernelBase") basicItem = skroot_env::BasicItem::KernelBase;
+    else if(strItem == "WriteTest") basicItem = skroot_env::BasicItem::WriteTest;
+    else if(strItem == "ReadTrampoline") basicItem = skroot_env::BasicItem::ReadTrampoline;
+    else if(strItem == "WriteTrampoline") basicItem = skroot_env::BasicItem::WriteTrampoline;
+    else return env->NewStringUTF(strItem.c_str());
+
     std::stringstream sstr;
-    sstr << "test_skroot_shellcode_channel: " << to_string(err).c_str();
+    std::string info;
+    KModErr err = skroot_env::test_skroot_basics(strRootKey.c_str(), basicItem, info);
+    sstr << "Test " << strItem.c_str() <<": " << to_string(err).c_str() << "\n";
+    sstr << info.c_str();
     return env->NewStringUTF(sstr.str().c_str());
 }
 
@@ -184,8 +198,8 @@ Java_com_linux_permissionmanager_bridge_NativeBridge_testSkrootDefaultModule(
     std::stringstream sstr;
     std::string info;
     KModErr err = skroot_env::test_skroot_deafult_module(strRootKey.c_str(), defName, info);
-    if(is_failed(err)) sstr << "Test " << strName.c_str() <<": " << to_string(err).c_str();
-    else sstr << info.c_str();
+    sstr << "Test " << strName.c_str() <<": " << to_string(err).c_str() << "\n";
+    sstr << info.c_str();
     return env->NewStringUTF(sstr.str().c_str());
 }
 

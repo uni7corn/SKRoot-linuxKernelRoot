@@ -10,10 +10,10 @@ public final class NativeBridge {
     public static native String uninstallSkrootEnv(String rootKey);
     public static native String getInstalledSkrootEnvVersion(String rootKey);
     public static native String getSdkSkrootEnvVersion();
-    public static native String readSkrootLogs(String rootKey);
+    public static native String readSkrootLog(String rootKey);
     public static native String setSkrootLogEnable(String rootKey, boolean enable);
     public static native boolean isEnableSkrootLog(String rootKey);
-    public static native String testSkrootShellcodeChannel(String rootKey);
+    public static native String testSkrootBasics(String rootKey, String item);
     public static native String testSkrootDefaultModule(String rootKey, String name);
 
     public static native String addSuAuth(String rootKey, String appPackageName);

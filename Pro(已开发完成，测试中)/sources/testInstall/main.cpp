@@ -61,9 +61,9 @@ void test_show_skroot_ver() {
 
 void test_show_skroot_log() {
 	std::string log;
-	KModErr err = skroot_env::read_skroot_autorun_log(ROOT_KEY, log);
+	KModErr err = skroot_env::read_skroot_log(ROOT_KEY, log);
     printf("%s\n", log.c_str());
-    printf("read_skroot_autorun_log: %s\n", to_string(err).c_str());
+    printf("read_skroot_log: %s\n", to_string(err).c_str());
 }
 
 void test_root() {

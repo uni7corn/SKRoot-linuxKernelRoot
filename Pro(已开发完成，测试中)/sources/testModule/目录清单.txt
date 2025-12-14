@@ -10,4 +10,5 @@ testModule 模块目录清单：
 • 模块更新 JSON 演示模块（源码）.......... module_update_demo
 • 隐藏 /data 路径功能模块（源码）........ module_hide_data_dir
 • 清理 USB 调试痕迹模块（源码）........... module_clear_usb_trace
+• TrickyStore集成模块（源码）................. module_tricky_store
 ──────────────────────────────

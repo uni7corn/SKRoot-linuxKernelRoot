@@ -1,24 +1,31 @@
 package com.linux.permissionmanager.model;
 
+import android.text.TextUtils;
+
 public class SkrModItem {
     private String name;
     private String desc;
     private String ver;
     private String uuid;
     private String author;
+    private String updateJson;
     private String miniSdk;
     private boolean webUi;
     private boolean isRunning;
 
-    public SkrModItem(String name, String desc, String ver, String uuid, String author, String miniSdk, boolean webUi, boolean isRunning) {
+    private SkrModUpdateInfo updateInfo;
+
+    public SkrModItem(String name, String desc, String ver, String uuid, String author, String updateJson, String miniSdk, boolean webUi, boolean isRunning) {
         this.name = name;
         this.desc = desc;
         this.ver = ver;
         this.uuid = uuid;
         this.author = author;
+        this.updateJson = updateJson;
         this.miniSdk = miniSdk;
         this.webUi = webUi;
         this.isRunning = isRunning;
+        this.updateInfo = null;   // 默认无更新信息
     }
 
     public String getName() {
@@ -61,6 +68,12 @@ public class SkrModItem {
         this.author = author;
     }
 
+    public String getUpdateJson() {
+        return updateJson;
+    }
+
+    public void setUpdateJson(String updateJson) { this.updateJson = updateJson; }
+
     public String getMiniSdk() {
         return miniSdk;
     }
@@ -83,5 +96,17 @@ public class SkrModItem {
 
     public void setRunning(boolean running) {
         isRunning = running;
+    }
+
+    public SkrModUpdateInfo getUpdateInfo() {
+        return updateInfo;
+    }
+
+    public void setUpdateInfo(SkrModUpdateInfo updateInfo) {
+        this.updateInfo = updateInfo;
+    }
+
+    public boolean hasChangelog() {
+        return updateInfo != null && !TextUtils.isEmpty(updateInfo.getChangelogUrl());
     }
 }

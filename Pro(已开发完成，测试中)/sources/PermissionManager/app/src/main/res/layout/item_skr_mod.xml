@@ -148,6 +148,22 @@
                 android:paddingEnd="11dp"
                 android:textAllCaps="false"
                 android:text="Web管理"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/new_version_btn"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:paddingStart="11dp"
+                android:paddingEnd="11dp"
+                android:textAllCaps="false"
+                android:text="有新版"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

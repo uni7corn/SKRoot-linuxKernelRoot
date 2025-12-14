@@ -25,19 +25,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.linux.permissionmanager.R;
 import com.linux.permissionmanager.adapter.SelectAppRecyclerAdapter;
-import com.linux.permissionmanager.bridge.NativeBridge;
-import com.linux.permissionmanager.model.PopupWindowOnTouchClose;
 import com.linux.permissionmanager.model.SelectAppItem;
 import com.linux.permissionmanager.utils.ScreenInfoUtils;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SelectAppDlg {
     public static View showSelectAppDlg(Activity activity, String rootKey, Handler selectAppCallback) {
@@ -56,8 +48,6 @@ public class SelectAppDlg {
         //全屏
         View parent = View.inflate(activity, R.layout.activity_main, null);
         popupWindow.showAtLocation(parent, Gravity.NO_GRAVITY, 0, 0);
-        popupWindow.showAsDropDown(parent, 0, 0);
-
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
@@ -74,10 +64,15 @@ public class SelectAppDlg {
         android.view.ViewGroup.LayoutParams lp = center_layout.getLayoutParams();
         lp.width = (int) centerWidth;
         lp.height = (int) centerHeight;
+        center_layout.setLayoutParams(lp);
 
-        //点击阴影部分可关闭窗口
-        popupWindow.setTouchInterceptor(new PopupWindowOnTouchClose(popupWindow,
-                screenWidth, screenHeight, (int) centerWidth, (int) centerHeight));
+        // 外层容器：点到阴影就关闭弹窗
+        View outside = view.findViewById(R.id.popup_outside_container);
+        outside.setOnClickListener(v -> popupWindow.dismiss());
+        // 中间内容区域：消费点击，不往外传（防止点内容也被当成点阴影）
+        center_layout.setOnClickListener(v -> {
+            // 什么都不做，只是阻止事件传到 outside
+        });
 
         List<SelectAppItem> appList = new ArrayList<>();
         List<PackageInfo> packages = activity.getPackageManager().getInstalledPackages(0);

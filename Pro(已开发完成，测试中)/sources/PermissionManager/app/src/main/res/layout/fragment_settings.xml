@@ -39,17 +39,17 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <Button
-                        android:id="@+id/test_skroot_shellcode_channel_btn"
+                        android:id="@+id/test_skroot_basics_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="通道测试"/>
+                        android:text="单项检查"/>
 
                     <Button
                         android:layout_marginLeft="8dp"
                         android:id="@+id/test_skroot_default_module_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="核心模块自检"/>
+                        android:text="核心模块检查"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -87,7 +87,7 @@
                     android:textSize="14sp" />
 
                 <Button
-                    android:id="@+id/show_skroot_logs_btn"
+                    android:id="@+id/show_skroot_log_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="查看日志"/>
@@ -126,7 +126,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="为避免被侦测，可卸载管理器APP，功能依然有效。" />
+                    android:text="为避免被侦测，可使用寄生模式，或卸载管理器App，功能仍可正常生效" />
 
             </LinearLayout>
 
@@ -166,6 +166,61 @@
                     android:text="内置核心版本：" />
 
                 <LinearLayout
+                    android:id="@+id/core_update_block"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_marginBottom="10dp">
+
+                    <TextView
+                        android:id="@+id/core_update_found_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="发现新版本：vX.X.X"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/holo_red_dark"
+                        android:layout_marginBottom="4dp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/core_update_changelog_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="查看更新日志"
+                            android:textSize="13sp"
+                            android:textColor="?attr/colorAccent"
+                            android:textStyle="bold"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackgroundBorderless" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="  |  "
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/core_update_download_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="点击开始下载"
+                            android:textSize="13sp"
+                            android:textColor="?attr/colorAccent"
+                            android:textStyle="bold"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackgroundBorderless" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -186,6 +241,7 @@
                         android:textSize="13sp"
                         android:clickable="true"
                         android:focusable="true"
+                        android:textColor="#1E88E5"
                         android:foreground="?attr/selectableItemBackgroundBorderless"
                         android:text="" />
 
