@@ -8,14 +8,16 @@
 #include "module_tricky_store.h"
 #include "file_utils.h"
 #include "android_packages_list_utils.h"
+#include "tricky_store_daemon.h"
 
-#define MOD_VER "1.4.1-r4"
+#define MOD_VER "1.4.1-r5"
 
 #define TARGET_TS_DIR "/data/adb/"
 #define TARGET_TXT "/data/adb/tricky_store/target.txt"
 #define KEYBOX_XML "/data/adb/tricky_store/keybox.xml"
 #define TEE_STATUS "/data/adb/tricky_store/tee_status"
 #define SERVICE_SH "/data/adb/modules/tricky_store/service.sh"
+#define SERVICE_BASE "/data/adb/modules/tricky_store/"
 
 #define HIDE_BOOTLOADER_SH "hide_bootloader.sh"
 
@@ -108,17 +110,19 @@ int skroot_module_main(const char* root_key, const char* module_private_dir) {
     printf("tee_fix_toggle: %d\n", !!tee_fix_toggle);
     printf("hide_bootloader_toggle: %d\n", !!hide_bootloader_toggle);
 
-    spawn_delayed_task(3, [=] {
+    spawn_delayed_task(7, [=] {
         if (auto_third_app_toggle) {
             bool ok = write_target_txt_applist();
             std::printf("[module_tricky_store] write target.txt applist: %s\n", ok ? "success" : "failed");
         }
         std::printf("[module_tricky_store] run_script: %s\n", SERVICE_SH);
-        run_script(SERVICE_SH);
+        // run_script(SERVICE_SH); // DO NOT USE!
+        // prevent the sh process from remaining in the background.
+        start_tricky_store_daemon_loop(SERVICE_BASE);
     });
 
     if (hide_bootloader_toggle) {
-        spawn_delayed_task(6, [=] {
+        spawn_delayed_task(9, [=] {
             std::printf("[module_tricky_store] run hide_bootloader_sh\n");
             run_script(HIDE_BOOTLOADER_SH);
         });
