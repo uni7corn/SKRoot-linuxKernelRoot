@@ -1,5 +1,4 @@
 ﻿#include "patch_base.h"
-#include "analyze/base_func.h"
 
 using namespace asmjit;
 using namespace asmjit::a64;
@@ -75,9 +74,7 @@ size_t PatchBase::patch_jump(size_t patch_addr, size_t jump_addr, std::vector<pa
 	auto a = asm_ctx.assembler();
 	aarch64_asm_b(a, (int32_t)(jump_addr - patch_addr));
 	std::vector<uint8_t> bytes = aarch64_asm_to_bytes(a);
-	if (bytes.size() == 0) {
-		return 0;
-	}
+	if (bytes.size() == 0) return 0;
 	std::string str_bytes = bytes2hex((const unsigned char*)bytes.data(), bytes.size());
 	vec_out_patch_bytes_data.push_back({ str_bytes, patch_addr });
 	return bytes.size();
@@ -87,7 +84,7 @@ bool PatchBase::is_CONFIG_THREAD_INFO_IN_TASK() {
 	return !m_kernel_ver_parser.is_kernel_version_less("4.4.207");
 }
 
-void PatchBase::emit_get_current(asmjit::a64::Assembler* a, asmjit::a64::GpX x) {
+void PatchBase::emit_get_current(Assembler* a, GpX x) {
 	struct thread_info {
 		uint64_t flags;		/* low level flags */
 		uint64_t addr_limit;	/* address limit */
@@ -101,6 +98,13 @@ void PatchBase::emit_get_current(asmjit::a64::Assembler* a, asmjit::a64::GpX x) 
 		a->ldr(x, ptr(x, sizeof(thread_info)));
 		a->bind(label_error);
 	}
+}
+
+void PatchBase::emit_safe_bl(Assembler* a, size_t func_base_addr, size_t target) {
+	RegProtectGuard g1(a, x29, x30);
+	size_t bl_addr = func_base_addr + a->offset();
+	int64_t diff = (int64_t)target - (int64_t)bl_addr;
+	aarch64_asm_bl_raw(a, (int32_t)diff);
 }
 
 std::vector<size_t> PatchBase::find_all_aarch64_ret_offsets(size_t offset, size_t size) {

@@ -291,6 +291,12 @@
     <ClCompile Include="3rdparty\capstone-4.0.2\src\utils.c">
       <Filter>capstone</Filter>
     </ClCompile>
+    <ClCompile Include="patch_current_avc_check.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="patch_audit_log_start.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="patch_do_execve.h">
@@ -670,6 +676,12 @@
     </ClInclude>
     <ClInclude Include="3rdparty\capstone-4.0.2\src\utils.h">
       <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="patch_current_avc_check.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="patch_audit_log_start.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

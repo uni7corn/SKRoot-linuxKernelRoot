@@ -103,7 +103,9 @@ PROJECT_SRCS := \
   analyze/kernel_symbol_parser.cpp \
   analyze/kernel_version_parser.cpp \
   analyze/symbol_analyze.cpp \
+  patch_current_avc_check.cpp \
   patch_avc_denied.cpp \
+  patch_audit_log_start.cpp \
   patch_base.cpp \
   patch_do_execve.cpp \
   patch_filldir64.cpp \

@@ -13,19 +13,14 @@ size_t PatchFilldir64::patch_filldir64_root_key_guide(size_t root_key_mem_addr, 
 	size_t hook_func_start_addr = hook_func_start_region.offset;
 	if (hook_func_start_addr == 0) { return 0; }
 	std::cout << "Start hooking addr:  " << std::hex << hook_func_start_addr << std::endl << std::endl;
-
 	aarch64_asm_ctx asm_ctx = init_aarch64_asm();
 	auto a = asm_ctx.assembler();
-
 	int root_key_adr_offset = root_key_mem_addr - (hook_func_start_addr + a->offset());
 	aarch64_asm_adr_x(a, x11, root_key_adr_offset);
-
 	std::cout << print_aarch64_asm(a) << std::endl;
 
 	std::vector<uint8_t> bytes = aarch64_asm_to_bytes(a);
-	if (bytes.size() == 0) {
-		return 0;
-	}
+	if (bytes.size() == 0) return 0;
 	std::string str_bytes = bytes2hex((const unsigned char*)bytes.data(), bytes.size());
 	size_t shellcode_size = str_bytes.length() / 2;
 	if (shellcode_size > hook_func_start_region.size) {
@@ -52,7 +47,6 @@ size_t PatchFilldir64::patch_filldir64_core(const SymbolRegion& hook_func_start_
 	auto a = asm_ctx.assembler();
 	Label label_end = a->newLabel();
 	Label label_cycle_name = a->newLabel();
-
 	a->cmp(w_namelen_arg, Imm(FOLDER_HEAD_ROOT_KEY_LEN));
 	a->b(CondCode::kNE, label_end);
 	a->mov(x12, Imm(0));
@@ -76,9 +70,7 @@ size_t PatchFilldir64::patch_filldir64_core(const SymbolRegion& hook_func_start_
 	std::cout << print_aarch64_asm(a) << std::endl;
 
 	std::vector<uint8_t> bytes = aarch64_asm_to_bytes(a);
-	if (bytes.size() == 0) {
-		return 0;
-	}
+	if (bytes.size() == 0) return 0;
 	std::string str_bytes = bytes2hex((const unsigned char*)bytes.data(), bytes.size());
 	size_t shellcode_size = str_bytes.length() / 2;
 	if (shellcode_size > hook_func_start_region.size) {
@@ -88,7 +80,6 @@ size_t PatchFilldir64::patch_filldir64_core(const SymbolRegion& hook_func_start_
 	char hookOrigCmd[4] = { 0 };
 	memcpy(&hookOrigCmd, (void*)((size_t)&m_file_buf[0] + m_filldir64), sizeof(hookOrigCmd));
 	std::string strHookOrigCmd = bytes2hex((const unsigned char*)hookOrigCmd, sizeof(hookOrigCmd));
-
 	int end_order_len = a->offset() - 2 * 4;
 	str_bytes = str_bytes.substr(0, (end_order_len) * 2) + strHookOrigCmd + str_bytes.substr((end_order_len + 4) * 2);
 	if (shellcode_size > hook_func_start_region.size) {

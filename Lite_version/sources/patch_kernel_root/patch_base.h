@@ -3,6 +3,7 @@
 #include <vector>
 #include "patch_kernel_root.h"
 #include "3rdparty/aarch64_asm_helper.h"
+#include "3rdparty/aarch64_reg_protect_guard.h"
 #include "analyze/symbol_analyze.h"
 
 class PatchBase {
@@ -21,6 +22,7 @@ protected:
 
 	bool is_CONFIG_THREAD_INFO_IN_TASK();
 	void emit_get_current(asmjit::a64::Assembler* a, asmjit::a64::GpX x);
+	void emit_safe_bl(asmjit::a64::Assembler* a, size_t func_base_addr, size_t target);
 	std::vector<size_t> find_all_aarch64_ret_offsets(size_t offset, size_t size);
 
 	const std::vector<char>& m_file_buf;
