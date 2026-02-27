@@ -1,11 +1,11 @@
 # SkRoot - LinuxKernelRoot - Linux内核级完美隐藏Root演示
-新一代SkRoot，完美隐藏Root功能，挑战全网Root检测手段，实现真正的SELinux 0%触碰、无挂载，通用性强，通杀所有内核，不需要内核源码，直接patch内核，兼容安卓APP直接JNI调用，稳定不闪退。 TG频道：https://t.me/skrootabc
+新一代SkRoot，完美隐藏Root功能，挑战全网Root检测手段，实现真正的SELinux 0%触碰、无挂载，通用性强，通杀所有内核，不需要内核源码，直接patch内核，兼容安卓APP直接JNI调用，稳定不闪退。
 
 ## SkRoot(Lite)：
 完美隐藏Root功能，实现SELinux 0%触碰、无挂载，通杀所有内核，仅提供Root基础功能。
  
 ## SkRoot(Pro)：
-同享完美隐藏Root特性，SELinux零触碰、无挂载，支持授权管理+全套高级模块（隐藏目录、隐蔽执行sh、解除温控、系统文件无痕伪造等）。
+同享完美隐藏Root特性，SELinux零触碰、无挂载，支持授权管理+内核模块（隐藏目录、隐蔽执行sh、解除温控、系统文件无痕伪造等）。
 
 ### 模块特性：
 支持内核热Hook修改，最高10万Hook点位、0性能损耗，单模块跨全内核通用运行。
@@ -37,14 +37,17 @@
 ## 功能备注：
 1. APP应用程序得到Root权限的唯一方法就是得到Root密匙，此密匙为48位的随机字符串，安全可靠。
 
-2. 其中【**注入su到指定进程**】**只支持授权su到64位的APP**，老式32位App不再进行支持，因市面上几乎所有App都是64位，例如MT文件管理器、Root Explorer文件管理器等等。
+2. 其中【**注入su到指定进程**】**只支持授权su到64位的APP**，老式32位App不再进行支持。
 
-## 使用流程：
-1.编译产物下载： [patch_kernel_root.exe](https://github.com/abcz316/SKRoot-linuxKernelRoot/blob/master/Lite_version/build/patch_kernel_root(2026-2-25).exe)、 [PermissionManager.apk](https://github.com/abcz316/SKRoot-linuxKernelRoot/blob/master/Lite_version/build/PermissionManager(2026-2-25).apk)
+## SkRoot(Lite) 使用流程：
+1.下载源码编译或**下载编译产物**： [patch_kernel_root.exe](https://github.com/abcz316/SKRoot-linuxKernelRoot/blob/master/Lite_version/build/patch_kernel_root(2026-2-25).exe)、 [PermissionManager.apk](https://github.com/abcz316/SKRoot-linuxKernelRoot/blob/master/Lite_version/build/PermissionManager(2026-2-25).apk)
 
 2.将内核kernel文件拖拽置`patch_kernel_root.exe`即可一键自动化流程补丁内核，同时会自动生成Root密匙。
 
-3.安装并启动`PermissionManager.apk`或者`testRoot`，输入Root密匙值，开始享受舒爽的Root环境。
+3.安装并启动`PermissionManager.apk`或者`testRoot`，输入Root密匙值，即可正常使用SkRoot。
+
+## SkRoot(Pro) 使用流程：
+***已开发完成，目前正在众测中，稳定后会全部公开。如想加入测试组织，请关注TG频道。https://t.me/skrootabc***
 
 ## 更新日志：
 2026-2：
