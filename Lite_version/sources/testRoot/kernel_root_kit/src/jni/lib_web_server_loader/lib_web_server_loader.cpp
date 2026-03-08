@@ -16,7 +16,7 @@
 #include "rootkit_umbrella.h"
 #include "shm_open_anon.h"
 #include "lib_web_server_loader_inline.h"
-#include "web_server\web_server_exec_data.h"
+#include "web_server\web_server_data.generated.h"
 #include "web_server\web_server_inline.h"
 
 char ROOT_KEY[256] = {0};

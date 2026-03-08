@@ -201,8 +201,7 @@ bool KallsymsLookupName::find_kallsyms_markers_list(int kallsyms_num, size_t nam
 		if (val1 == 0 && val2 > 0) {
 			markers_list_start = x;
 			break;
-		}
-		else if (val1 == 0 && val2 == 0) {
+		} else if (val1 == 0 && val2 == 0) {
 			continue;
 		}
 		return false;
@@ -270,8 +269,7 @@ bool KallsymsLookupName::find_kallsyms_token_index(size_t kallsyms_token_table_e
 		if (val1 == 0 && val2 > 0) {
 			kallsyms_token_index_start = x;
 			break;
-		}
-		else if (val1 == 0 && val2 == 0) {
+		} else if (val1 == 0 && val2 == 0) {
 			continue;
 		}
 		return false;

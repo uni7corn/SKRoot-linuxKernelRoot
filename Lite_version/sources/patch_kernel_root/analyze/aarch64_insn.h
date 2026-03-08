@@ -3,10 +3,10 @@
 #include <iostream>
 
 #define	__AARCH64_INSN_FUNCS(abbr, mask, val)				\
-static bool aarch64_insn_is_##abbr(uint32_t code)		\
+static bool aarch64_insn_is_##abbr(uint32_t insn)		\
 {									\
 	static_assert((val & ~mask) == 0, "val has bits outside mask");	\
-	return (code & (mask)) == (val);				\
+	return (insn & (mask)) == (val);				\
 }									\
 static uint32_t aarch64_insn_get_##abbr##_value(void)	\
 {									\
@@ -114,11 +114,21 @@ __AARCH64_INSN_FUNCS(smc,	0xFFE0001F, 0xD4000003)
 __AARCH64_INSN_FUNCS(brk,	0xFFE0001F, 0xD4200000)
 __AARCH64_INSN_FUNCS(exception,	0xFF000000, 0xD4000000)
 __AARCH64_INSN_FUNCS(hint,	0xFFFFF01F, 0xD503201F)
+__AARCH64_INSN_FUNCS(paciaz, 0xFFFFFFFF, 0xD503231F)
+__AARCH64_INSN_FUNCS(paciasp, 0xFFFFFFFF, 0xD503233F)
+__AARCH64_INSN_FUNCS(pacibz, 0xFFFFFFFF, 0xD503235F)
+__AARCH64_INSN_FUNCS(pacibsp, 0xFFFFFFFF, 0xD503237F)
+__AARCH64_INSN_FUNCS(autiaz, 0xFFFFFFFF, 0xD503239F)
+__AARCH64_INSN_FUNCS(autiasp, 0xFFFFFFFF, 0xD50323BF)
+__AARCH64_INSN_FUNCS(autibz, 0xFFFFFFFF, 0xD50323DF)
+__AARCH64_INSN_FUNCS(autibsp, 0xFFFFFFFF, 0xD50323FF)
 __AARCH64_INSN_FUNCS(br,	0xFFFFFC1F, 0xD61F0000)
 __AARCH64_INSN_FUNCS(br_auth,	0xFEFFF800, 0xD61F0800)
 __AARCH64_INSN_FUNCS(blr,	0xFFFFFC1F, 0xD63F0000)
 __AARCH64_INSN_FUNCS(blr_auth,	0xFEFFF800, 0xD63F0800)
 __AARCH64_INSN_FUNCS(ret,	0xFFFFFC1F, 0xD65F0000)
+__AARCH64_INSN_FUNCS(retaa, 0xFFFFFFFF, 0xD65F0BFF)
+__AARCH64_INSN_FUNCS(retab, 0xFFFFFFFF, 0xD65F0FFF)
 __AARCH64_INSN_FUNCS(ret_auth,	0xFFFFFBFF, 0xD65F0BFF)
 __AARCH64_INSN_FUNCS(eret,	0xFFFFFFFF, 0xD69F03E0)
 __AARCH64_INSN_FUNCS(eret_auth,	0xFFFFFBFF, 0xD69F0BFF)
@@ -233,4 +243,12 @@ static bool aarch64_insn_uses_literal(uint32_t insn)
 static uint32_t aarch64_insn_extract_system_reg(uint32_t insn)
 {
 	return (insn & 0x1FFFE0) >> 5;
+}
+
+static bool aarch64_insn_is_pac_or_bti(uint32_t insn) {
+	return aarch64_insn_is_paciaz(insn)
+		|| aarch64_insn_is_paciasp(insn)
+		|| aarch64_insn_is_pacibz(insn)
+		|| aarch64_insn_is_pacibsp(insn)
+		|| aarch64_insn_is_bti(insn);
 }

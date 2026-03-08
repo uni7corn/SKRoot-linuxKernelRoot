@@ -133,7 +133,7 @@ bool handle_current_task_next_register_offset(const std::vector<code_line>& v_co
 }
 
 bool find_current_task_next_register_offset(const std::vector<char>& file_buf, size_t start, size_t end, std::string& mode_name, size_t& register_offset) {
-	size_t sz = end - start;
+	size_t code_size = end - start;
 	bool res = false;
 	csh handle;
 	cs_err err = cs_open(CS_ARCH_ARM64, CS_MODE_LITTLE_ENDIAN, &handle);
@@ -148,16 +148,15 @@ bool find_current_task_next_register_offset(const std::vector<char>& file_buf, s
 	cs_insn* insn = cs_malloc(handle);
 	uint64_t address = 0x0;
 	const uint8_t* code = (const uint8_t*)&file_buf[0] + start;
-	size_t file_size = file_buf.size() - start;
 	std::vector<code_line> v_code_line;
-	v_code_line.reserve(sz / 4);
-	while (cs_disasm_iter(handle, &code, &file_size, &address, insn)) {
+	v_code_line.reserve(code_size / 4);
+	while (cs_disasm_iter(handle, &code, &code_size, &address, insn)) {
 		code_line line;
 		line.addr = insn->address;
 		line.cmd_id = (arm64_insn)insn->id;
 		line.op_str = insn->op_str;
 		v_code_line.push_back(line);
-		if (v_code_line.back().addr < sz) continue;
+		if (v_code_line.back().addr < code_size) continue;
 		res = handle_current_task_next_register_offset(v_code_line, mode_name, register_offset);
 		if (res) break;
 	}

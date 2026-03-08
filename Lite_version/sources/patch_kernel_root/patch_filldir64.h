@@ -13,4 +13,5 @@ public:
 
 private:
 	size_t m_filldir64 = 0;
+	uint32_t m_filldir64_orig_entry_insn = 0;
 };

@@ -279,7 +279,7 @@ int main(int argc, char* argv[]) {
 		"\tUsage: testRoot implantApp <process-name>\n\n"
 
 		"本工具特点：\n"
-		"新一代SKRoot，跟面具完全不同思路，摆脱面具被检测的弱点，完美隐藏root功能，兼容安卓APP直接JNI稳定调用。\n"
+		"新一代 SkRoot，完美隐藏Root功能，兼容安卓 APP 直接JNI调用，稳定不闪退。\n"
 		"------------------------------------------------------\n"
 		"如需帮助，请使用对应的命令，或者查看上面的菜单。\n\n");
 	++argv;

@@ -5,8 +5,7 @@ using namespace asmjit;
 using namespace asmjit::a64;
 using namespace asmjit::a64::Predicate;
 
-PatchCurrentAvcCheck::PatchCurrentAvcCheck(const PatchBase& patch_base)
-	: PatchBase(patch_base) {}
+PatchCurrentAvcCheck::PatchCurrentAvcCheck(const PatchBase& patch_base) : PatchBase(patch_base) {}
 
 PatchCurrentAvcCheck::~PatchCurrentAvcCheck() {}
 
@@ -28,6 +27,7 @@ size_t PatchCurrentAvcCheck::patch_current_avc_check_bl_func(const SymbolRegion&
 	Label label_end = a->newLabel();
 	Label label_allow = a->newLabel();
 	Label label_cycle_cap = a->newLabel();
+
 	a->mov(x10, xzr);
 	emit_get_current(a, x11);
 	a->ldr(x11, ptr(x11, task_struct_cred_offset));

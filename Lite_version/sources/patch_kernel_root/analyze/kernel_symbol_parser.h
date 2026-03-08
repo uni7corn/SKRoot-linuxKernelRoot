@@ -2,6 +2,7 @@
 #include "kernel_version_parser.h"
 #include "kallsyms_lookup_name.h"
 #include "kallsyms_lookup_name_4_6_0.h"
+#include "kallsyms_lookup_name_6_1_0.h"
 #include "kallsyms_lookup_name_6_1_42.h"
 #include "kallsyms_lookup_name_6_1_60.h"
 #include "kallsyms_lookup_name_6_4_0.h"
@@ -24,6 +25,7 @@ private:
 	KernelVersionParser m_kernel_ver_parser;
 	KallsymsLookupName m_kallsyms_lookup_name;
 	KallsymsLookupName_4_6_0 m_kallsyms_lookup_name_4_6_0;
+	KallsymsLookupName_6_1_0 m_kallsyms_lookup_name_6_1_0;
 	KallsymsLookupName_6_1_42 m_kallsyms_lookup_name_6_1_42;
 	KallsymsLookupName_6_1_60 m_kallsyms_lookup_name_6_1_60;
 	KallsymsLookupName_6_4_0 m_kallsyms_lookup_name_6_4_0;

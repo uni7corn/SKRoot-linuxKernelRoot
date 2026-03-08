@@ -1,23 +1,26 @@
-﻿#include <netinet/in.h>
-#include <sys/file.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <iostream>
+﻿#include <unistd.h>
+#include <csignal>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <cerrno>
+
+#include <atomic>
+#include <filesystem>
+#include <map>
+#include <mutex>
+#include <set>
 #include <sstream>
 #include <string>
 #include <thread>
-#include <atomic>
-#include <set>
-#include <mutex>
-#include <filesystem>
-#include <cmath>
-#include <limits>
+#include <tuple>
+#include <vector>
 
 #include "web_server.h"
 #include "web_server_inline.h"
 #include "civetweb-1.16/include/CivetServer.h"
-#include "index_html_gz_data.h"
+#include "index_html_gz_data.generated.h"
 #include "rootkit_umbrella.h"
 #include "src/jni/common/android_open_url.h"
 #include "json_helper.h"
@@ -73,8 +76,8 @@ std::string handle_heartbeat(const std::string & json) {
 }
 
 std::string handle_test_root() {
-    std::string test_report = kernel_root::get_root_test_report(ROOT_KEY);
-    return convert_2_json(test_report);
+    std::string report = kernel_root::get_root_test_report(ROOT_KEY);
+    return convert_2_json(report);
 }
 
 std::string handle_run_root_cmd(const std::string & json) {
@@ -397,9 +400,6 @@ public:
                   resp.c_str());
         return true;
     }
-private:
-    std::string m_root_key;
-    std::string m_config_file_path;
 };
 
 
@@ -414,6 +414,11 @@ int main(int argc, char* argv[]) {
 		return 0;
 	}
 
+	if (setsid() < 0) {
+		setpgid(0, 0); 
+	}
+	signal(SIGPIPE, SIG_IGN);
+
     std::string str_port = std::to_string(PORT);
     const char* options[] = {
         "listening_ports", str_port.c_str(),
@@ -422,9 +427,8 @@ int main(int argc, char* argv[]) {
     };
 
     CivetServer server(options);
-
     MyHttpHandler handler;
-    server.addHandler("/", handler); // /代表所有路径
+    server.addHandler("/", handler);
     
     sleep(1);
     std::string url = "http://127.0.0.1:" + std::to_string(PORT);

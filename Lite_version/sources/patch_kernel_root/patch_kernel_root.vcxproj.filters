@@ -258,44 +258,50 @@
     <ClCompile Include="analyze\kallsyms_lookup_name_6_12_0.cpp">
       <Filter>analyze</Filter>
     </ClCompile>
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64BaseInfo.c">
-      <Filter>capstone</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64Disassembler.c">
-      <Filter>capstone</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64InstPrinter.c">
-      <Filter>capstone</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64Mapping.c">
-      <Filter>capstone</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64Module.c">
-      <Filter>capstone</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\cs.c">
-      <Filter>capstone</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\MCInst.c">
-      <Filter>capstone</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\MCInstrDesc.c">
-      <Filter>capstone</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\MCRegisterInfo.c">
-      <Filter>capstone</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\SStream.c">
-      <Filter>capstone</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\utils.c">
-      <Filter>capstone</Filter>
-    </ClCompile>
     <ClCompile Include="patch_current_avc_check.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="patch_audit_log_start.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\cs.c">
+      <Filter>capstone</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\Mapping.c">
+      <Filter>capstone</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\MCInst.c">
+      <Filter>capstone</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\MCInstrDesc.c">
+      <Filter>capstone</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\MCRegisterInfo.c">
+      <Filter>capstone</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\SStream.c">
+      <Filter>capstone</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\utils.c">
+      <Filter>capstone</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64BaseInfo.c">
+      <Filter>capstone</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64Disassembler.c">
+      <Filter>capstone</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64InstPrinter.c">
+      <Filter>capstone</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64Mapping.c">
+      <Filter>capstone</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64Module.c">
+      <Filter>capstone</Filter>
+    </ClCompile>
+    <ClCompile Include="analyze\kallsyms_lookup_name_6_1_0.cpp">
+      <Filter>analyze</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -629,81 +635,114 @@
     <ClInclude Include="analyze\find_static_code_start.h">
       <Filter>analyze</Filter>
     </ClInclude>
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64AddressingModes.h">
-      <Filter>capstone</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64BaseInfo.h">
-      <Filter>capstone</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64Disassembler.h">
-      <Filter>capstone</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64InstPrinter.h">
-      <Filter>capstone</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64Mapping.h">
-      <Filter>capstone</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64Module.h">
-      <Filter>capstone</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\cs_priv.h">
-      <Filter>capstone</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\LEB128.h">
-      <Filter>capstone</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\MathExtras.h">
-      <Filter>capstone</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\MCDisassembler.h">
-      <Filter>capstone</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\MCFixedLenDisassembler.h">
-      <Filter>capstone</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\MCInst.h">
-      <Filter>capstone</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\MCInstrDesc.h">
-      <Filter>capstone</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\MCRegisterInfo.h">
-      <Filter>capstone</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\SStream.h">
-      <Filter>capstone</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\utils.h">
-      <Filter>capstone</Filter>
-    </ClInclude>
     <ClInclude Include="patch_current_avc_check.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="patch_audit_log_start.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\cs_priv.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\cs_simple_types.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\LEB128.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\Mapping.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\MathExtras.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\MCDisassembler.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\MCFixedLenDisassembler.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\MCInst.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\MCInstrDesc.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\MCRegisterInfo.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\SStream.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\utils.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64AddressingModes.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64BaseInfo.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64Disassembler.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64InstPrinter.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64Mapping.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64Module.h">
+      <Filter>capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="analyze\kallsyms_lookup_name_6_1_0.h">
+      <Filter>analyze</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64GenAsmWriter.inc">
+    <None Include="3rdparty\capstone-5.0.7\src\capstone.pc.in">
       <Filter>capstone</Filter>
     </None>
-    <None Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64GenDisassemblerTables.inc">
+    <None Include="3rdparty\capstone-5.0.7\src\capstone-config.cmake.in">
       <Filter>capstone</Filter>
     </None>
-    <None Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64GenInstrInfo.inc">
+    <None Include="3rdparty\capstone-5.0.7\src\cmake_uninstall.cmake.in">
       <Filter>capstone</Filter>
     </None>
-    <None Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64GenRegisterInfo.inc">
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenAsmWriter.inc">
       <Filter>capstone</Filter>
     </None>
-    <None Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64GenSubtargetInfo.inc">
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenDisassemblerTables.inc">
       <Filter>capstone</Filter>
     </None>
-    <None Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64MappingInsn.inc">
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenInstrInfo.inc">
       <Filter>capstone</Filter>
     </None>
-    <None Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64MappingInsnOp.inc">
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenRegisterInfo.inc">
+      <Filter>capstone</Filter>
+    </None>
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenRegisterName.inc">
+      <Filter>capstone</Filter>
+    </None>
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenRegisterV.inc">
+      <Filter>capstone</Filter>
+    </None>
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenSubtargetInfo.inc">
+      <Filter>capstone</Filter>
+    </None>
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenSystemOperands.inc">
+      <Filter>capstone</Filter>
+    </None>
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenSystemOperands_enum.inc">
+      <Filter>capstone</Filter>
+    </None>
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64MappingInsn.inc">
+      <Filter>capstone</Filter>
+    </None>
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64MappingInsnName.inc">
+      <Filter>capstone</Filter>
+    </None>
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64MappingInsnOp.inc">
       <Filter>capstone</Filter>
     </None>
   </ItemGroup>

@@ -521,8 +521,7 @@ bool KallsymsLookupName_6_4_0::find_kallsyms_token_index(size_t kallsyms_token_t
 		if (val1 == 0 && val2 > 0) {
 			kallsyms_token_index_start = x;
 			break;
-		}
-		else if (val1 == 0 && val2 == 0) {
+		} else if (val1 == 0 && val2 == 0) {
 			continue;
 		}
 		return false;

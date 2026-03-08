@@ -20,7 +20,7 @@ bool is_offset_jump_asm(const code_line& line) {
 	return line.cmd_id == ARM64_INS_B;
 }
 
-bool handle_candidate_offsets(const std::vector<code_line>& v_code_line, std::vector<int64_t> &candidate_offsets) {
+void handle_candidate_offsets(const std::vector<code_line>& v_code_line, std::vector<int64_t> &candidate_offsets) {
 	for (auto x = 0; x < v_code_line.size(); x++) {
 		auto& line = v_code_line[x];
 		if (is_offset_jump_asm(line)) continue;
@@ -28,12 +28,10 @@ bool handle_candidate_offsets(const std::vector<code_line>& v_code_line, std::ve
 		if(line.imm[0] > 0) candidate_offsets.push_back(line.imm[0]);
 		if(line.imm[1] > 0) candidate_offsets.push_back(line.imm[1]);
 	}
-	return true;
 }
 
 bool find_imm_register_offset(const std::vector<char>& file_buf, size_t start, size_t end, std::vector<int64_t>& candidate_offsets) {
-	size_t sz = end - start;
-	bool res = false;
+	size_t code_size = end - start;
 	csh handle;
 	cs_err err = cs_open(CS_ARCH_ARM64, CS_MODE_LITTLE_ENDIAN, &handle);
 	if (err) {
@@ -47,10 +45,9 @@ bool find_imm_register_offset(const std::vector<char>& file_buf, size_t start, s
 	cs_insn* insn = cs_malloc(handle);
 	uint64_t address = 0x0;
 	const uint8_t* code = (const uint8_t*)&file_buf[0] + start;
-	size_t file_size = file_buf.size() - start;
 	std::vector<code_line> v_code_line;
-	v_code_line.reserve(sz / 4);
-	while (cs_disasm_iter(handle, &code, &file_size, &address, insn)) {
+	v_code_line.reserve(code_size / 4);
+	while (cs_disasm_iter(handle, &code, &code_size, &address, insn)) {
 		code_line line;
 		line.addr = insn->address;
 		line.cmd_id = (arm64_insn)insn->id;
@@ -65,12 +62,11 @@ bool find_imm_register_offset(const std::vector<char>& file_buf, size_t start, s
 			}
 		}
 		v_code_line.push_back(line);
-		if (v_code_line.back().addr < sz) continue;
-		res = handle_candidate_offsets(v_code_line, candidate_offsets);
-		if (res) break;
+		if (v_code_line.back().addr < code_size) continue;
+		handle_candidate_offsets(v_code_line, candidate_offsets);
 	}
 	cs_free(insn, 1);
 	cs_close(&handle);
-	return res;
+	return !!candidate_offsets.size();
 }
 }

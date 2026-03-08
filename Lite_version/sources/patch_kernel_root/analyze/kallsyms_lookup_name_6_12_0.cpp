@@ -260,7 +260,6 @@ bool KallsymsLookupName_6_12_0::find_kallsyms_names_list(int kallsyms_num, size_
 	size_t off = name_list_start;
 	for (int i = 0; i < kallsyms_num; i++) {
 		unsigned char ch = (unsigned char)m_file_buf[off++];
-		//uint32_t value = *(uint32_t*)&m_file_buf[off];
 		if (ch == 0) {
 			break;
 		}
@@ -372,8 +371,7 @@ bool KallsymsLookupName_6_12_0::find_kallsyms_token_index(size_t kallsyms_token_
 		if (val1 == 0 && val2 > 0) {
 			kallsyms_token_index_start = x;
 			break;
-		}
-		else if (val1 == 0 && val2 == 0) {
+		} else if (val1 == 0 && val2 == 0) {
 			continue;
 		}
 		return false;

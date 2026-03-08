@@ -3,7 +3,7 @@ package com.linux.permissionmanager;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.os.Build;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ import com.linux.permissionmanager.model.SelectFileItem;
 import com.linux.permissionmanager.utils.ClipboardUtils;
 import com.linux.permissionmanager.utils.DialogUtils;
 import com.linux.permissionmanager.utils.GetAppListPermissionHelper;
+import com.linux.permissionmanager.utils.UrlIntentUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         implant_app_btn.setOnClickListener(this);
         copy_info_btn.setOnClickListener(this);
         clean_info_btn.setOnClickListener(this);
+        initLink();
     }
 
     @Override
@@ -108,8 +111,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void initLink() {
+        TextView link_tv = findViewById(R.id.link_tv);
+        link_tv.setText("https://github.com/abcz316/SKRoot-linuxKernelRoot");
+        link_tv.setOnClickListener(v -> { UrlIntentUtils.openUrl(this, link_tv.getText().toString()); });
+        link_tv.getPaint().setFlags(link_tv.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+    }
+
     private void showSkrootStatus() {
-        appendConsoleMsg("APP版本：" + BuildConfig.VERSION_NAME);
+        appendConsoleMsg("版本：" + BuildConfig.VERSION_NAME);
     }
 
     public void showInputRootKeyDlg() {
@@ -126,19 +136,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DialogUtils.showInputDlg(this, rootKey,"请输入ROOT权限的KEY", null, inputCallback, null);
     }
     private void checkGetAppListPermission() {
-        if(!GetAppListPermissionHelper.getPermissions(this)) {
-            DialogUtils.showCustomDialog(
-                    this,
-                    "权限申请",
-                    "请授予读取APP列表权限，再重新打开",
-                    null,
-                    "确定", (dialog, which) -> {
-                        dialog.dismiss();
-                        finish();
-                    },
-                    null, null
-            );
-        }
+        if(GetAppListPermissionHelper.getPermissions(this)) return;
+        DialogUtils.showCustomDialog(this,"权限申请","请授予读取APP列表权限，再重新打开",null,"确定", (dialog, which) -> {
+                    dialog.dismiss();
+                    finish();
+                },null, null
+        );
     }
 
     public void showInputRootCmdDlg() {
@@ -184,8 +187,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(insRet.indexOf("install_su done.") != -1) {
             String suFilePath = NativeBridge.getLastSuFilePath();
             appendConsoleMsg("last_su_file_path:" + suFilePath);
-            DialogUtils.showMsgDlg(this,"温馨提示",
-                    "安装部署su成功，su路径已复制到剪贴板。", null);
+            DialogUtils.showMsgDlg(this,"温馨提示","安装部署su成功，su路径已复制到剪贴板。", null);
             ClipboardUtils.copyText(this, suFilePath);
             appendConsoleMsg("安装部署su成功，su路径已复制到剪贴板");
         }
@@ -200,9 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Handler selectInjectSuAppCallback = new Handler() {
             @Override
             public void handleMessage(@NonNull Message msg) {
-
                 SelectAppItem app = (SelectAppItem) msg.obj;
-
                 if (m_loadingDlg == null) {
                     m_loadingDlg = new ProgressDialog(MainActivity.this);
                     m_loadingDlg.setCancelable(false);
@@ -226,9 +226,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         appendConsoleMsg(autoSuEnvInjectRet);
                         m_loadingDlg.cancel();
 
-                        if(autoSuEnvInjectRet.indexOf("auto_su_env_inject done.")!= -1) {
-                            DialogUtils.showMsgDlg(MainActivity.this, "提示",
-                                    "已授予ROOT权限至APP [" + app.getShowName(MainActivity.this) + "]",
+                        if(autoSuEnvInjectRet.indexOf("auto_su_env_inject done.") != -1) {
+                            DialogUtils.showMsgDlg(MainActivity.this, "提示","已授予ROOT权限至APP [" + app.getShowName(MainActivity.this) + "]",
                                     app.getDrawable(MainActivity.this));
                         }
                     }
@@ -259,10 +258,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CheckBox show_running_app_ckbox = view.findViewById(R.id.show_running_app_ckbox);
         show_system_app_ckbox.setChecked(false);
         show_system_app_ckbox.setEnabled(false);
-
         show_thirty_app_ckbox.setChecked(true);
         show_thirty_app_ckbox.setEnabled(false);
-
         show_running_app_ckbox.setChecked(true);
         show_running_app_ckbox.setEnabled(false);
     }
@@ -286,8 +283,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 String parasiteImplantSuEnvRet = NativeBridge.parasiteImplantSuEnv(rootKey, app.getPackageName(), fileItem.getFilePath());
                                 appendConsoleMsg(parasiteImplantSuEnvRet);
                                 if(parasiteImplantSuEnvRet.indexOf("parasite_implant_su_env done.")!= -1) {
-                                    DialogUtils.showMsgDlg(MainActivity.this, "提示",
-                                            "已永久寄生su环境至APP [" + app.getShowName(MainActivity.this) + "]",
+                                    DialogUtils.showMsgDlg(MainActivity.this, "提示","已永久寄生su环境至APP [" + app.getShowName(MainActivity.this) + "]",
                                             app.getDrawable(MainActivity.this));
                                 }
                                 super.handleMessage(msg);
@@ -308,18 +304,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                if(which == 0) {
-                    suTempInject();
-                } else if(which == 1) {
-                    suForeverInject();
-                }
+                if(which == 0) suTempInject();
+                else if(which == 1) suForeverInject();
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
+            public void onClick(DialogInterface dialog, int which) { dialog.dismiss(); }
         });
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -358,7 +349,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         new Thread() {
             public void run() {
                 String parasitePrecheckAppRet = NativeBridge.parasitePrecheckApp(rootKey, app.getPackageName());
-
                 runOnUiThread(new Runnable() {
                     public void run() {
                         m_loadingDlg.cancel();

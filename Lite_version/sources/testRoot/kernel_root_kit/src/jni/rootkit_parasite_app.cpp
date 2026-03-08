@@ -24,7 +24,7 @@
 #include "common/file_utils.h"
 #include "lib_web_server_loader/lib_web_server_loader_inline.h"
 #include "lib_su_env/lib_su_env_inline.h"
-#include "lib_su_env/lib_su_env_data.h"
+#include "lib_su_env/lib_su_env_data.generated.h"
 
 namespace kernel_root {
 	

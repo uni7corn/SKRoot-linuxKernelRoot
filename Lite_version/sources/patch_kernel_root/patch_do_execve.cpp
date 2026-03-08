@@ -43,6 +43,7 @@ void PatchDoExecve::init_do_execve_param(const KernelSymbolOffset& sym) {
 		m_doexecve_reg_param.do_execve_addr = sym.do_execveat;
 		m_doexecve_reg_param.do_execve_filename_reg = 1;
 	}
+	m_doexecve_reg_param.do_execve_addr = skip_pac_bti_at_func_start(m_doexecve_reg_param.do_execve_addr);
 }
 
 int PatchDoExecve::get_need_write_cap_cnt() {
@@ -120,10 +121,12 @@ size_t PatchDoExecve::patch_do_execve(const SymbolRegion& hook_func_start_region
 	a->bind(label_end);
 	aarch64_asm_b(a, (int32_t)(hook_jump_back_addr - (hook_func_start_addr + a->offset())));
 	std::cout << print_aarch64_asm(a) << std::endl;
+
 	std::vector<uint8_t> bytes = aarch64_asm_to_bytes(a);
 	if (bytes.size() == 0) return 0;
 	std::string str_bytes = bytes2hex((const unsigned char*)bytes.data(), bytes.size());
 	size_t shellcode_size = str_bytes.length() / 2;
+
 	char hookOrigCmd[4] = { 0 };
 	memcpy(&hookOrigCmd, (void*)((size_t)&m_file_buf[0] + m_doexecve_reg_param.do_execve_addr), sizeof(hookOrigCmd));
 	std::string strHookOrigCmd = bytes2hex((const unsigned char*)hookOrigCmd, sizeof(hookOrigCmd));
@@ -133,6 +136,7 @@ size_t PatchDoExecve::patch_do_execve(const SymbolRegion& hook_func_start_region
 		std::cout << "[发生错误] patch_do_execve failed: not enough kernel space." << std::endl;
 		return 0;
 	}
+	
 	vec_out_patch_bytes_data.push_back({ str_bytes, hook_func_start_addr });
 	patch_jump(m_doexecve_reg_param.do_execve_addr, hook_func_start_addr + sizeof(empty_root_key_buf), vec_out_patch_bytes_data);
 	return shellcode_size;

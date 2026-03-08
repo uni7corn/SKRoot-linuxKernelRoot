@@ -312,6 +312,14 @@ void aarch64_asm_pacia(Assembler* a, GpX x) {
 }
 
 /******************************************************************
+ * PACIAZ
+ *****************************************************************/
+void aarch64_asm_paciaz(Assembler* a) {
+	uint32_t instr = 0xD503231F;
+	a->embed(reinterpret_cast<const uint8_t*>(&instr), sizeof(instr));
+}
+
+/******************************************************************
  * PACIASP
  *****************************************************************/
 void aarch64_asm_paciasp(Assembler* a) {
@@ -320,10 +328,66 @@ void aarch64_asm_paciasp(Assembler* a) {
 }
 
 /******************************************************************
+ * PACIBZ
+ *****************************************************************/
+void aarch64_asm_pacibz(Assembler* a) {
+	uint32_t instr = 0xD503235F;
+	a->embed(reinterpret_cast<const uint8_t*>(&instr), sizeof(instr));
+}
+
+/******************************************************************
+ * PACIBSP
+ *****************************************************************/
+void aarch64_asm_pacibsp(Assembler* a) {
+	uint32_t instr = 0xD503237F;
+	a->embed(reinterpret_cast<const uint8_t*>(&instr), sizeof(instr));
+}
+
+/******************************************************************
+ * AUTIAZ
+ *****************************************************************/
+void aarch64_asm_autiaz(Assembler* a) {
+	uint32_t instr = 0xD503239F;
+	a->embed(reinterpret_cast<const uint8_t*>(&instr), sizeof(instr));
+}
+
+/******************************************************************
  * AUTIASP
  *****************************************************************/
 void aarch64_asm_autiasp(Assembler* a) {
 	uint32_t instr = 0xD50323BF;
+	a->embed(reinterpret_cast<const uint8_t*>(&instr), sizeof(instr));
+}
+
+/******************************************************************
+ * AUTIBZ
+ *****************************************************************/
+void aarch64_asm_autibz(Assembler* a) {
+	uint32_t instr = 0xD50323DF;
+	a->embed(reinterpret_cast<const uint8_t*>(&instr), sizeof(instr));
+}
+
+/******************************************************************
+ * AUTIBSP
+ *****************************************************************/
+void aarch64_asm_autibsp(Assembler* a) {
+	uint32_t instr = 0xD50323FF;
+	a->embed(reinterpret_cast<const uint8_t*>(&instr), sizeof(instr));
+}
+
+/******************************************************************
+ * RETAA
+ *****************************************************************/
+void aarch64_asm_retaa(Assembler* a) {
+	uint32_t instr = 0xD65F0BFF;
+	a->embed(reinterpret_cast<const uint8_t*>(&instr), sizeof(instr));
+}
+
+/******************************************************************
+ * RETAB
+ *****************************************************************/
+void aarch64_asm_retab(Assembler* a) {
+	uint32_t instr = 0xD65F0FFF;
 	a->embed(reinterpret_cast<const uint8_t*>(&instr), sizeof(instr));
 }
 

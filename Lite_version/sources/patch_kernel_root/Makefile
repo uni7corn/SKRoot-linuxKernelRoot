@@ -5,7 +5,7 @@ TARGET := patch_kernel_root
 
 INCLUDES := \
   -I. \
-  -I3rdparty/capstone-4.0.2/include \
+  -I3rdparty/capstone-5.0.7/include \
   -I3rdparty/asmjit2-src/src
 
 DEFINES := \
@@ -81,25 +81,27 @@ ASMJIT_SRCS := \
   3rdparty/asmjit2-src/src/asmjit/x86/x86rapass.cpp
 
 CAPSTONE_SRCS := \
-  3rdparty/capstone-4.0.2/src/arch/AArch64/AArch64BaseInfo.c \
-  3rdparty/capstone-4.0.2/src/arch/AArch64/AArch64Disassembler.c \
-  3rdparty/capstone-4.0.2/src/arch/AArch64/AArch64InstPrinter.c \
-  3rdparty/capstone-4.0.2/src/arch/AArch64/AArch64Mapping.c \
-  3rdparty/capstone-4.0.2/src/arch/AArch64/AArch64Module.c \
-  3rdparty/capstone-4.0.2/src/cs.c \
-  3rdparty/capstone-4.0.2/src/MCInst.c \
-  3rdparty/capstone-4.0.2/src/MCInstrDesc.c \
-  3rdparty/capstone-4.0.2/src/MCRegisterInfo.c \
-  3rdparty/capstone-4.0.2/src/SStream.c \
-  3rdparty/capstone-4.0.2/src/utils.c
+  3rdparty/capstone-5.0.7/src/arch/AArch64/AArch64BaseInfo.c \
+  3rdparty/capstone-5.0.7/src/arch/AArch64/AArch64Disassembler.c \
+  3rdparty/capstone-5.0.7/src/arch/AArch64/AArch64InstPrinter.c \
+  3rdparty/capstone-5.0.7/src/arch/AArch64/AArch64Mapping.c \
+  3rdparty/capstone-5.0.7/src/arch/AArch64/AArch64Module.c \
+  3rdparty/capstone-5.0.7/src/cs.c \
+  3rdparty/capstone-5.0.7/src/Mapping.c \
+  3rdparty/capstone-5.0.7/src/MCInst.c \
+  3rdparty/capstone-5.0.7/src/MCInstrDesc.c \
+  3rdparty/capstone-5.0.7/src/MCRegisterInfo.c \
+  3rdparty/capstone-5.0.7/src/SStream.c \
+  3rdparty/capstone-5.0.7/src/utils.c
 
 PROJECT_SRCS := \
   analyze/kallsyms_lookup_name.cpp \
   analyze/kallsyms_lookup_name_4_6_0.cpp \
-  analyze/kallsyms_lookup_name_6_12_0.cpp \
+  analyze/kallsyms_lookup_name_6_1_0.cpp \
   analyze/kallsyms_lookup_name_6_1_42.cpp \
   analyze/kallsyms_lookup_name_6_1_60.cpp \
   analyze/kallsyms_lookup_name_6_4_0.cpp \
+  analyze/kallsyms_lookup_name_6_12_0.cpp \
   analyze/kernel_symbol_parser.cpp \
   analyze/kernel_version_parser.cpp \
   analyze/symbol_analyze.cpp \

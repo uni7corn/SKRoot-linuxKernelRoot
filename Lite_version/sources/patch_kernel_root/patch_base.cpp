@@ -26,6 +26,19 @@ PatchBase::PatchBase(const PatchBase& other)
 
 PatchBase::~PatchBase() {}
 
+uint32_t PatchBase::skip_pac_bti_at_func_start(uint32_t addr) {
+	uint32_t instr = *reinterpret_cast<const uint32_t*>(&m_file_buf[addr]);
+	if (aarch64_insn_is_pac_or_bti(instr)) return addr + 4;
+	return addr;
+}
+
+SymbolRegion PatchBase::skip_pac_bti_at_func_start(const SymbolRegion& symbol) {
+	uint32_t skip = skip_pac_bti_at_func_start(symbol.offset) - symbol.offset;
+	SymbolRegion new_sym = symbol;
+	new_sym.consume(skip);
+	return new_sym;
+}
+
 int PatchBase::get_cred_atomic_usage_len() {
 	return m_cred_uid_offset;
 }
@@ -39,33 +52,22 @@ int PatchBase::get_cred_euid_offset() {
 }
 
 int PatchBase::get_cred_securebits_padding() {
-	if (get_cred_atomic_usage_len() == 8) {
-		return 4;
-	}
+	if (get_cred_atomic_usage_len() == 8) return 4;
 	return 0;
 }
 
 uint64_t PatchBase::get_cap_ability_max() {
 	uint64_t cap = 0x3FFFFFFFFF;
-	if (m_kernel_ver_parser.is_kernel_version_less("5.8.0")) {
-		cap = 0x3FFFFFFFFF;
-	}
-	else if (m_kernel_ver_parser.is_kernel_version_less("5.9.0")) {
-		cap = 0xFFFFFFFFFF;
-	}
-	else {
-		cap = 0x1FFFFFFFFFF;
-	}
+	if (m_kernel_ver_parser.is_kernel_version_less("5.8.0")) cap = 0x3FFFFFFFFF;
+	else if (m_kernel_ver_parser.is_kernel_version_less("5.9.0")) cap = 0xFFFFFFFFFF;
+	else cap = 0x1FFFFFFFFFF;
 	return cap;
 }
 
 int PatchBase::get_cap_cnt() {
 	int cnt = 0;
-	if (m_kernel_ver_parser.is_kernel_version_less("4.3.0")) {
-		cnt = 4;
-	} else {
-		cnt = 5;
-	}
+	if (m_kernel_ver_parser.is_kernel_version_less("4.3.0")) cnt = 4;
+	else cnt = 5;
 	return cnt;
 }
 
@@ -107,14 +109,38 @@ void PatchBase::emit_safe_bl(Assembler* a, size_t func_base_addr, size_t target)
 	aarch64_asm_bl_raw(a, (int32_t)diff);
 }
 
+void PatchBase::emit_ret_by_entry_insn(Assembler* a, uint32_t entry_insn) {
+    if (aarch64_insn_is_paciaz(entry_insn)) {
+        aarch64_asm_autiaz(a);
+        a->ret(x30);
+    } else if (aarch64_insn_is_paciasp(entry_insn)) {
+        aarch64_asm_retaa(a);
+    } else if (aarch64_insn_is_pacibz(entry_insn)) {
+        aarch64_asm_autibz(a);
+        a->ret(x30);
+    } else if (aarch64_insn_is_pacibsp(entry_insn)) {
+        aarch64_asm_retab(a);
+    } else {
+        a->ret(x30);
+    }
+}
+
 std::vector<size_t> PatchBase::find_all_aarch64_ret_offsets(size_t offset, size_t size) {
 	std::vector<size_t> v_ret_addr;
-	for (auto i = offset; i < offset + size; i += 4) {
-		constexpr uint32_t kRetInstr = 0xD65F03C0;
+	std::string mode;
+	for (size_t i = offset; i < offset + size; i += 4) {
 		uint32_t instr = *reinterpret_cast<const uint32_t*>(&m_file_buf[i]);
-		if (instr == kRetInstr) {
-			v_ret_addr.push_back(i);
+		std::string cur;
+		if (aarch64_insn_is_ret(instr)) cur = "ret";
+		else if (aarch64_insn_is_retaa(instr)) cur = "retaa";
+		else if (aarch64_insn_is_retab(instr)) cur = "retab";
+		if (cur.empty()) continue;
+		if (mode.empty()) mode = cur;
+		else if (mode != cur) {
+			printf("Error: RET / RETAA / RETAB cannot appear together in the same range.\n");
+			_exit(EXIT_FAILURE);
 		}
+		v_ret_addr.push_back(i);
 	}
 	return v_ret_addr;
 }

@@ -1,15 +1,7 @@
 ﻿#pragma once
-#include <string.h>
-#include <iostream>
-#include <fstream>
-#include <memory>
-#include <vector>
-#include <tuple>
-#include <string_view>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include "cJSON.h"
+
+#include <string>
+#include <cstdio>
 
 static void writeToLog(const std::string & message) {
     printf("%s\n", message.c_str());

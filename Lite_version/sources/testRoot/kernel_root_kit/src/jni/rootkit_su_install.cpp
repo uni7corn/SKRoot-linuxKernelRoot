@@ -18,16 +18,16 @@
 using namespace file_utils;
 namespace kernel_root {
 
-#ifdef SU_EXEC_DATA
+#ifdef SU_DATA
 static bool write_su_exec(const char* str_root_key, const char* target_path) {
-	std::shared_ptr<char> sp_su_exec_file_data(new (std::nothrow) char[su_exec_file_size], std::default_delete<char[]>());
-	if(!sp_su_exec_file_data) {
+	std::shared_ptr<char> sp_su_file_data(new (std::nothrow) char[su_file_size], std::default_delete<char[]>());
+	if(!sp_su_file_data) {
 		return false;
 	}
-	memcpy(sp_su_exec_file_data.get(), reinterpret_cast<char*>(su_exec_data), su_exec_file_size);
+	memcpy(sp_su_file_data.get(), reinterpret_cast<char*>(su_data), su_file_size);
 
 	// write root key
-	if(!replace_feature_string_in_buf(const_cast<char*>(static_inline_su_rootkey), sizeof(static_inline_su_rootkey), str_root_key, sp_su_exec_file_data.get(), su_exec_file_size)) {
+	if(!replace_feature_string_in_buf(const_cast<char*>(static_inline_su_rootkey), sizeof(static_inline_su_rootkey), str_root_key, sp_su_file_data.get(), su_file_size)) {
 		return false;
 	}
 
@@ -35,7 +35,7 @@ static bool write_su_exec(const char* str_root_key, const char* target_path) {
     if (!file.is_open()) {
         return false;
     }
-    file.write(sp_su_exec_file_data.get(), su_exec_file_size);
+    file.write(sp_su_file_data.get(), su_file_size);
     file.close();
     return true;
 }

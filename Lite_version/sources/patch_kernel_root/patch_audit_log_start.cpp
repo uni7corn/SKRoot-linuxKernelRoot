@@ -5,8 +5,10 @@ using namespace asmjit;
 using namespace asmjit::a64;
 using namespace asmjit::a64::Predicate;
 
-PatchAuditLogStart::PatchAuditLogStart(const PatchBase& patch_base, uint64_t audit_log_start)
-	: PatchBase(patch_base), m_audit_log_start(audit_log_start) {}
+PatchAuditLogStart::PatchAuditLogStart(const PatchBase& patch_base, uint64_t audit_log_start) : PatchBase(patch_base) {
+	m_audit_log_start_orig_entry_insn = *(uint32_t*)&m_file_buf[audit_log_start];
+	m_audit_log_start = skip_pac_bti_at_func_start(audit_log_start);
+}
 
 PatchAuditLogStart::~PatchAuditLogStart() {}
 
@@ -23,7 +25,7 @@ size_t PatchAuditLogStart::patch_audit_log_start(const SymbolRegion& hook_func_s
 	emit_safe_bl(a, hook_func_start_addr, current_avc_check_bl_func);
 	a->cbz(x10, label_end);
 	a->mov(w0, wzr);
-	a->ret(x30);
+	emit_ret_by_entry_insn(a, m_audit_log_start_orig_entry_insn);
 	a->bind(label_end);
 	a->mov(x0, x0);
 	aarch64_asm_b(a, (int32_t)(hook_jump_back_addr - (hook_func_start_addr + a->offset())));

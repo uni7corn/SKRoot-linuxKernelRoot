@@ -32,7 +32,7 @@ call "%ndk_path%" clean
 call "%ndk_path%"
 
 cd %root_path%\src\jni\su
-call generate_source_su_exec_data.bat
+call generate_source_su_data.bat
 
 cd %root_path%\src\jni
 call "%ndk_path%" clean
@@ -45,7 +45,7 @@ cd %root_path%\src\jni\web_server\jni
 call "%ndk_path%" clean
 call "%ndk_path%"
 cd %root_path%\src\jni\web_server
-call generate_source_web_server_exec_data.bat
+call generate_source_web_server_data.bat
 
 cd %root_path%\src\jni
 call "%ndk_path%" clean

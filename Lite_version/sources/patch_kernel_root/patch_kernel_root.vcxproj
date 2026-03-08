@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugVerifyMtk|x64">
+      <Configuration>DebugVerifyMtk</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugVerifyQcom|x64">
+      <Configuration>DebugVerifyQcom</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugVerify|x64">
+      <Configuration>DebugVerify</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleVerifyMtk|x64">
+      <Configuration>ReleVerifyMtk</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleVerifyQcom|x64">
+      <Configuration>ReleVerifyQcom</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleVerify|x64">
+      <Configuration>ReleVerify</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -24,7 +48,46 @@
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugVerify|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugVerifyQcom|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugVerifyMtk|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleVerify|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleVerifyQcom|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleVerifyMtk|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
@@ -39,17 +102,59 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugVerify|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugVerifyQcom|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugVerifyMtk|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleVerify|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleVerifyQcom|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleVerifyMtk|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir);$(ProjectDir)/3rdparty/capstone-4.0.2/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)/3rdparty/capstone-5.0.7/include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugVerify|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir);$(ProjectDir)/3rdparty/capstone-5.0.7/include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugVerifyQcom|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir);$(ProjectDir)/3rdparty/capstone-5.0.7/include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugVerifyMtk|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir);$(ProjectDir)/3rdparty/capstone-5.0.7/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir);$(ProjectDir)/3rdparty/capstone-4.0.2/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)/3rdparty/capstone-5.0.7/include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleVerify|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir);$(ProjectDir)/3rdparty/capstone-5.0.7/include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleVerifyQcom|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir);$(ProjectDir)/3rdparty/capstone-5.0.7/include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleVerifyMtk|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir);$(ProjectDir)/3rdparty/capstone-5.0.7/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -64,7 +169,100 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugVerify|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);CAPSTONE_HAS_ARM64;CAPSTONE_USE_SYS_DYN_MEM</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugVerifyQcom|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);CAPSTONE_HAS_ARM64;CAPSTONE_USE_SYS_DYN_MEM</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugVerifyMtk|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);CAPSTONE_HAS_ARM64;CAPSTONE_USE_SYS_DYN_MEM</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);CAPSTONE_HAS_ARM64;CAPSTONE_USE_SYS_DYN_MEM</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleVerify|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);CAPSTONE_HAS_ARM64;CAPSTONE_USE_SYS_DYN_MEM</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleVerifyQcom|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);CAPSTONE_HAS_ARM64;CAPSTONE_USE_SYS_DYN_MEM</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleVerifyMtk|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -142,20 +340,22 @@
     <ClCompile Include="3rdparty\asmjit2-src\src\asmjit\x86\x86instdb.cpp" />
     <ClCompile Include="3rdparty\asmjit2-src\src\asmjit\x86\x86operand.cpp" />
     <ClCompile Include="3rdparty\asmjit2-src\src\asmjit\x86\x86rapass.cpp" />
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64BaseInfo.c" />
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64Disassembler.c" />
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64InstPrinter.c" />
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64Mapping.c" />
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64Module.c" />
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\cs.c" />
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\MCInst.c" />
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\MCInstrDesc.c" />
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\MCRegisterInfo.c" />
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\SStream.c" />
-    <ClCompile Include="3rdparty\capstone-4.0.2\src\utils.c" />
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64BaseInfo.c" />
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64Disassembler.c" />
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64InstPrinter.c" />
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64Mapping.c" />
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64Module.c" />
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\cs.c" />
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\Mapping.c" />
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\MCInst.c" />
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\MCInstrDesc.c" />
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\MCRegisterInfo.c" />
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\SStream.c" />
+    <ClCompile Include="3rdparty\capstone-5.0.7\src\utils.c" />
     <ClCompile Include="analyze\kallsyms_lookup_name.cpp" />
     <ClCompile Include="analyze\kallsyms_lookup_name_4_6_0.cpp" />
     <ClCompile Include="analyze\kallsyms_lookup_name_6_12_0.cpp" />
+    <ClCompile Include="analyze\kallsyms_lookup_name_6_1_0.cpp" />
     <ClCompile Include="analyze\kallsyms_lookup_name_6_1_42.cpp" />
     <ClCompile Include="analyze\kallsyms_lookup_name_6_1_60.cpp" />
     <ClCompile Include="analyze\kallsyms_lookup_name_6_4_0.cpp" />
@@ -263,22 +463,24 @@
     <ClInclude Include="3rdparty\asmjit2-src\src\asmjit\x86\x86opcode_p.h" />
     <ClInclude Include="3rdparty\asmjit2-src\src\asmjit\x86\x86operand.h" />
     <ClInclude Include="3rdparty\asmjit2-src\src\asmjit\x86\x86rapass_p.h" />
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64AddressingModes.h" />
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64BaseInfo.h" />
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64Disassembler.h" />
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64InstPrinter.h" />
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64Mapping.h" />
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64Module.h" />
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\cs_priv.h" />
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\LEB128.h" />
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\MathExtras.h" />
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\MCDisassembler.h" />
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\MCFixedLenDisassembler.h" />
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\MCInst.h" />
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\MCInstrDesc.h" />
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\MCRegisterInfo.h" />
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\SStream.h" />
-    <ClInclude Include="3rdparty\capstone-4.0.2\src\utils.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64AddressingModes.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64BaseInfo.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64Disassembler.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64InstPrinter.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64Mapping.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64Module.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\cs_priv.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\cs_simple_types.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\LEB128.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\Mapping.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\MathExtras.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\MCDisassembler.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\MCFixedLenDisassembler.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\MCInst.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\MCInstrDesc.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\MCRegisterInfo.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\SStream.h" />
+    <ClInclude Include="3rdparty\capstone-5.0.7\src\utils.h" />
     <ClInclude Include="analyze\aarch64_insn.h" />
     <ClInclude Include="analyze\aarch64_simulate_insn.h" />
     <ClInclude Include="analyze\base_func.h" />
@@ -286,6 +488,7 @@
     <ClInclude Include="analyze\kallsyms_lookup_name.h" />
     <ClInclude Include="analyze\kallsyms_lookup_name_4_6_0.h" />
     <ClInclude Include="analyze\kallsyms_lookup_name_6_12_0.h" />
+    <ClInclude Include="analyze\kallsyms_lookup_name_6_1_0.h" />
     <ClInclude Include="analyze\kallsyms_lookup_name_6_1_42.h" />
     <ClInclude Include="analyze\kallsyms_lookup_name_6_1_60.h" />
     <ClInclude Include="analyze\kallsyms_lookup_name_6_4_0.h" />
@@ -301,13 +504,21 @@
     <ClInclude Include="patch_kernel_root.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64GenAsmWriter.inc" />
-    <None Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64GenDisassemblerTables.inc" />
-    <None Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64GenInstrInfo.inc" />
-    <None Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64GenRegisterInfo.inc" />
-    <None Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64GenSubtargetInfo.inc" />
-    <None Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64MappingInsn.inc" />
-    <None Include="3rdparty\capstone-4.0.2\src\arch\AArch64\AArch64MappingInsnOp.inc" />
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenAsmWriter.inc" />
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenDisassemblerTables.inc" />
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenInstrInfo.inc" />
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenRegisterInfo.inc" />
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenRegisterName.inc" />
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenRegisterV.inc" />
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenSubtargetInfo.inc" />
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenSystemOperands.inc" />
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64GenSystemOperands_enum.inc" />
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64MappingInsn.inc" />
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64MappingInsnName.inc" />
+    <None Include="3rdparty\capstone-5.0.7\src\arch\AArch64\AArch64MappingInsnOp.inc" />
+    <None Include="3rdparty\capstone-5.0.7\src\capstone-config.cmake.in" />
+    <None Include="3rdparty\capstone-5.0.7\src\capstone.pc.in" />
+    <None Include="3rdparty\capstone-5.0.7\src\cmake_uninstall.cmake.in" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
