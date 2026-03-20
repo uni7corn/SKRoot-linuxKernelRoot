@@ -1,10 +1,10 @@
-# SkRoot - Linux 内核级完美隐藏 Root 方案
+# SKRoot - Linux 内核级完美隐藏 Root 方案
 
-新一代 SkRoot，完美隐藏Root功能，挑战全网Root检测手段，**实现SELinux零触碰、无挂载**，通杀所有内核，**免源码直接 Patch 原厂内核，完美保留官方内核所有特性**。
+新一代 SKRoot，完美隐藏Root功能，挑战全网Root检测手段，**实现SELinux零触碰、无挂载**，通杀所有内核，**免源码直接 Patch 原厂内核，完美保留官方内核所有特性**。
 
 ## 版本对比
 
-| 对比项 | 🟢 SkRoot (Lite) | 🚀 SkRoot (Pro) |
+| 对比项 | 🟢 SKRoot (Lite) | 🚀 SKRoot (Pro) |
 | :--- | :--- | :--- |
 | **隐蔽性** | **完美隐藏 Root**、**SELinux 零触碰、无挂载** | **完美隐藏 Root**、**SELinux 零触碰、无挂载** |
 | **用途** | 面向基础 Root 场景，稳定性最佳。 | 拥有更强的控制能力。 |
@@ -27,7 +27,7 @@
 
 7.寄生目标APP
 ## 效果：
-* 实验设备包括：红米K20\K30\K40\K50\K60、小米8\9\10\11\12\13、小米平板5\6、红魔5\6\7、联想、三星、一加、ROG2\3等，支持型号非常多。测试结果显示，SkRoot能够在设备上**非常稳定**的运行。
+* 实验设备包括：红米K20\K30\K40\K50\K60、小米8\9\10\11\12\13、小米平板5\6、红魔5\6\7、联想、三星、一加、ROG2\3等，支持型号非常多。测试结果显示，SKRoot能够在设备上**非常稳定**的运行。
 * **过市面上所有主流App的Root检测，如农业XX、交X12123等...**
 * **不需要Linux内核源码、不编译内核，直接修补内核，保留原厂内核优化**
 * **支持Linux内核版本：3.10~6.12**
@@ -41,15 +41,15 @@
 
 2. 其中【**注入su到指定进程**】**只支持授权su到64位的APP**，老式32位App不再进行支持。
 
-## SkRoot(Lite) 使用流程：
+## SKRoot(Lite) 使用流程：
 1.下载源码编译或**下载编译产物**： [patch_kernel_root.exe](https://github.com/abcz316/SKRoot-linuxKernelRoot/blob/master/Lite_version/patch_kernel_root(2026-3-20).exe)、 [PermissionManager.apk](https://github.com/abcz316/SKRoot-linuxKernelRoot/blob/master/Lite_version/SKRoot_Lite(2026-3-8).apk)
 
 2.将内核kernel文件拖拽置`patch_kernel_root.exe`即可一键自动化流程补丁内核，同时会自动生成Root密匙。
 
-3.安装并启动`PermissionManager.apk`或者`testRoot`，输入Root密匙值，即可正常使用SkRoot。
+3.安装并启动`PermissionManager.apk`或者`testRoot`，输入Root密匙值，即可正常使用SKRoot。
 
-## SkRoot(Pro) 使用流程：
-*已全部开发完成，其中 “SkRootPro 模块开发 SDK” 已公开，其余组件将在稳定后逐步公开。*
+## SKRoot(Pro) 使用流程：
+*已全部开发完成，其中 “SKRootPro 模块开发 SDK” 已公开，其余组件将在稳定后逐步公开。*
 
 *目前正在众测中。如想加入测试组织，请关注TG频道：https://t.me/skrootabc*
 
@@ -101,9 +101,9 @@
 * **如果你曾经使用过Magisk，你应该先将手机完全刷机，因为Magisk可能会残留日志文件等信息。**
 * **不要安装需要Root权限的工具，或涉及系统环境检测的应用，如冰箱、黑洞、momo和密匙认证等。这些应用的存在可能会被用作证据，推断你的设备已获取Root权限。若需使用，请在使用后立即卸载。**
 * **App可能会被特征检测。这里的App只是演示功能写法。在实际使用中，请尽量隐藏App。例如使用寄生功能，寄生到其他无害的App内，以免被侦测。**
-* **如果在解锁BL后手机会发出警报，你需要自行解决这个问题，因为它与SkRoot无关。**
-* **如果对方是检测BL锁，而不是Root权限。你应该安装SkRoot的隐藏BL锁模块。**
+* **如果在解锁BL后手机会发出警报，你需要自行解决这个问题，因为它与SKRoot无关。**
+* **如果对方是检测BL锁，而不是Root权限。你应该安装SKRoot的隐藏BL锁模块。**
 * **请检查SELinux状态是否被恶意软件禁用。**
 
 3、耗电风险须知：
-* **我们不提倡任何自行编译内核的行为，可能会造成续航缩短、发烫等问题，因其丢失了原厂的功耗管理策略。SkRoot则是在原厂内核上进行修补，保留原厂调教，无任何耗电问题。**
+* **我们不提倡任何自行编译内核的行为，可能会造成续航缩短、发烫等问题，因其丢失了原厂的功耗管理策略。SKRoot则是在原厂内核上进行修补，保留原厂调教，无任何耗电问题。**
