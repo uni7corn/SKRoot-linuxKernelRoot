@@ -43,7 +43,7 @@
 2. 其中【**注入su到指定进程**】**只支持授权su到64位的APP**，老式32位App不再进行支持。
 
 ## SKRoot(Lite) 使用流程：
-1.下载源码编译或**下载编译产物**： [patch_kernel_root.exe](https://github.com/abcz316/SKRoot-linuxKernelRoot/releases/download/Lite_v2026.3.20/patch_kernel_root.2026-3-31.exe)、 [skroot_lite.apk](https://github.com/abcz316/SKRoot-linuxKernelRoot/releases/download/Lite_v2026.3.20/SKRoot_Lite.2026-3-20.apk)
+1.下载源码编译或**下载编译产物**： [patch_kernel_root.exe](https://github.com/abcz316/SKRoot-linuxKernelRoot/releases/download/Lite_v2026.3.31/patch_kernel_root.2026-3-31.exe)、 [skroot_lite.apk](https://github.com/abcz316/SKRoot-linuxKernelRoot/releases/download/Lite_v2026.3.31/SKRoot_Lite.2026-3-20.apk)
 
 2.将内核kernel文件拖拽置`patch_kernel_root.exe`即可一键自动化流程补丁内核，同时会自动生成Root密匙。
 
