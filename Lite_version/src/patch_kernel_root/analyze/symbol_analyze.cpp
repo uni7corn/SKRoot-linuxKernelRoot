@@ -47,8 +47,8 @@ bool SymbolAnalyze::find_symbol_offset() {
 	m_sym_offset._text = find_addr({{"_text", false}});
 	m_sym_offset._stext = find_addr({{"_stext", false}});
 	m_sym_offset.die = find_region({{"die", false}});
-	m_sym_offset.arm64_notify_die = find_region({{"arm64_notify_die", false}});
-	m_sym_offset.__drm_printfn_coredump = find_region({{"__drm_printfn_coredump", false}});
+	m_sym_offset.__drm_puts_coredump = find_region({ {"__drm_puts_coredump", false} });
+	m_sym_offset.__drm_printfn_coredump = find_region({ {"__drm_printfn_coredump", false} });
 
 	m_sym_offset.__do_execve_file = find_addr({{"__do_execve_file", false}});
 	m_sym_offset.do_execveat_common = find_addr({
@@ -107,7 +107,7 @@ void SymbolAnalyze::printf_symbol_offset() {
 	std::cout << "_text:" << m_sym_offset._text << std::endl;
 	std::cout << "_stext:" << m_sym_offset._stext << std::endl;
 	if (m_sym_offset.die) std::cout << "die:" << m_sym_offset.die.offset << ", size:" << m_sym_offset.die.size << std::endl;
-	if (m_sym_offset.arm64_notify_die) std::cout << "arm64_notify_die:" << m_sym_offset.arm64_notify_die.offset << ", size:" << m_sym_offset.arm64_notify_die.size << std::endl;
+	if (m_sym_offset.__drm_puts_coredump) std::cout << "__drm_puts_coredump:" << m_sym_offset.__drm_puts_coredump.offset << ", size:" << m_sym_offset.__drm_printfn_coredump.size << std::endl;
 	if (m_sym_offset.__drm_printfn_coredump) std::cout << "__drm_printfn_coredump:" << m_sym_offset.__drm_printfn_coredump.offset << ", size:" << m_sym_offset.__drm_printfn_coredump.size << std::endl;
 
 	std::cout << "__do_execve_file:" << m_sym_offset.__do_execve_file << std::endl;

@@ -37,15 +37,15 @@ KRootErr run_root_cmd_with_cb(const char* str_root_key, const char* cmd, void (*
 
 	KRootErr err = KRootErr::OK;
 
-	std::string cmd_add_err_info = cmd;
-	cmd_add_err_info += " 2>&1";
+	std::string cmd_pack = cmd;
+	cmd_pack += " 2>&1";
 
 	std::string result;
 	fork_pipe_info finfo;
 	if(fork_pipe_child_process(finfo)) {
 		do {
 			BREAK_ON_ERROR(get_root(str_root_key));
-			FILE * fp = popen(cmd_add_err_info.c_str(), "r");
+			FILE * fp = popen(cmd_pack.c_str(), "r");
 			if(!fp) {
 				err = KRootErr::ERR_POPEN;
 				break;

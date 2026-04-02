@@ -18,7 +18,7 @@ struct KernelSymbolOffset {
 	size_t _text = 0;
 	size_t _stext = 0;
 	SymbolRegion die = { 0 };
-	SymbolRegion arm64_notify_die = { 0 };
+	SymbolRegion __drm_puts_coredump = { 0 };
 	SymbolRegion __drm_printfn_coredump = { 0 };
 
 	size_t __do_execve_file = 0;

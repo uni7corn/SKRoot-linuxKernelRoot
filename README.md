@@ -43,7 +43,7 @@
 2. 其中【**注入su到指定进程**】**只支持授权su到64位的APP**，老式32位App不再进行支持。
 
 ## SKRoot(Lite) 使用流程：
-1.下载源码编译或**下载编译产物**： [patch_kernel_root.exe](https://github.com/abcz316/SKRoot-linuxKernelRoot/releases/download/Lite_v2026.3.31/patch_kernel_root.2026-3-31.exe)、 [skroot_lite.apk](https://github.com/abcz316/SKRoot-linuxKernelRoot/releases/download/Lite_v2026.3.31/SKRoot_Lite.2026-3-20.apk)
+1.下载源码编译或**下载编译产物**： [patch_kernel_root.exe](https://github.com/abcz316/SKRoot-linuxKernelRoot/releases/download/Lite_v2026.4.2/patch_kernel_root.2026-4-2.exe)、 [skroot_lite.apk](https://github.com/abcz316/SKRoot-linuxKernelRoot/releases/download/Lite_v2026.4.2/SKRoot_Lite.2026-3-20.apk)
 
 2.将内核kernel文件拖拽置`patch_kernel_root.exe`即可一键自动化流程补丁内核，同时会自动生成Root密匙。
 
@@ -55,20 +55,19 @@
 *目前正在众测中。如想加入测试组织，请关注TG频道：[t.me/skrootabc](https://t.me/skrootabc)*
 
 ## 更新日志：
-2026-3：
-  * 1.修复部分Linux6.12无法解析的问题。
-  * 2.修复Linux 5.15会睡死的问题。
-  * 3.修复部分Linux4.x内核无法开机的问题。
-  * 4.修复CONFIG_THREAD_INFO_IN_TASK判断错误的问题。
-  * 5.增强寄生App功能的稳定性。
+2026-4：
+  * 1.修复一些特殊情况下会死机的问题。
   
-2026-2：
-  * 1.修复su无法独立后台运行的问题。
-  * 2.修复Linux 4.4无法解析的问题。
-
-2026-1：
+2026：
   * 1.修复审计日志残留痕迹。
-
+  * 2.修复su无法独立后台运行的问题。
+  * 3.修复Linux 4.4无法解析的问题。
+  * 4.修复部分Linux6.12无法解析的问题。
+  * 5.修复Linux 5.15会睡死的问题。
+  * 6.修复部分Linux4.x内核无法开机的问题。
+  * 7.修复CONFIG_THREAD_INFO_IN_TASK判断错误的问题。
+  * 8.增强寄生App功能的稳定性。
+  
 2025：
   * 1.适配Linux6.12。
   * 2.修复su部分命令无法执行的问题。

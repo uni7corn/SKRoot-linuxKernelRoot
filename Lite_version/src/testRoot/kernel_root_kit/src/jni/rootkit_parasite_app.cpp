@@ -8,7 +8,6 @@
 #include <vector>
 #include <map>
 #include <filesystem>
-#include <random>
 #include <dirent.h>
 #include <sys/stat.h> 
 #include <sys/types.h>
@@ -42,48 +41,6 @@ namespace {
 		return p.filename();
 	}
 
-	static bool random_expand_file(const char* file_path) {
-  		std::ofstream file(file_path, std::ios::binary | std::ios::app);
-		if (!file.is_open()) {
-			return false;
-		}
-
-		std::random_device rd;
-		std::mt19937 gen(rd());
-		// 随机大小：1MB–5MB
-		std::uniform_int_distribution<size_t> size_dis(1 * 1024 * 1024, 5 * 1024 * 1024);
-		size_t random_size = size_dis(gen);
-		std::uniform_int_distribution<unsigned> byte_dis(0, 255);
-		std::vector<char> buffer(random_size);
-		for (size_t i = 0; i < random_size; ++i) {
-			buffer[i] = static_cast<char>(byte_dis(gen));
-		}
-		file.write(buffer.data(), buffer.size());
-		if (!file) {
-			return false;
-		}
-		file.close();
-		return true;
-	}
-	
-	static bool copy_selinux_context(const char* source_file_path, const char* target_file_path) {
-		char selinux_context[512] = { 0 }; // adjust the size as per your requirement
-		
-		// Retrieve the SELinux context from the source file
-		ssize_t length = getxattr(source_file_path, XATTR_NAME_SELINUX, selinux_context, sizeof(selinux_context));
-		if (length == -1) {
-			return false;
-		}
-		selinux_context[length] = '\0'; // ensure null termination
-
-		// Set the SELinux context to the target file
-		if (setxattr(target_file_path, XATTR_NAME_SELINUX, selinux_context, strlen(selinux_context) + 1, 0)) {
-			return false;
-		}
-
-		return true;
-	}
-
 	static KRootErr _internal_parasite_implant_app(const char* str_root_key, const char* target_pid_cmdline,
 		const char* original_so_full_path, const char* implant_so_full_path) {
 		RETURN_ON_ERROR(get_root(str_root_key));
@@ -93,7 +50,7 @@ namespace {
 		if(!file_utils::file_exists(implant_so_full_path)) {
 			return KRootErr::ERR_NOT_EXIST_IMPLANT_FILE;
 		}
-		if (!copy_selinux_context(original_so_full_path, implant_so_full_path)) {
+		if (!file_utils::copy_selinux_context(original_so_full_path, implant_so_full_path)) {
 			return KRootErr::ERR_COPY_SELINUX;
 		}
 		// Because it is in the same directory as the parasitized so, all you need to do here is fill in the file name of so
@@ -232,7 +189,7 @@ static KRootErr write_web_server_so_file(const char* str_root_key, const char* i
 	if (chmod(implant_so_full_path, 0777)) {
 		return KRootErr::ERR_CHMOD;
 	}
-	random_expand_file(implant_so_full_path);
+	file_utils::random_expand_file(implant_so_full_path);
     return KRootErr::OK;
 }
 
@@ -290,7 +247,7 @@ static KRootErr write_su_env_so_file(const char* str_root_key, const char* impla
 	if (chmod(implant_so_full_path, 0777)) {
 		return KRootErr::ERR_CHMOD;
 	}
-	random_expand_file(implant_so_full_path);
+	file_utils::random_expand_file(implant_so_full_path);
     return KRootErr::OK;
 }
 
