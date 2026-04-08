@@ -43,7 +43,7 @@
 2. 其中【**注入su到指定进程**】**只支持授权su到64位的APP**，老式32位App不再进行支持。
 
 ## SKRoot(Lite) 使用流程：
-1.下载源码编译或**下载编译产物**： [patch_kernel_root.exe](https://github.com/abcz316/SKRoot-linuxKernelRoot/releases/download/Lite_v2026.4.2/patch_kernel_root.2026-4-2.exe)、 [skroot_lite.apk](https://github.com/abcz316/SKRoot-linuxKernelRoot/releases/download/Lite_v2026.4.2/SKRoot_Lite.2026-3-20.apk)
+1.下载源码编译或**下载编译产物**： [patch_kernel_root.exe](https://github.com/abcz316/SKRoot-linuxKernelRoot/releases/download/Lite_v2026.4.8/patch_kernel_root.2026-4-8.exe)、 [skroot_lite.apk](https://github.com/abcz316/SKRoot-linuxKernelRoot/releases/download/Lite_v2026.4.8/SKRoot_Lite.2026-4-8.apk)
 
 2.将内核kernel文件拖拽置`patch_kernel_root.exe`即可一键自动化流程补丁内核，同时会自动生成Root密匙。
 
@@ -57,6 +57,8 @@
 ## 更新日志：
 2026-4：
   * 1.修复一些特殊情况下会死机的问题。
+  * 2.修复su无法查看/data/data的问题。
+  * 3.修复华为荣耀Linux4.4无法修补的问题。
   
 2026：
   * 1.修复审计日志残留痕迹。
