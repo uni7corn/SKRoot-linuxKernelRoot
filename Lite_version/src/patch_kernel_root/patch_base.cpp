@@ -1,19 +1,32 @@
 ﻿#include "patch_base.h"
+#include "3rdparty/find_mrs_register.h"
 
 using namespace asmjit;
 using namespace asmjit::a64;
 using namespace asmjit::a64::Predicate;
 
-PatchBase::PatchBase(const std::vector<char>& file_buf, size_t cred_uid_offset) : 
-	m_file_buf(file_buf), m_kernel_ver_parser(file_buf), m_init_cred_searcher(file_buf, cred_uid_offset) {
+namespace {
+	constexpr uint64_t kThreadSize = 0x4000;
+	struct thread_info {
+		uint64_t flags;
+		uint64_t addr_limit;
+		uint64_t task;
+	};
+}
+
+PatchBase::PatchBase(const std::vector<char>& file_buf, size_t cred_uid_offset, const huawei_extra& huawei) :
+	m_file_buf(file_buf), 
+	m_kernel_ver_parser(file_buf), 
+	m_init_cred_searcher(file_buf, cred_uid_offset), 
+	m_huawei_extra(huawei) {
 	IF_EXIT(!m_init_cred_searcher.init());
 }
 
 PatchBase::PatchBase(const PatchBase& other)
 	: m_file_buf(other.m_file_buf)
 	, m_kernel_ver_parser(other.m_file_buf)
-	, m_init_cred_searcher(other.m_init_cred_searcher) {
-}
+	, m_init_cred_searcher(other.m_init_cred_searcher)
+	, m_huawei_extra(other.m_huawei_extra) {}
 
 PatchBase::~PatchBase() {}
 
@@ -42,28 +55,69 @@ size_t PatchBase::patch_jump(size_t patch_addr, size_t jump_addr, std::vector<pa
 }
 
 bool PatchBase::is_CONFIG_THREAD_INFO_IN_TASK() {
-	int cnt = 0;
-	for (auto i = 0; i < m_file_buf.size() - 4; i += 4) {
-		uint32_t insn = *(uint32_t*)& m_file_buf[i];
-		if (aarch64_insn_is_mrs_sp_el0(insn)) cnt++;
+	using namespace a64_find_mrs_register;
+	if (count_mrs_sp_el0() <= 5000) return false;
+	return !is_CURRENT_FROM_SP_EL0_THREAD_INFO();
+}
+
+bool PatchBase::is_CURRENT_FROM_SP_EL0_THREAD_INFO() {
+	using namespace a64_find_mrs_register;
+	if (count_mrs_sp_el0() <= 5000) return false;
+
+	static bool last_result = false;
+	static bool inited = false;
+	if (inited) return last_result;
+
+	int thread_info_size_cnt = 0;
+	size_t max_size = m_file_buf.size() - 4;
+	for (auto x = 0; x < max_size; x += 4) {
+		uint32_t insn = *(uint32_t*)&m_file_buf[x];
+		if (!aarch64_insn_is_mrs_sp_el0(insn)) continue;
+		auto y = x + 4;
+		if (y >= max_size) break;
+		int end_off = 0;
+		for (; y < max_size; y += 4) {
+			uint32_t end_insn = *(uint32_t*)&m_file_buf[y];
+			if (aarch64_insn_is_ret(end_insn) || aarch64_insn_is_retaa(end_insn) || aarch64_insn_is_retab(end_insn)) { end_off = y; break; }
+		}
+		if (end_off == 0) continue;
+		std::vector<track_reg_info>track_info;
+		if (!find_current_task_next_register_offset(m_file_buf, x, end_off, track_info)) continue;
+		if (track_info.size() >= 2 && track_info[0].load_offset == offsetof(thread_info, task)) {
+			for (auto& t : track_info) {
+				if (t.load_offset > 0x400) {
+					thread_info_size_cnt++; break; }
+			}
+		}
 	}
-	return cnt > 5000;
+	float radio = (float)thread_info_size_cnt / (float)count_mrs_sp_el0();
+	last_result = radio >= 0.1f;
+	inited = true;
+	return last_result;
 }
 
 void PatchBase::emit_get_current(Assembler* a, GpX x) {
-	struct thread_info {
-		uint64_t flags;		/* low level flags */
-		uint64_t addr_limit;	/* address limit */
-	};
 	Label label_error = a->newLabel();
 	uint32_t sp_el0_id = SysReg::encode(3, 0, 4, 1, 0);
-	a->mrs(x, sp_el0_id);
-	if (!is_CONFIG_THREAD_INFO_IN_TASK()) {
-		a->cbz(x, label_error);
-		a->and_(x, x, Imm((uint64_t)~(0x4000 - 1)));
-		a->ldr(x, ptr(x, sizeof(thread_info)));
-		a->bind(label_error);
+
+	if (is_CONFIG_THREAD_INFO_IN_TASK()) {
+		a->mrs(x, sp_el0_id);
+		emit_huawei_kti_add(a, x);
+		return;
 	}
+
+	if (is_CURRENT_FROM_SP_EL0_THREAD_INFO()) {
+		a->mrs(x, sp_el0_id);
+		a->cbz(x, label_error);
+		emit_huawei_kti_add(a, x);
+		a->ldr(x, ptr(x, offsetof(thread_info, task)));
+		a->bind(label_error);
+		return;
+	}
+
+	a->mov(x, sp);
+	a->and_(x, x, Imm((uint64_t)~(kThreadSize - 1)));
+	a->ldr(x, ptr(x, offsetof(thread_info, task)));
 }
 
 void PatchBase::emit_safe_bl(Assembler* a, size_t func_base_addr, size_t target) {
@@ -89,6 +143,18 @@ void PatchBase::emit_ret_by_entry_insn(Assembler* a, uint32_t entry_insn) {
     }
 }
 
+int PatchBase::count_mrs_sp_el0() {
+	static int cnt = 0;
+	static bool inited = false;
+	if (inited) return cnt;
+	for (auto x = 0; x < m_file_buf.size() - 4; x += 4) {
+		uint32_t insn = *(uint32_t*)&m_file_buf[x];
+		if (aarch64_insn_is_mrs_sp_el0(insn)) cnt++;
+	}
+	inited = true;
+	return cnt;
+}
+
 std::vector<size_t> PatchBase::find_all_aarch64_ret_offsets(size_t offset, size_t size) {
 	std::vector<size_t> v_ret_addr;
 	std::string mode;
@@ -107,4 +173,26 @@ std::vector<size_t> PatchBase::find_all_aarch64_ret_offsets(size_t offset, size_
 		v_ret_addr.push_back(i);
 	}
 	return v_ret_addr;
+}
+
+bool PatchBase::is_huawei() {
+	return !!m_huawei_extra.kti_addr;
+}
+
+void PatchBase::update_huawei_kti_calc_base(size_t base) {
+	m_huawei_kti_calc_base = base;
+}
+
+void PatchBase::emit_huawei_kti_add(Assembler* a, GpX x) {
+	if (!is_huawei()) return;
+	RegProtectGuard g1(a, x1);
+	uint64_t cur_abs_addr = (uint64_t)m_huawei_kti_calc_base + (uint64_t)a->offset();
+	if (!aarch64_asm_adrp_x(a, x1, cur_abs_addr, (uint64_t)m_huawei_extra.kti_addr)) {
+		std::cout << "[发生错误] aarch64_asm_adrp_x failed" << std::endl;
+		_exit(EXIT_FAILURE);
+	}
+	uint32_t lo12 = (uint32_t)(m_huawei_extra.kti_addr & 0xFFF);
+	if (lo12) {
+		a->ldr(x, ptr(x1, lo12));
+	}
 }

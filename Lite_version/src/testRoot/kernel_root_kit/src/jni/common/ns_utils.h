@@ -19,7 +19,7 @@ inline bool enter_init_mount_ns() {
 
     if (ret < 0) {
         errno = saved_errno;
-        perror("setns CLONE_NEWNS failed");
+        // perror("setns CLONE_NEWNS failed");
         return false;
     }
     return true;

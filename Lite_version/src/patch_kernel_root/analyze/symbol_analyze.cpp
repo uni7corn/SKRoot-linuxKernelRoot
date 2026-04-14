@@ -94,6 +94,7 @@ bool SymbolAnalyze::find_symbol_offset() {
 	m_sym_offset.hkip_check_uid_root = find_addr({{"hkip_check_uid_root", false}});
 	m_sym_offset.hkip_check_gid_root = find_addr({{"hkip_check_gid_root", false}});
 	m_sym_offset.hkip_check_xid_root = find_addr({{"hkip_check_xid_root", false}});
+	m_sym_offset.kti_randomize_init = find_region({{"kti_randomize_init", false}});
 
 	return (m_sym_offset.do_execve || m_sym_offset.do_execveat || m_sym_offset.do_execveat_common) 
 		&& m_sym_offset.avc_denied.valid()
@@ -136,6 +137,7 @@ void SymbolAnalyze::printf_symbol_offset() {
 	if (m_sym_offset.hkip_check_uid_root) std::cout << "hkip_check_uid_root:" << m_sym_offset.hkip_check_uid_root << std::endl;
 	if (m_sym_offset.hkip_check_gid_root) std::cout << "hkip_check_gid_root:" << m_sym_offset.hkip_check_gid_root << std::endl;
 	if (m_sym_offset.hkip_check_xid_root) std::cout << "hkip_check_xid_root:" << m_sym_offset.hkip_check_xid_root << std::endl;
+	if (m_sym_offset.kti_randomize_init) std::cout << "kti_randomize_init:" << m_sym_offset.kti_randomize_init.offset << ", size:" << m_sym_offset.kti_randomize_init.size << std::endl;
 }
 
 uint64_t SymbolAnalyze::kallsyms_matching_single(const char* name, bool fuzzy) {

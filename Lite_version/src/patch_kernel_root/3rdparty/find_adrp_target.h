@@ -7,7 +7,7 @@
 #include <cinttypes>
 #include <capstone/capstone.h>
 
-namespace a64_find_mrs_register {
+namespace a64_find_adrp_target {
 struct code_line {
 	uint64_t addr;
 	arm64_insn cmd_id = ARM64_INS_INVALID;
@@ -25,7 +25,7 @@ static std::vector<track_reg_info> track_register_load_offset(const std::vector<
 		track_reg_info t;
 		std::stringstream fmt;
 		auto& item = v_code_line[y];
-		if (item.cmd_id == ARM64_INS_LDR || item.cmd_id == ARM64_INS_LDRSW) {
+		if (item.cmd_id == ARM64_INS_STR || item.cmd_id == ARM64_INS_LDR || item.cmd_id == ARM64_INS_LDRSW) {
 			fmt << "x%d, [x" << x_load_reg << ", #%" SCNx64 "]";
 			if (sscanf(item.op_str.c_str(), fmt.str().c_str(), &t.move_to_x_reg_num, &t.load_offset) != 2) continue;
 		} else if (item.cmd_id == ARM64_INS_ADD) {
@@ -37,45 +37,28 @@ static std::vector<track_reg_info> track_register_load_offset(const std::vector<
 	return result;
 }
 
-static std::vector<track_reg_info> handle_mrs(const std::vector<code_line>& v_code_line) {
+static bool handle_adrp_target_addr(const std::vector<code_line>& v_code_line, size_t start, uint64_t& result) {
 	for (auto x = 0; x < v_code_line.size(); x++) {
 		auto& item = v_code_line[x];
-		if (item.cmd_id != ARM64_INS_MRS) continue;
-		int x_current_reg = 0;
-		if (sscanf(item.op_str.c_str(), "x%d sp_el0", &x_current_reg) != 1) continue;
-		return track_register_load_offset(v_code_line, x + 1, x_current_reg);
-	}
-	return {};
-}
+		if (item.cmd_id != ARM64_INS_ADRP) continue;
+		int x_reg = 0;
+		uint64_t imm_u = 0;
+		if (sscanf(item.op_str.c_str(), "x%d, #%" SCNx64, &x_reg, &imm_u) != 2) continue;
 
-static std::vector<track_reg_info> handle_and(const std::vector<code_line>& v_code_line) {
-	bool res = false;
-	for (auto x = 0; x < v_code_line.size(); x++) {
-		auto& item = v_code_line[x];
-		if (item.cmd_id != ARM64_INS_AND) continue;
-		int x_current_reg = 0;
-		int xLastSpReg = 0;
-		if (sscanf(item.op_str.c_str(), "x%d, x%d, #0xffffffffffffc000", &x_current_reg, &xLastSpReg) != 2) continue;
-		return track_register_load_offset(v_code_line, x +1, x_current_reg);
-	}
-	return {};
-}
+		int64_t imm = static_cast<int64_t>(imm_u);
+		uint64_t insn_file_off = start + item.addr;
+		uint64_t page_base = insn_file_off & ~0xFFFULL;
+		uint64_t target_page = static_cast<uint64_t>(static_cast<int64_t>(page_base) + imm);
 
-static bool handle_current_task_next_register_offset(const std::vector<code_line>& v_code_line, std::vector<track_reg_info>& result) {
-	std::vector<track_reg_info> _mrs = handle_mrs(v_code_line);
-	if (!_mrs.empty()) {
-		result = std::move(_mrs);
-		return true;
-	}
-	std::vector<track_reg_info> _and = handle_and(v_code_line);
-	if (!_and.empty()) {
-		result = std::move(_and);
+		std::vector<track_reg_info> track_info = track_register_load_offset(v_code_line, x + 1, x_reg);
+		if (!track_info.size()) return false;
+		result = target_page + track_info[0].load_offset;
 		return true;
 	}
 	return false;
 }
 
-static bool find_current_task_next_register_offset(const std::vector<char>& file_buf, size_t start, size_t end, std::vector<track_reg_info> & result) {
+static bool find_adrp_target(const std::vector<char>& file_buf, size_t start, size_t end, uint64_t& addr) {
 	size_t total_code_size = end - start;
 	size_t remaining_size = total_code_size;
 	bool res = false;
@@ -103,6 +86,6 @@ static bool find_current_task_next_register_offset(const std::vector<char>& file
 	}
 	cs_free(insn, 1);
 	cs_close(&handle);
-	return handle_current_task_next_register_offset(v_code_line, result);
+	return handle_adrp_target_addr(v_code_line, start, addr);
 }
 }

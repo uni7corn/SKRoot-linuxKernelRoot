@@ -201,6 +201,84 @@ bool aarch64_asm_adr_x(Assembler* a, GpX x, int32_t adr_value) {
 }
 
 /******************************************************************
+ * 手工生成一条 ADRP 指令
+ * 参数：
+ *   a               : Assembler 指针
+ *   x               : 目标 X 寄存器
+ *   cur_abs_addr    : 当前这条 ADRP 指令自己的绝对地址
+ *   target_abs_addr : 目标绝对地址
+ *
+ * 语义：
+ *   x = (cur_abs_addr & ~0xFFF) + ((target_abs_addr_page - cur_abs_addr_page))
+ *
+ * 注意：
+ *   1. ADRP 取的是 PAGE，不包含低 12 位
+ *   2. current / target 必须处于同一套地址空间（都为运行时 VA，或都为你定义的伪地址）
+ *   3. 范围约为 ±4GB（按页计算）
+ *****************************************************************/
+bool aarch64_asm_adrp_x(Assembler* a, GpX x, uint64_t cur_abs_addr, uint64_t target_abs_addr) {
+	if (!a) return false;
+	const uint64_t cur_page = cur_abs_addr & ~0xFFFULL;
+	const uint64_t target_page = target_abs_addr & ~0xFFFULL;
+	const int64_t page_delta = (int64_t)target_page - (int64_t)cur_page;
+	if ((page_delta & 0xFFF) != 0) {
+		std::cout << "[发生错误] ADRP page delta is not 4KB aligned" << std::endl;
+		return false;
+	}
+	const int64_t imm_pages = page_delta >> 12;
+	// ADRP 立即数是 signed 21-bit（按页）
+	if (imm_pages < -(1LL << 20) || imm_pages >((1LL << 20) - 1)) {
+		std::cout << "[发生错误] ADRP instruction offset exceeds ±4GB range" << std::endl;
+		return false;
+	}
+	// immhi: bits[20:2], immlo: bits[1:0]
+	const uint32_t imm21 = (uint32_t)((uint64_t)imm_pages & 0x1FFFFF);
+	const uint32_t immlo = imm21 & 0x3;
+	const uint32_t immhi = (imm21 >> 2) & 0x7FFFF;
+
+	// ADRP 编码：
+	// op = 1, fixed = 0b10000
+	// [31]    = 1
+	// [30:29] = immlo
+	// [28:24] = 10000
+	// [23:5]  = immhi
+	// [4:0]   = Rd
+	const uint32_t insn = 0x90000000u | (immlo << 29) | (immhi << 5) | ((uint32_t)x.id() & 0x1F);
+	a->embed(&insn, sizeof(insn));
+	return true;
+}
+
+/******************************************************************
+ * 生成 “ADRP + ADD” 指令序列，将一个目标绝对地址写入 X 寄存器。
+ * 参数：
+ *   a               : Assembler 指针
+ *   x               : 目标 X 寄存器
+ *   cur_abs_addr    : 当前这条 ADRP 指令自身的绝对地址
+ *   target_abs_addr : 目标绝对地址
+ * 生成效果：
+ *   ADRP x, target@PAGE
+ *   ADD  x, x, #target@PAGEOFF
+ * 最终语义：
+ *   x = target_abs_addr
+ * 说明：
+ *   1. ADRP 先根据当前指令所在页，计算出目标地址所在页的页基址。
+ *   2. ADD 再补上目标地址的低 12 位页内偏移。
+ *   3. cur_abs_addr 必须是 ADRP 这条指令本身的真实地址，一般应在 emit ADRP 之前用：base + a->offset() 来计算。
+ *   4. cur_abs_addr 和 target_abs_addr 必须处于同一地址空间，例如都为运行时虚拟地址，或者都为自定义伪地址。
+ *   5. 如果 target_abs_addr 的低 12 位为 0，则不会额外生成 ADD。
+ * 返回值：
+ *   true  : 生成成功，false : ADRP 编码失败（例如超出 ±4GB 页范围）
+ *****************************************************************/
+bool aarch64_asm_adrp_add_x(Assembler* a, GpX x, uint64_t cur_abs_addr, uint64_t target_abs_addr) {
+	if (!aarch64_asm_adrp_x(a, x, cur_abs_addr, target_abs_addr)) return false;
+	uint32_t lo12 = (uint32_t)(target_abs_addr & 0xFFF);
+	if (lo12) {
+		a->add(x, x, Imm(lo12));
+	}
+	return true;
+}
+
+/******************************************************************
  * 将一个 64bit 常量赋值 X 寄存器：
  * 参数：a		: Assembler 指针
  * 		x         : 目标 X 寄存器

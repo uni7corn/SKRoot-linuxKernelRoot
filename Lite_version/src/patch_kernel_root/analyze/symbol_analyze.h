@@ -46,6 +46,7 @@ struct KernelSymbolOffset {
 	size_t hkip_check_uid_root = 0;
 	size_t hkip_check_gid_root = 0;
 	size_t hkip_check_xid_root = 0;
+	SymbolRegion kti_randomize_init = { 0 };
 };
 
 class SymbolAnalyze

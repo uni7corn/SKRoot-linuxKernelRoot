@@ -13,6 +13,7 @@ size_t PatchCurrentAvcCheck::patch_current_avc_check_bl_func(const SymbolRegion&
 	size_t hook_func_start_addr = hook_func_start_region.offset;
 	if (hook_func_start_addr == 0) { return 0; }
 	std::cout << "Start hooking addr:  " << std::hex << hook_func_start_addr << std::endl << std::endl;
+	if (is_huawei()) update_huawei_kti_calc_base(hook_func_start_addr);
 
 	InitCredResult cred_result = m_init_cred_searcher.get_init_cred_result();
 	int cred_uid_region_size = sizeof(cred_uid_info);

@@ -187,7 +187,8 @@ namespace a64_find_func_return_offset {
 						get_ret_mode_name(found_ret_mode),
 						get_ret_mode_name(cur_ret_mode),
 						static_cast<unsigned long long>(line.addr));
-					abort();
+					//abort();
+					break;
 				}
 			}
 

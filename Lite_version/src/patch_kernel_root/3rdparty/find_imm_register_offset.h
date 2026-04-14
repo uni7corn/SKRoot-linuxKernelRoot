@@ -9,64 +9,86 @@
 #include "capstone/capstone.h"
 
 namespace a64_find_imm_register_offset {
+
 struct code_line {
-	uint64_t addr;
+	uint64_t addr = 0;
 	arm64_insn cmd_id = ARM64_INS_INVALID;
 	int64_t mem_disp = 0;
-	int64_t imm[2] = {0};
+	int64_t imm[2] = {0, 0};
 };
 
-bool is_offset_jump_asm(const code_line& line) {
+inline bool is_offset_jump_asm(const code_line& line) {
 	return line.cmd_id == ARM64_INS_B;
 }
 
-void handle_candidate_offsets(const std::vector<code_line>& v_code_line, std::vector<int64_t> &candidate_offsets) {
-	for (auto x = 0; x < v_code_line.size(); x++) {
-		auto& line = v_code_line[x];
+inline void handle_candidate_offsets(const std::vector<code_line>& v_code_line,
+                                     std::vector<int64_t>& candidate_offsets) {
+	for (size_t x = 0; x < v_code_line.size(); x++) {
+		const auto& line = v_code_line[x];
 		if (is_offset_jump_asm(line)) continue;
-		if(line.mem_disp > 0) candidate_offsets.push_back(line.mem_disp);
-		if(line.imm[0] > 0) candidate_offsets.push_back(line.imm[0]);
-		if(line.imm[1] > 0) candidate_offsets.push_back(line.imm[1]);
+
+		if (line.mem_disp > 0) candidate_offsets.push_back(line.mem_disp);
+		if (line.imm[0] > 0) candidate_offsets.push_back(line.imm[0]);
+		if (line.imm[1] > 0) candidate_offsets.push_back(line.imm[1]);
 	}
 }
 
-bool find_imm_register_offset(const std::vector<char>& file_buf, size_t start, size_t end, std::vector<int64_t>& candidate_offsets) {
-	size_t code_size = end - start;
+inline bool find_imm_register_offset(const std::vector<char>& file_buf, size_t start, size_t end, std::vector<int64_t>& candidate_offsets) {
+	candidate_offsets.clear();
+	if (start >= end || end > file_buf.size()) return false;
+	if ((start % 4) != 0) return false;
+	if (((end - start) % 4) != 0) return false;
+
+	size_t total_code_size = end - start;
+	size_t remaining_size = total_code_size;
+
 	csh handle;
 	cs_err err = cs_open(CS_ARCH_ARM64, CS_MODE_LITTLE_ENDIAN, &handle);
-	if (err) {
+	if (err != CS_ERR_OK) {
 		printf("Failed on cs_open() with error returned: %u\n", err);
-		abort();
+		return false;
 	}
+
 	cs_option(handle, CS_OPT_DETAIL, CS_OPT_ON);
-	cs_option(handle, CS_OPT_SKIPDATA, CS_OPT_ON);
-	//cs_option(handle, CS_OPT_UNSIGNED, CS_OPT_ON);
+	cs_option(handle, CS_OPT_SKIPDATA, CS_OPT_OFF);
 
 	cs_insn* insn = cs_malloc(handle);
-	uint64_t address = 0x0;
-	const uint8_t* code = (const uint8_t*)&file_buf[0] + start;
+	if (!insn) {
+		cs_close(&handle);
+		return false;
+	}
+
+	uint64_t address = 0;
+	const uint8_t* code = reinterpret_cast<const uint8_t*>(file_buf.data()) + start;
+
 	std::vector<code_line> v_code_line;
-	v_code_line.reserve(code_size / 4);
-	while (cs_disasm_iter(handle, &code, &code_size, &address, insn)) {
+	v_code_line.reserve(total_code_size / 4);
+
+	while (cs_disasm_iter(handle, &code, &remaining_size, &address, insn)) {
 		code_line line;
 		line.addr = insn->address;
-		line.cmd_id = (arm64_insn)insn->id;
+		line.cmd_id = static_cast<arm64_insn>(insn->id);
+
 		int idx = 0;
-		for (auto y = 0; y < insn->detail->arm64.op_count; y++) {
-			if (insn->detail->arm64.operands[y].type == ARM64_OP_IMM) {
-				auto imm = insn->detail->arm64.operands[y].imm;
-				if (imm > 0) line.imm[idx++] = imm;
-			}
-			if (insn->detail->arm64.operands[y].type == ARM64_OP_MEM) {
-				line.mem_disp = insn->detail->arm64.operands[y].mem.disp;
+		for (uint8_t y = 0; y < insn->detail->arm64.op_count; y++) {
+			const auto& op = insn->detail->arm64.operands[y];
+			if (op.type == ARM64_OP_IMM) {
+				if (op.imm > 0 && idx < 2) {
+					line.imm[idx++] = op.imm;
+				}
+			} else if (op.type == ARM64_OP_MEM) {
+				line.mem_disp = op.mem.disp;
 			}
 		}
-		v_code_line.push_back(line);
-		if (v_code_line.back().addr < code_size) continue;
-		handle_candidate_offsets(v_code_line, candidate_offsets);
+
+		v_code_line.push_back(std::move(line));
 	}
+
 	cs_free(insn, 1);
 	cs_close(&handle);
-	return !!candidate_offsets.size();
+
+	handle_candidate_offsets(v_code_line, candidate_offsets);
+	return !candidate_offsets.empty();
 }
-}
+
+} // namespace a64_find_imm_register_offset
