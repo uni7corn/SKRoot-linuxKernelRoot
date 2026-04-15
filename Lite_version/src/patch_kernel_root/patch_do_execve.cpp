@@ -15,33 +15,34 @@ PatchDoExecve::PatchDoExecve(const PatchBase& patch_base, const KernelSymbolOffs
 PatchDoExecve::~PatchDoExecve() {}
 
 void PatchDoExecve::init_do_execve_param(const KernelSymbolOffset& sym) {
+	auto set_execve_param = [this](uint32_t addr, uint8_t filename_reg, bool is_single_char_ptr) {
+		if (addr == 0) {
+			return false;
+		}
+		m_doexecve_reg_param.do_execve_addr = addr;
+		m_doexecve_reg_param.do_execve_filename_reg = filename_reg;
+		m_doexecve_reg_param.is_single_char_ptr = is_single_char_ptr;
+		return true;
+	};
+
 	if (m_kernel_ver_parser.is_kernel_version_less("3.14.0")) {
-		m_doexecve_reg_param.do_execve_addr = sym.do_execve_common;
-		m_doexecve_reg_param.do_execve_filename_reg = 0;
-		m_doexecve_reg_param.is_single_char_ptr = true;
-	}
-	if (m_kernel_ver_parser.is_kernel_version_less("3.19.0")) {
-		m_doexecve_reg_param.do_execve_addr = sym.do_execve_common;
-		m_doexecve_reg_param.do_execve_filename_reg = 0;
-	} else if (m_kernel_ver_parser.is_kernel_version_less("4.18.0")) {
-		m_doexecve_reg_param.do_execve_addr = sym.do_execveat_common;
-		m_doexecve_reg_param.do_execve_filename_reg = 1;
-	} else if (m_kernel_ver_parser.is_kernel_version_less("5.9.0")) {
-		m_doexecve_reg_param.do_execve_addr = sym.__do_execve_file;
-		m_doexecve_reg_param.do_execve_filename_reg = 1;
-	} else {
-		// default linux kernel useage
-		m_doexecve_reg_param.do_execve_addr = sym.do_execveat_common;
-		m_doexecve_reg_param.do_execve_filename_reg = 1;
+		set_execve_param(sym.do_execve_common, 0, true);
 	}
 
 	if (m_doexecve_reg_param.do_execve_addr == 0) {
-		m_doexecve_reg_param.do_execve_addr = sym.do_execve;
-		m_doexecve_reg_param.do_execve_filename_reg = 0;
+		set_execve_param(sym.__do_execve_file, 1, false);
 	}
 	if (m_doexecve_reg_param.do_execve_addr == 0) {
-		m_doexecve_reg_param.do_execve_addr = sym.do_execveat;
-		m_doexecve_reg_param.do_execve_filename_reg = 1;
+		set_execve_param(sym.do_execveat_common, 1, false);
+	}
+	if (m_doexecve_reg_param.do_execve_addr == 0) {
+		set_execve_param(sym.do_execve, 0, false);
+	}
+	if (m_doexecve_reg_param.do_execve_addr == 0) {
+		set_execve_param(sym.do_execveat, 1, false);
+	}
+	if (m_doexecve_reg_param.do_execve_addr == 0) {
+		set_execve_param(sym.do_execve_common, 0, false);
 	}
 	m_doexecve_reg_param.do_execve_addr = skip_pac_bti_at_func_start(m_doexecve_reg_param.do_execve_addr);
 }
