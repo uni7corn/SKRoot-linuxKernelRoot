@@ -172,7 +172,7 @@ static void monitor_pkgs_loop(const std::set<std::string>& pkgs) {
     for (;;) {
         bool any_running = false;
         for (const auto& pkg : pkgs) {
-            const bool running = is_pkg_running(pkg, 600 * 1024); // 忽略600MB以下的
+            const bool running = is_pkg_running(pkg, 250 * 1024); // 忽略250MB以下的
             if (running) {
                 any_running = true;
                 if(!s_pkg_remove_armed[pkg]) printf("detect running:%s\n", pkg.c_str());
@@ -188,7 +188,7 @@ static void monitor_pkgs_loop(const std::set<std::string>& pkgs) {
         }
         set_persist_dir_locked_once(any_running && !g_need_reload);
         if(g_need_reload) break;
-        std::this_thread::sleep_for(3s);
+        std::this_thread::sleep_for(2s);
     }
 }
 
@@ -287,7 +287,7 @@ private:
 
 // SKRoot 模块名片
 SKROOT_MODULE_NAME("防设备标记&自动清理")
-SKROOT_MODULE_VERSION("4.0.4")
+SKROOT_MODULE_VERSION("4.0.5")
 SKROOT_MODULE_DESC("需要手动添加包名")
 SKROOT_MODULE_AUTHOR("SKRoot & 蜃 & Cycle1337")
 SKROOT_MODULE_UUID32("Vk0EFJTuG2aBLQqc6WLHVPHnhfiZ8VKG")
