@@ -14,6 +14,13 @@ contains_reset_prop() {
   [[ "$(resetprop "$NAME")" == *"$CONTAINS"* ]] && resetprop "$NAME" "$NEWVAL"
 }
 
+contains_reset_ro_prop() {
+  local NAME="$1"
+  local CONTAINS="$2"
+  local NEWVAL="$3"
+  [[ "$(resetprop "$NAME")" == *"$CONTAINS"* ]] && resetprop -n "$NAME" "$NEWVAL"
+}
+
 resetprop -w sys.boot_completed 0
 check_reset_prop "ro.boot.vbmeta.device_state" "locked"
 check_reset_prop "ro.boot.verifiedbootstate" "green"
@@ -31,7 +38,7 @@ check_reset_prop "ro.vendor.boot.warranty_bit" "0"
 check_reset_prop "ro.vendor.warranty_bit" "0"
 check_reset_prop "vendor.boot.vbmeta.device_state" "locked"
 check_reset_prop "vendor.boot.verifiedbootstate" "green"
-check_reset_prop "sys.oem_unlock_allowed" "0"
+contains_reset_ro_prop "sys.oem_unlock_allowed" "1" "0"
 
 # MIUI specific
 check_reset_prop "ro.secureboot.lockstate" "locked"
@@ -51,7 +58,7 @@ check_reset_prop "partition.system_ext.verified" "0"
 check_reset_prop "partition.odm.verified" "0"
 
 # OEM 解锁
-check_reset_prop "ro.oem_unlock_supported" "0"
+contains_reset_ro_prop "ro.oem_unlock_supported" "1" "0"
 
 # USB / ADB
 check_reset_prop "persist.sys.usb.config" "none"

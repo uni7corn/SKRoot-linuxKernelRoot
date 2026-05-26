@@ -11,7 +11,7 @@
 #include "android_packages_list_utils.h"
 #include "tricky_store_daemon.h"
 
-#define MOD_VER "1.4.1-r5"
+#define MOD_VER "1.4.1-r6"
 
 #define TARGET_TS_DIR "/data/adb/"
 #define TARGET_TXT "/data/adb/tricky_store/target.txt"
