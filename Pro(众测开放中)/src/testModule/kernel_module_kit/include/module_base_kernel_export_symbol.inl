@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <atomic>
 #include "kernel_module_kit_umbrella.h"
 #include "module_math.h"
 #include "aarch64_kernel_sym_call_helper.h"
@@ -8,6 +9,9 @@
  * 这是 module_base_kernel_export_symbol.h 的实现部分
  ***************************************************************************/
 namespace kernel_module {
+KModErr hardware_virt_to_phys(uint64_t virt_kaddr, uint64_t & result);
+KModErr __get_PAGE_OFFSET(uint64_t & result);
+KModErr calibrate_vmemmap_dynamic(uint64_t & out_vmemmap, uint64_t & out_struct_page_size);
 namespace export_symbol {
 using namespace asmjit;
 using namespace asmjit::a64;
@@ -122,14 +126,10 @@ inline void copy_from_user(Assembler* a, KModErr & out_err, GpX to, GpX __user_f
 }
 
 inline void copy_from_user(Assembler* a, KModErr & out_err, GpX to, GpX __user_from, uint64_t n) {
-	IdleRegPool pool = IdleRegPool::make(to, __user_from);
-	GpX xN = pool.acquireX();
-	RegProtectGuard g1(a, excluding_x0(pool.getUsed()));
-	aarch64_asm_mov_x(a, xN, n);
 	CallHelper::callSymbolCandidates(a, out_err,
 		copy_from_user_symbol_names,
 		NeedReturnX0::Yes,
-		to, __user_from, xN
+		to, __user_from, n
 	);
 }
 
@@ -142,14 +142,10 @@ inline void copy_to_user(Assembler* a, KModErr & out_err, GpX __user_to, GpX fro
 }
 
 inline void copy_to_user(Assembler* a, KModErr & out_err, GpX __user_to, GpX from, uint64_t n) {
-	IdleRegPool pool = IdleRegPool::make(__user_to, from);
-	GpX xN = pool.acquireX();
-	RegProtectGuard g1(a, excluding_x0(pool.getUsed()));
-	aarch64_asm_mov_x(a, xN, n);
 	CallHelper::callSymbolCandidates(a, out_err,
 		copy_to_user_symbol_names,
 		NeedReturnX0::Yes,
-        __user_to, from, xN
+        __user_to, from, n
     );
 }
 
@@ -169,14 +165,10 @@ inline void copy_from_kernel_nofault(Assembler* a, KModErr& out_err, GpX dst, Gp
 }
 
 inline void copy_from_kernel_nofault(Assembler* a, KModErr& out_err, GpX dst, GpX src, uint64_t size) {
-	IdleRegPool pool = IdleRegPool::make(dst, src);
-	GpX xN = pool.acquireX();
-	RegProtectGuard g1(a, excluding_x0(pool.getUsed()));
-	aarch64_asm_mov_x(a, xN, size);
 	CallHelper::callSymbolCandidates(a, out_err,
 		copy_from_kernel_nofault_symbol_names,
 		NeedReturnX0::Yes,
-		dst, src, xN
+		dst, src, size
 	);
 }
 
@@ -204,11 +196,7 @@ inline void kallsyms_lookup_size_offset(Assembler* a, KModErr& out_err, GpX addr
 }
 
 inline void kallsyms_lookup_size_offset(Assembler* a, KModErr& out_err, uint64_t addr, GpX symbolsize, GpX offset) {
-	IdleRegPool pool = IdleRegPool::make(symbolsize, offset);
-	GpX xAddr = pool.acquireX();
-	RegProtectGuard g1(a, excluding_x0(pool.getUsed()));
-	aarch64_asm_mov_x(a, xAddr, addr);
-	kallsyms_lookup_size_offset(a, out_err, xAddr, symbolsize, offset);
+	out_err = CallHelper::callNameAuto(a, "kallsyms_lookup_size_offset", NeedReturnX0::Yes, addr, symbolsize, offset);
 }
 
 inline void kallsyms_on_each_symbol(Assembler* a, KModErr & out_err, SymbolCb fn, GpX data) {
@@ -254,21 +242,11 @@ inline void find_vma(Assembler* a, KModErr& out_err, GpX mm, GpX addr) {
 }
 
 inline void find_vma(Assembler* a, KModErr& out_err, GpX mm, uint64_t addr) {
-	IdleRegPool pool = IdleRegPool::make(mm);
-	GpX xAddr = pool.acquireX();
-	RegProtectGuard g1(a, excluding_x0(pool.getUsed()));
-	aarch64_asm_mov_x(a, xAddr, addr);
-	find_vma(a, out_err, mm, xAddr);
+	out_err = CallHelper::callNameAuto(a, "find_vma", NeedReturnX0::Yes, mm, addr);
 }
 
 inline void find_vma(Assembler* a, KModErr& out_err, uint64_t mm, uint64_t addr) {
-	IdleRegPool pool = IdleRegPool::make();
-	GpX xMm = pool.acquireX();
-	GpX xAddr = pool.acquireX();
-	RegProtectGuard g1(a, excluding_x0(pool.getUsed()));
-	aarch64_asm_mov_x(a, xMm, mm);
-	aarch64_asm_mov_x(a, xAddr, addr);
-	find_vma(a, out_err, xMm, xAddr);
+	out_err = CallHelper::callNameAuto(a, "find_vma", NeedReturnX0::Yes, mm, addr);
 }
 
 inline void find_vm_area(Assembler* a, KModErr& out_err, GpX addr) {
@@ -276,11 +254,7 @@ inline void find_vm_area(Assembler* a, KModErr& out_err, GpX addr) {
 }
 
 inline void find_vm_area(Assembler* a, KModErr& out_err, uint64_t addr) {
-	IdleRegPool pool = IdleRegPool::make();
-	GpX xAddr = pool.acquireX();
-	RegProtectGuard g1(a, excluding_x0(pool.getUsed()));
-	aarch64_asm_mov_x(a, xAddr, addr);
-	find_vm_area(a, out_err, xAddr);
+	out_err = CallHelper::callNameAuto(a, "find_vm_area", NeedReturnX0::Yes, addr);
 }
 
 inline void set_memory_ro(Assembler* a, KModErr & out_err, GpX addr, GpW numpages) {
@@ -325,31 +299,18 @@ inline void kmalloc(Assembler* a, KModErr & out_err, GpX size, GpW flags) {
 }
 
 inline void kmalloc(Assembler* a, KModErr & out_err, GpX size, KmallocFlags flags) {
-	IdleRegPool pool = IdleRegPool::make(size);
-	GpW wGFP_FLAG = pool.acquireW();
-	RegProtectGuard g1(a, excluding_x0(pool.getUsed()));
-	aarch64_asm_mov_w(a, wGFP_FLAG, (uint32_t)flags);
-	std::vector<Arm64Arg> new_regs;
-	new_regs.push_back(to_arg(size));
-	new_regs.push_back(to_arg(wGFP_FLAG));
 	CallHelper::callSymbolCandidates(a, out_err,
         (std::vector<std::string>{ "__kmalloc", "__kmalloc_noprof"/*Linux kernel 6.10*/ }),
 		NeedReturnX0::Yes,
-        new_regs
+        size, (uint32_t)flags
     );
 }
 
 inline void kmalloc(Assembler* a, KModErr & out_err, uint64_t size, KmallocFlags flags) {
-	RegProtectGuard g1(a, x11, w12);
-	aarch64_asm_mov_x(a, x11, size);
-	aarch64_asm_mov_w(a, w12, (uint32_t)flags);
-	std::vector<Arm64Arg> new_regs;
-	new_regs.push_back(to_arg(x11));
-	new_regs.push_back(to_arg(w12));
 	CallHelper::callSymbolCandidates(a, out_err,
         (std::vector<std::string>{ "__kmalloc", "__kmalloc_noprof"/*Linux kernel 6.10*/ }),
 		NeedReturnX0::Yes,
-        new_regs
+        size, (uint32_t)flags
     );
 }
 
@@ -403,13 +364,7 @@ inline void execmem_alloc(Assembler* a, KModErr& out_err, ExecmemTypes type, uin
 		out_err = KModErr::ERR_MODULE_SYMBOL_NOT_MATCH_LINUX_VER;
 		return;
 	}
-	RegProtectGuard g1(a, x11, x12);
-	aarch64_asm_mov_w(a, w11, (uint32_t)type);
-	aarch64_asm_mov_x(a, x12, size);
-	std::vector<Arm64Arg> new_regs;
-	new_regs.push_back(to_arg(w11));
-	new_regs.push_back(to_arg(x12));
-	out_err = CallHelper::callNameAuto(a, "execmem_alloc", NeedReturnX0::Yes, new_regs);
+	out_err = CallHelper::callNameAuto(a, "execmem_alloc", NeedReturnX0::Yes, (uint32_t)type, size);
 }
 
 inline KModErr execmem_alloc(ExecmemTypes type, uint64_t size, uint64_t& out_ptr) {
@@ -467,11 +422,7 @@ inline void module_alloc(Assembler* a, KModErr & out_err, uint64_t size) {
 		out_err = KModErr::ERR_MODULE_SYMBOL_NOT_MATCH_LINUX_VER;
 		return;
 	}
-	RegProtectGuard g1(a, x11);
-	aarch64_asm_mov_x(a, x11, size);
-	std::vector<Arm64Arg> new_regs;
-	new_regs.push_back(to_arg(x11));
-	out_err = CallHelper::callNameAuto(a, "module_alloc", NeedReturnX0::Yes, new_regs);
+	out_err = CallHelper::callNameAuto(a, "module_alloc", NeedReturnX0::Yes, size);
 }
 
 inline KModErr module_alloc(uint64_t size, uint64_t& out_module_region) {
@@ -499,8 +450,6 @@ inline void module_memfree(Assembler* a, KModErr & out_err, GpX module_region) {
 }
 
 inline KModErr module_memfree(uint64_t module_region) {
-	if(!kernel_module::is_kernel_version_less("6.12.0")) return KModErr::ERR_MODULE_SYMBOL_NOT_MATCH_LINUX_VER;
-
 	KModErr out_err = KModErr::OK;
     aarch64_asm_ctx asm_ctx = init_aarch64_asm();
 	auto a = asm_ctx.assembler();
@@ -525,13 +474,11 @@ inline void access_process_vm(Assembler* a, KModErr& out_err, GpX tsk, GpX addr,
 	out_err = CallHelper::callNameAuto(a, "access_process_vm", NeedReturnX0::Yes, tsk, addr, buf, len, gup_flags);
 }
 inline void access_process_vm(Assembler* a, KModErr& out_err, GpX tsk, GpX addr, GpX buf, uint32_t len, GpW gup_flags) {
-	IdleRegPool pool = IdleRegPool::make(tsk, addr, buf, gup_flags);
-	GpW wLen = pool.acquireW();
-
-	RegProtectGuard g1(a, excluding_x0(pool.getUsed()));
-
-	aarch64_asm_mov_w(a, wLen, len);
-	access_process_vm(a, out_err, tsk, addr, buf, wLen, gup_flags);
+	if (is_kernel_version_less("4.9.0")) {
+		out_err = KModErr::ERR_MODULE_SYMBOL_NOT_MATCH_LINUX_VER;
+		return;
+	}
+	out_err = CallHelper::callNameAuto(a, "access_process_vm", NeedReturnX0::Yes, tsk, addr, buf, len, gup_flags);
 }
 }
 
@@ -544,11 +491,40 @@ inline void access_process_vm(Assembler* a, KModErr& out_err, GpX tsk, GpX addr,
 	out_err = CallHelper::callNameAuto(a, "access_process_vm", NeedReturnX0::Yes, tsk, addr, buf, len, write);
 }
 inline void access_process_vm(Assembler* a, KModErr& out_err, GpX tsk, GpX addr, GpX buf, uint32_t len, GpW write) {
-	IdleRegPool pool = IdleRegPool::make(tsk, addr, buf, write);
-	GpW wLen = pool.acquireW();
-	RegProtectGuard g1(a, excluding_x0(pool.getUsed()));
-	aarch64_asm_mov_w(a, wLen, len);
-	access_process_vm(a, out_err, tsk, addr, buf, wLen, write);
+	if (!is_kernel_version_less("4.9.0")) {
+		out_err = KModErr::ERR_MODULE_SYMBOL_NOT_MATCH_LINUX_VER;
+		return;
+	}
+	out_err = CallHelper::callNameAuto(a, "access_process_vm", NeedReturnX0::Yes, tsk, addr, buf, len, write);
+}
+}
+
+namespace linux_above_5_6_0 {
+inline void pin_user_pages_fast(Assembler* a, KModErr& out_err, GpX start, GpW nr_pages, GpW gup_flags, GpX pages) {
+	if (is_kernel_version_less("5.6.0")) {
+		out_err = KModErr::ERR_MODULE_SYMBOL_NOT_MATCH_LINUX_VER;
+		return;
+	}
+	out_err = CallHelper::callNameAuto(a, "pin_user_pages_fast", NeedReturnX0::Yes, start, nr_pages, gup_flags, pages);
+}
+}
+
+namespace linux_above_5_2_0 {
+inline void get_user_pages_fast(Assembler* a, KModErr& out_err, GpX start, GpW nr_pages, GpW gup_flags, GpX pages) {
+	if (is_kernel_version_less("5.2.0")) {
+		out_err = KModErr::ERR_MODULE_SYMBOL_NOT_MATCH_LINUX_VER;
+		return;
+	}
+	out_err = CallHelper::callNameAuto(a, "get_user_pages_fast", NeedReturnX0::Yes, start, nr_pages, gup_flags, pages);
+}
+}
+namespace linux_older {
+inline void get_user_pages_fast(Assembler* a, KModErr& out_err, GpX start, GpW nr_pages, GpW write, GpX pages) {
+	if (!is_kernel_version_less("5.2.0")) {
+		out_err = KModErr::ERR_MODULE_SYMBOL_NOT_MATCH_LINUX_VER;
+		return;
+	}
+	out_err = CallHelper::callNameAuto(a, "get_user_pages_fast", NeedReturnX0::Yes, start, nr_pages, write, pages);
 }
 }
 
@@ -564,27 +540,12 @@ inline void kern_path(Assembler* a, KModErr & out_err, GpX name, GpW flags, GpX 
     out_err = CallHelper::callNameAuto(a, "kern_path", NeedReturnX0::Yes, name, flags, path);
 }
 
-
 inline void kern_path(Assembler* a, KModErr & out_err, GpX name, LookupFlags flags, GpX path) {
-	IdleRegPool pool = IdleRegPool::make(name, path);
-	GpW wFlags = pool.acquireW();
-
-	RegProtectGuard g1(a, excluding_x0(pool.getUsed()));
-
-	aarch64_asm_mov_w(a, wFlags, (uint32_t)flags);
-	kern_path(a, out_err, name, wFlags, path);
+	out_err = CallHelper::callNameAuto(a, "kern_path", NeedReturnX0::Yes, name, (uint32_t)flags, path);
 }
 
 inline void kern_path(Assembler* a, KModErr & out_err, GpX name, LookupFlags flags, uint64_t path_buf_addr) {
-	IdleRegPool pool = IdleRegPool::make(name);
-	GpW wFlags = pool.acquireW();
-	GpX xPathBuf = pool.acquireX();
-
-	RegProtectGuard g1(a, excluding_x0(pool.getUsed()));
-
-	aarch64_asm_mov_w(a, wFlags, (uint32_t)flags);
-	aarch64_asm_mov_x(a, xPathBuf, path_buf_addr);
-	kern_path(a, out_err, name, wFlags, xPathBuf);
+	out_err = CallHelper::callNameAuto(a, "kern_path", NeedReturnX0::Yes, name, (uint32_t)flags, path_buf_addr);
 }
 
 inline void path_put(Assembler* a, KModErr& out_err, GpX ptr_path) {
@@ -592,11 +553,7 @@ inline void path_put(Assembler* a, KModErr& out_err, GpX ptr_path) {
 }
 
 inline void path_put(Assembler* a, KModErr& out_err, uint64_t ptr_path) {
-	IdleRegPool pool = IdleRegPool::make();
-	GpX xPtrPath = pool.acquireX();
-	RegProtectGuard g1(a, pool.getUsed());
-	aarch64_asm_mov_x(a, xPtrPath, ptr_path);
-	path_put(a, out_err, xPtrPath);
+	out_err = CallHelper::callNameAuto(a, "path_put", NeedReturnX0::No, ptr_path);
 }
 
 inline void d_path(Assembler* a, KModErr & out_err, GpX path, GpX buf, GpW buflen) {
@@ -604,13 +561,7 @@ inline void d_path(Assembler* a, KModErr & out_err, GpX path, GpX buf, GpW bufle
 }
 
 inline void d_path(Assembler* a, KModErr & out_err, GpX path, GpX buf, uint32_t buflen) {
-	IdleRegPool pool = IdleRegPool::make(path, buf);
-	GpW wBuflen = pool.acquireW();
-
-	RegProtectGuard g1(a, excluding_x0(pool.getUsed()));
-
-	aarch64_asm_mov_w(a, wBuflen, buflen);
-	d_path(a, out_err, path, buf, wBuflen);
+	out_err = CallHelper::callNameAuto(a, "d_path", NeedReturnX0::Yes, path, buf, buflen);
 }
 
 inline void find_get_pid(Assembler* a, KModErr & out_err, GpW nr) {
@@ -638,13 +589,11 @@ inline void pid_task(Assembler* a, KModErr& out_err, GpX pid, GpW type) {
 	out_err = CallHelper::callNameAuto(a, "pid_task", NeedReturnX0::Yes, pid, type);
 }
 inline void pid_task(Assembler* a, KModErr& out_err, GpX pid, PidType type) {
-	IdleRegPool pool = IdleRegPool::make(pid);
-	GpW wType = pool.acquireW();
-
-	RegProtectGuard g1(a, excluding_x0(pool.getUsed()));
-
-	aarch64_asm_mov_w(a, wType, (uint32_t)type);
-	pid_task(a, out_err, pid, wType);
+	if (is_kernel_version_less("4.19.0")) {
+		out_err = KModErr::ERR_MODULE_SYMBOL_NOT_MATCH_LINUX_VER;
+		return;
+	}
+	out_err = CallHelper::callNameAuto(a, "pid_task", NeedReturnX0::Yes, pid, (uint32_t)type);
 }
 }
 
@@ -657,11 +606,11 @@ inline void pid_task(Assembler* a, KModErr& out_err, GpX pid, GpW type) {
 	out_err = CallHelper::callNameAuto(a, "pid_task", NeedReturnX0::Yes, pid, type);
 }
 inline void pid_task(Assembler* a, KModErr& out_err, GpX pid, PidType type) {
-	IdleRegPool pool = IdleRegPool::make(pid);
-	GpW wType = pool.acquireW();
-	RegProtectGuard g1(a, excluding_x0(pool.getUsed()));
-	aarch64_asm_mov_w(a, wType, (uint32_t)type);
-	pid_task(a, out_err, pid, wType);
+	if (!is_kernel_version_less("4.19.0")) {
+		out_err = KModErr::ERR_MODULE_SYMBOL_NOT_MATCH_LINUX_VER;
+		return;
+	}
+	out_err = CallHelper::callNameAuto(a, "pid_task", NeedReturnX0::Yes, pid, (uint32_t)type);
 }
 }
 
@@ -753,8 +702,121 @@ inline void apply_to_existing_page_range(Assembler* a, KModErr& out_err, GpX mm,
 	out_err = CallHelper::callNameAuto(a, "apply_to_existing_page_range", NeedReturnX0::Yes, mm, addr, size, fn, data);
 }
 
-inline void vmalloc_to_pfn(Assembler* a, KModErr& out_err, GpX vmalloc_addr) {
-	out_err = CallHelper::callNameAuto(a, "vmalloc_to_pfn", NeedReturnX0::Yes, vmalloc_addr);
+inline KModErr get_PHYS_OFFSET(uint64_t & result) {
+	uint64_t kaddr;
+	RETURN_IF_ERROR(kernel_module::kallsyms_lookup_name("memstart_addr", kaddr));
+	return kernel_module::read_kernel_mem(kaddr, &result, sizeof(result));
+}
+
+inline KModErr get_PAGE_OFFSET(uint64_t& result) {
+    static std::atomic<uint64_t> last_result{0};
+    uint64_t cached = last_result.load(std::memory_order_acquire);
+    if (cached == 0) {
+        uint64_t r = 0;
+        RETURN_IF_ERROR(::kernel_module::__get_PAGE_OFFSET(r));
+        last_result.store(r, std::memory_order_release);
+        cached = r;
+    }
+    result = cached;
+    return KModErr::OK;
+}
+
+inline KModErr virt_to_phys(uint64_t virt_kaddr, uint64_t & result) {
+	// 生成纯净的 Page Mask，并将 va 对齐到“页头”
+    // 例如 4K 页 (4096)，减 1 是 0xFFF，取反就是 ~0xFFF (0xFFFFFFFFFFFFF000)
+    // 这样既能抹平低位，又能完美保留高位的 0xFFFF...
+    uint64_t page_mask = ~((uint64_t)kernel_module::get_page_size() - 1); 
+    uint64_t va_aligned = virt_kaddr & page_mask;
+    uint64_t va_page_off = virt_kaddr - va_aligned;
+    // 将对齐后的页头虚拟地址，传入硬件翻译
+    uint64_t pa = 0;
+    RETURN_IF_ERROR(kernel_module::hardware_virt_to_phys(va_aligned, pa));
+    if (!pa) return KModErr::ERR_MODULE_NOT_KADDR;
+	result = pa + va_page_off;
+	return KModErr::OK;
+}
+
+inline KModErr phys_to_virt(uint64_t phys_addr, uint64_t & result) {
+	SymbolLookupPrintfGuard_8dfccc5cf454087c7314725d3487e703 s;
+    uint64_t physvirt_offset = 0;
+    if(is_ok(kernel_module::kallsyms_lookup_name("physvirt_offset", physvirt_offset)) && physvirt_offset) {
+		uint64_t physvirt_offset_val = 0;
+		RETURN_IF_ERROR(kernel_module::read_kernel_mem(physvirt_offset, &physvirt_offset_val, sizeof(physvirt_offset_val)));
+		result = phys_addr - physvirt_offset_val;
+		return KModErr::OK;
+	}
+    uint64_t PHYS_OFFSET = 0;
+    RETURN_IF_ERROR(kernel_module::export_symbol::get_PHYS_OFFSET(PHYS_OFFSET));
+    uint64_t PAGE_OFFSET = 0;
+    RETURN_IF_ERROR(kernel_module::export_symbol::get_PAGE_OFFSET(PAGE_OFFSET));
+    if(kernel_module::is_kernel_version_less("4.6.0")) {
+        result = phys_addr - PHYS_OFFSET + PAGE_OFFSET;
+    } else {
+        result = (phys_addr - PHYS_OFFSET) | PAGE_OFFSET;
+    }
+	return KModErr::OK;
+}
+
+inline KModErr get_vmemmap(uint64_t & result) {
+	uint64_t s;
+	return ::kernel_module::calibrate_vmemmap_dynamic(result, s);
+}
+
+inline KModErr android_arm64_page_to_pfn(uint64_t page, uint64_t & result) {
+	uint64_t vmemmap = 0;
+	RETURN_IF_ERROR(get_vmemmap(vmemmap));
+	uint32_t struct_page_size = 0;
+	RETURN_IF_ERROR(kernel_module::get_struct_page_size(struct_page_size));
+	uint64_t byte_offset = page - vmemmap;
+	result = byte_offset / struct_page_size;
+	return KModErr::OK;
+}
+
+inline KModErr pfn_to_phys(uint64_t pfn, uint64_t & result) {
+	result = pfn << PAGE_SHIFT;
+	return KModErr::OK;
+}
+
+inline void vmalloc(Assembler* a, KModErr& out_err, GpX size) {
+	CallHelper::callSymbolCandidates(a, out_err,
+        (std::vector<std::string>{ "vmalloc", "vmalloc_noprof"/*Linux kernel 6.10*/}),
+		NeedReturnX0::Yes,
+        size
+    );
+
+}
+
+inline void vmalloc(Assembler* a, KModErr& out_err, uint64_t size) {
+	CallHelper::callSymbolCandidates(a, out_err,
+        (std::vector<std::string>{ "vmalloc", "vmalloc_noprof"/*Linux kernel 6.10*/}),
+		NeedReturnX0::Yes,
+        size
+    );
+
+}
+
+inline void vfree(Assembler* a, KModErr& out_err, GpX addr) {
+	out_err = CallHelper::callNameAuto(a, "vfree", NeedReturnX0::Yes, addr);
+}
+
+inline void vfree(Assembler* a, KModErr& out_err, uint64_t addr) {
+	out_err = CallHelper::callNameAuto(a, "vfree", NeedReturnX0::Yes, addr);
+}
+
+inline void vmalloc_to_page(Assembler* a, KModErr& out_err, GpX addr) {
+	out_err = CallHelper::callNameAuto(a, "vmalloc_to_page", NeedReturnX0::Yes, addr);
+}
+
+inline void vmalloc_to_page(Assembler* a, KModErr& out_err, uint64_t addr) {
+	out_err = CallHelper::callNameAuto(a, "vmalloc_to_page", NeedReturnX0::Yes, addr);
+}
+
+inline void vmalloc_to_pfn(Assembler* a, KModErr& out_err, GpX addr) {
+	out_err = CallHelper::callNameAuto(a, "vmalloc_to_pfn", NeedReturnX0::Yes, addr);
+}
+
+inline void vmalloc_to_pfn(Assembler* a, KModErr& out_err, uint64_t addr) {
+	out_err = CallHelper::callNameAuto(a, "vmalloc_to_pfn", NeedReturnX0::Yes, addr);
 }
 
 inline void pfn_pte(Assembler* a, GpX pfn, GpX prot) {
@@ -780,10 +842,27 @@ inline void I_BDEV(Assembler* a, KModErr& out_err, GpX inode) {
 }
 
 inline void I_BDEV(Assembler* a, KModErr& out_err, uint64_t inode_kaddr) {
-	IdleRegPool pool = IdleRegPool::make();
-	GpX xInode = pool.acquireX();
-	aarch64_asm_mov_x(a, xInode, inode_kaddr);
-	I_BDEV(a, out_err, xInode);
+	out_err = CallHelper::callNameAuto(a, "I_BDEV", NeedReturnX0::Yes, inode_kaddr);
+}
+
+
+namespace linux_above_4_17_0 {
+inline void selinux_kernel_status_page(Assembler* a, KModErr& out_err, GpX state) {
+	out_err = CallHelper::callNameAuto(a, "selinux_kernel_status_page", NeedReturnX0::Yes, state);
+}
+}
+namespace linux_older {
+inline void selinux_kernel_status_page(Assembler* a, KModErr& out_err) {
+	out_err = CallHelper::callNameAuto(a, "selinux_kernel_status_page", NeedReturnX0::Yes);
+}
+}
+
+inline void vmap(Assembler* a, KModErr& out_err, GpX pages, GpW count, GpX flags, GpX prot) {
+	out_err = CallHelper::callNameAuto(a, "vmap", NeedReturnX0::Yes, pages, count, flags, prot);
+}
+
+inline void vunmap(Assembler* a, KModErr& out_err, GpX addr) {
+	out_err = CallHelper::callNameAuto(a, "vunmap", NeedReturnX0::No, addr);
 }
 
 inline void dump_stack(Assembler* a, KModErr& out_err) {

@@ -166,7 +166,6 @@ void module_memfree(Assembler* a, KModErr& out_err, GpX module_region);
 KModErr module_memfree(uint64_t module_region);
 }
 
-
 namespace linux_above_4_9_0 {
 // 原型: int access_process_vm(struct task_struct *tsk, unsigned long addr, void *buf, int len, unsigned int gup_flags); 返回值为 W0 寄存器
 void access_process_vm(Assembler* a, KModErr& out_err, GpX tsk, GpX addr, GpX buf, GpW len, GpW gup_flags);
@@ -178,7 +177,19 @@ void access_process_vm(Assembler* a, KModErr& out_err, GpX tsk, GpX addr, GpX bu
 void access_process_vm(Assembler* a, KModErr& out_err, GpX tsk, GpX addr, GpX buf, uint32_t len, GpW write);
 }
 
-void access_process_vm(Assembler* a, KModErr& out_err, uint64_t addr, uint32_t insn);
+namespace linux_above_5_6_0 {
+// 原型: int pin_user_pages_fast(unsigned long start, int nr_pages, unsigned int gup_flags, struct page **pages); 返回值为 W0 寄存器
+void pin_user_pages_fast(Assembler* a, KModErr& out_err, GpX start, GpW nr_pages, GpW gup_flags, GpX pages);
+}
+
+namespace linux_above_5_2_0 {
+// 原型: int get_user_pages_fast(unsigned long start, int nr_pages, unsigned int gup_flags, struct page **pages); 返回值为 W0 寄存器
+void get_user_pages_fast(Assembler* a, KModErr& out_err, GpX start, GpW nr_pages, GpW gup_flags, GpX pages);
+}
+namespace linux_older {
+// 原型: int get_user_pages_fast(unsigned long start, int nr_pages, int write, struct page **pages); 返回值为 W0 寄存器
+void get_user_pages_fast(Assembler* a, KModErr& out_err, GpX start, GpW nr_pages, GpW write, GpX pages);
+}
 
 // 原型: int __kprobes aarch64_insn_write(void *addr, u32 insn); 返回值为 W0 寄存器
 void aarch64_insn_write(Assembler* a, KModErr& out_err, GpX addr, GpW insn);
@@ -304,16 +315,64 @@ void apply_to_page_range(Assembler* a, KModErr& out_err, GpX mm, GpX addr, GpX s
 // 原型：int apply_to_existing_page_range(struct mm_struct *mm, unsigned long addr, unsigned long size, pte_fn_t fn, void *data); 返回值为 W0 寄存器
 void apply_to_existing_page_range(Assembler* a, KModErr& out_err, GpX mm, GpX addr, GpX size, GpX fn, GpX data);
 
-// 原型：unsigned long vmalloc_to_pfn(const void *vmalloc_addr); 返回值为 X0 寄存器
-void vmalloc_to_pfn(Assembler* a, KModErr& out_err, GpX vmalloc_addr);
+// 原型：#define PHYS_OFFSET 返回值为 X0 寄存器
+KModErr get_PHYS_OFFSET(uint64_t & result);
+// 原型：#define PAGE_OFFSET 返回值为 X0 寄存器
+KModErr get_PAGE_OFFSET(uint64_t & result);
+// 原型：phys_addr_t virt_to_phys(const volatile void *x); 返回值为 X0 寄存器
+KModErr virt_to_phys(uint64_t virt_kaddr, uint64_t & result);
+// 原型：void *phys_to_virt(phys_addr_t x); 返回值为 X0 寄存器
+KModErr phys_to_virt(uint64_t phys_addr, uint64_t & result);
+
+// 原型：#define vmemmap 返回值为 X0 寄存器
+KModErr get_vmemmap(uint64_t & result);
+
+// 原型：#define __page_to_pfn(page) 返回值为 X0 寄存器
+KModErr android_arm64_page_to_pfn(uint64_t page, uint64_t & result);
+
+// 原型：#define __pfn_to_phys(pfn) 返回值为 X0 寄存器
+KModErr pfn_to_phys(uint64_t pfn, uint64_t & result);
+
+// 原型：void *vmalloc(unsigned long size); 返回值为 X0 寄存器
+void vmalloc(Assembler* a, KModErr& out_err, GpX size);
+void vmalloc(Assembler* a, KModErr& out_err, uint64_t size);
+
+// 原型：void vfree(const void *addr); 无返回值
+void vfree(Assembler* a, KModErr& out_err, GpX addr);
+void vfree(Assembler* a, KModErr& out_err, uint64_t addr);
+
+// 原型：struct page *vmalloc_to_page(const void *addr); 返回值为 X0 寄存器
+void vmalloc_to_page(Assembler* a, KModErr& out_err, GpX addr);
+void vmalloc_to_page(Assembler* a, KModErr& out_err, uint64_t addr);
+
+// 原型：unsigned long vmalloc_to_pfn(const void *addr); 返回值为 X0 寄存器
+void vmalloc_to_pfn(Assembler* a, KModErr& out_err, GpX addr);
+void vmalloc_to_pfn(Assembler* a, KModErr& out_err, uint64_t addr);
 
 // 原型：#define pfn_pte(pfn, prot); 返回值为 X0 寄存器
 void pfn_pte(Assembler* a, GpX pfn, GpX prot);
 void pfn_pte(Assembler* a, GpX pfn, uint64_t prot_val);
 
+namespace linux_above_4_17_0 {
+// 原型：struct page *selinux_kernel_status_page(struct selinux_state *state); 返回值为 X0 寄存器
+void selinux_kernel_status_page(Assembler* a, KModErr& out_err, GpX state);
+}
+
+namespace linux_older {
+// 原型：struct page *selinux_kernel_status_page(void); 返回值为 X0 寄存器
+void selinux_kernel_status_page(Assembler* a, KModErr& out_err);
+}
+
+// 原型：void *vmap(struct page **pages, unsigned int count, unsigned long flags, pgprot_t prot); 返回值为 X0 寄存器
+void vmap(Assembler* a, KModErr& out_err, GpX pages, GpW count, GpX flags, GpX prot);
+
+// 原型：void vunmap(const void *addr); 无返回值
+void vunmap(Assembler* a, KModErr& out_err, GpX addr);
+
 // 原型：struct block_device *I_BDEV(struct inode *inode); 返回值为 X0 寄存器
 void I_BDEV(Assembler* a, KModErr& out_err, GpX inode);
 void I_BDEV(Assembler* a, KModErr& out_err, uint64_t inode_kaddr);
+
 
 // 原型：void dump_stack(void); 无返回值
 void dump_stack(Assembler* a, KModErr& out_err);

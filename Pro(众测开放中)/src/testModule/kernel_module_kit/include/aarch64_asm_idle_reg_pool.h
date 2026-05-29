@@ -45,7 +45,7 @@ public:
    *    其它 kind（Imm32 / Imm64）不影响寄存器占用状态；
    * 返回值：基于当前参数使用情况初始化好的寄存器池。
    ***************************************************************************/
-  static IdleRegPool makeFromVec(const std::vector<Arm64Arg>& vec) {
+  static IdleRegPool  makeFromVec(const std::vector<Arm64Arg>& vec) {
     IdleRegPool p;
     p.init();
     for (auto& a : vec) {

@@ -25,7 +25,7 @@ struct SymbolHit {
  * 参数: name         要查找的内核符号名称（以 '\\0' 结尾的字符串）
  *       mode         符号匹配模式
  *       out          输出参数，返回找到的符号地址
- * 返回: OK 表示成功找到符号；其他值为错误码
+ * 返回: OK 表示成功找到符号；其他值为错误码，其中 ERR_MODULE_SYMBOL_NOT_EXIST 含义为内核符号不存在
  ***************************************************************************/
 KModErr kallsyms_lookup_name(const char * name, SymbolMatchMode mode, SymbolHit & out);
 

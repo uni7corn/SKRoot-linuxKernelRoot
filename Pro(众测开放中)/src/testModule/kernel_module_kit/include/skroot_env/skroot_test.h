@@ -54,6 +54,7 @@ enum class BasicItem : uint32_t {
     WriteTest,          // 写入内存测试
     ReadTrampoline,     // 读取跳板测试
     WriteTrampoline,    // 写入跳板测试
+    PhysAddrCalc,       // 物理地址计算测试
 };
 
 KModErr test_skroot_basics(const char* root_key, BasicItem item, std::string& out);
