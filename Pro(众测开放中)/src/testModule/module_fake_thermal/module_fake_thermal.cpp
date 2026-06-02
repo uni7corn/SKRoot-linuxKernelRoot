@@ -23,9 +23,10 @@ int skroot_module_main(const char* root_key, const char* module_private_dir) {
 }
 
 // SKRoot 模块名片
+// 字段说明见 module_descriptor.h
 SKROOT_MODULE_NAME("温控解除")
 SKROOT_MODULE_VERSION("1.0.3")
 SKROOT_MODULE_DESC("内核级伪装处理器温度曲线，实现去除温控，安全可靠。")
 SKROOT_MODULE_AUTHOR("SKRoot")
-SKROOT_MODULE_UUID32("kO8hT9tT2fB0hY9hV2bB4eJ6aY2nQ6kL")
+SKROOT_MODULE_ID32("kO8hT9tT2fB0hY9hV2bB4eJ6aY2nQ6kL")
 SKROOT_MODULE_UPDATE_JSON("https://abcz316.github.io/SKRoot-linuxKernelRoot/module_fake_thermal/update.json")

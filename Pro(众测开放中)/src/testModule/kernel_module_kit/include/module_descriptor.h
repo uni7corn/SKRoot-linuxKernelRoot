@@ -33,8 +33,10 @@ int skroot_module_main(const char* root_key, const char* module_private_dir);
 // SKRoot 模块作者（必填）
 #define SKROOT_MODULE_AUTHOR(author)        ___MOD_AUTHOR(author)
 
-// SKRoot 模块 UUID32（必填，32 个随机字符 [0-9a-zA-Z]）
-#define SKROOT_MODULE_UUID32(str32)         ___MOD_UUID32(str32)
+// SKRoot 模块唯一身份ID（必填）
+// 用于区分不同模块，必须是固定 32 字符字符串。
+// 仅允许 [0-9a-zA-Z]，建议随机生成一次后保持不变。
+#define SKROOT_MODULE_ID32(str32)           ___MOD_ID32(str32)
 
 /***************************************************************************
  * 可选能力（按需填写）

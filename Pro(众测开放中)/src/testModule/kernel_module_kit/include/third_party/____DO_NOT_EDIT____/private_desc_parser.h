@@ -23,12 +23,12 @@ inline char skroot_module_name_5d1745f8a8fb4814fb0dbb5aab27bbca[1024] = {0};
         extern void Error_Missing_SKRoot_Module_Version__Please_define_SKROOT_MODULE_VERSION(); \
         extern void Error_Missing_SKRoot_Module_Descriptor__Please_define_SKROOT_MODULE_DESC(); \
         extern void Error_Missing_SKRoot_Module_Author__Please_define_SKROOT_MODULE_AUTHOR(); \
-        extern void Error_Missing_SKRoot_Module_UUID32__Please_define_SKROOT_MODULE_UUID32(); \
+        extern void Error_Missing_SKRoot_Module_ID32__Please_define_SKROOT_MODULE_ID32(); \
         Error_Missing_SKRoot_Module_Name__Please_define_SKROOT_MODULE_NAME(); \
         Error_Missing_SKRoot_Module_Version__Please_define_SKROOT_MODULE_VERSION();  \
         Error_Missing_SKRoot_Module_Descriptor__Please_define_SKROOT_MODULE_DESC();  \
         Error_Missing_SKRoot_Module_Author__Please_define_SKROOT_MODULE_AUTHOR();  \
-        Error_Missing_SKRoot_Module_UUID32__Please_define_SKROOT_MODULE_UUID32();  \
+        Error_Missing_SKRoot_Module_ID32__Please_define_SKROOT_MODULE_ID32();  \
         if(strlen(skroot_module_name_5d1745f8a8fb4814fb0dbb5aab27bbca) == 0) printf("");  \
         if(strlen(skroot_module_ver_61432c728da7c34d7fd698461a36a421) == 0) printf("");  \
         if(strlen(skroot_module_desc_c658b5f0a346f94d52b96379fc26b0c4) == 0) printf(""); \
@@ -67,22 +67,22 @@ inline char skroot_module_author_857d43a4f1978f830f6a2dc91d840338[1024] = {0};
     };
     
 inline char skroot_module_uuid_927fa0e9f491cdcbd07e8a647f09e1e2[1024] = {0};
-#define __INJECT_SKROOT_MODULE_UUID32 inject_skroot_module_uuid32_e4c143955f2eb7eebe1d71130f428f7a
-#define ___MOD_UUID32_TAG_BEGIN  "b33dcddd88c07d079a8e0e9ec6ab976f15f2edba46cab91a61234cfbb982111c"
-#define ___MOD_UUID32_TAG_END    "3020d9a6c07a30e2649dd29a72d7e57121f0c0ca457b6d21dca5a69acbe6c2c4"
-#define ___MOD_UUID32(val) \
+#define __INJECT_SKROOT_MODULE_ID32 inject_skroot_module_uuid32_e4c143955f2eb7eebe1d71130f428f7a
+#define ___MOD_ID32_TAG_BEGIN  "b33dcddd88c07d079a8e0e9ec6ab976f15f2edba46cab91a61234cfbb982111c"
+#define ___MOD_ID32_TAG_END    "3020d9a6c07a30e2649dd29a72d7e57121f0c0ca457b6d21dca5a69acbe6c2c4"
+#define ___MOD_ID32(val) \
     template <std::size_t N> \
     consteval void uuid32_check_bd8a9bbb16b9b755b96a9f2bc0114e13(const char (&s)[N]) { \
-        static_assert(N == 33, "SKROOT_MODULE_UUID32: 长度必须为32个字符"); \
+        static_assert(N == 33, "SKROOT_MODULE_ID32: 长度必须为32个字符"); \
     } \
-    extern "C" __attribute__((visibility("default"))) __attribute__((used, weak)) void __INJECT_SKROOT_MODULE_UUID32() { \
+    extern "C" __attribute__((visibility("default"))) __attribute__((used, weak)) void __INJECT_SKROOT_MODULE_ID32() { \
         uuid32_check_bd8a9bbb16b9b755b96a9f2bc0114e13(val); \
-        strncpy(skroot_module_uuid_927fa0e9f491cdcbd07e8a647f09e1e2, ___MOD_UUID32_TAG_BEGIN val ___MOD_UUID32_TAG_END, sizeof(skroot_module_uuid_927fa0e9f491cdcbd07e8a647f09e1e2) - 1); \
+        strncpy(skroot_module_uuid_927fa0e9f491cdcbd07e8a647f09e1e2, ___MOD_ID32_TAG_BEGIN val ___MOD_ID32_TAG_END, sizeof(skroot_module_uuid_927fa0e9f491cdcbd07e8a647f09e1e2) - 1); \
         extern void __set_current_module_uuid32_1b0494ae8a788541db46b82cc1f0577c(const char*); \
         __set_current_module_uuid32_1b0494ae8a788541db46b82cc1f0577c(val); \
     }; \
-    extern "C" void Error_Missing_SKRoot_Module_UUID32__Please_define_SKROOT_MODULE_UUID32() { \
-        __INJECT_SKROOT_MODULE_UUID32(); \
+    extern "C" void Error_Missing_SKRoot_Module_ID32__Please_define_SKROOT_MODULE_ID32() { \
+        __INJECT_SKROOT_MODULE_ID32(); \
     };
     
 inline char skroot_module_update_json_7310fa0a06d95799b3f9beaf60e26e85[1024] = {0};

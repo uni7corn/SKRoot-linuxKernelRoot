@@ -84,10 +84,11 @@ public:
 };
 
 // SKRoot 模块名片
+// 字段说明见 module_descriptor.h
 SKROOT_MODULE_NAME("隐藏/data目录")
 SKROOT_MODULE_VERSION("1.0.8")
 SKROOT_MODULE_DESC("内核级隐藏 /data 指定目录，彻底阻断文件扫描；底层拦截机制，免疫各类基于漏洞的暴力扫盘。")
 SKROOT_MODULE_AUTHOR("SKRoot")
-SKROOT_MODULE_UUID32("ae12076c010ebabbb233affdd0239c14")
+SKROOT_MODULE_ID32("ae12076c010ebabbb233affdd0239c14")
 SKROOT_MODULE_WEB_UI(MyWebHttpHandler)
 SKROOT_MODULE_UPDATE_JSON("https://abcz316.github.io/SKRoot-linuxKernelRoot/module_hide_data_dir/update.json")

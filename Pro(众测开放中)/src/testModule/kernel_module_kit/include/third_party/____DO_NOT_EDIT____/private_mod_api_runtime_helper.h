@@ -8,7 +8,7 @@
 #include "../../module_base_kernel_func_hook.h"
 namespace kernel_module {
 inline KModErr execute_kernel_asm_func(const std::vector<uint8_t>& func_bytes, uint64_t& output_result) {
-    KModErr execute_kernel_asm_func_with_buf(const uint8_t*shellcode, uint32_t size, uint64_t& out_kaddr);
+    KModErr execute_kernel_asm_func_with_buf(const uint8_t*shellcode, uint32_t shellcode_len, uint64_t& out_kaddr);
     return execute_kernel_asm_func_with_buf(func_bytes.data(), func_bytes.size(), output_result);
 }
 

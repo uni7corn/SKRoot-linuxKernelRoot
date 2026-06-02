@@ -190,11 +190,12 @@ private:
 };
 
 // SKRoot 模块名片
+// 字段说明见 module_descriptor.h
 SKROOT_MODULE_NAME("Tricky Store")
 SKROOT_MODULE_VERSION(MOD_VER)
 SKROOT_MODULE_DESC("提供系统证书接管与 TEE 状态修复能力。")
 SKROOT_MODULE_AUTHOR("5ec1cff, aviraxp, Cyberenchanter and topjohnwu")
-SKROOT_MODULE_UUID32("c3a70f603b48380a611131d29c50aac3")
+SKROOT_MODULE_ID32("c3a70f603b48380a611131d29c50aac3")
 SKROOT_MODULE_WEB_UI(MyWebHttpHandler)
 SKROOT_MODULE_ON_INSTALL(module_on_install)
 SKROOT_MODULE_ON_UNINSTALL(module_on_uninstall)

@@ -68,15 +68,14 @@ KModErr kernel_hijack_file(const fs::path& system_file_path, const fs::path& fak
     LOG_DBG("fake_i_mapping_ptr:%lx\n", fake_i_mapping_ptr);
 
     RETURN_IF_ERROR(kernel_module::write_kernel_rw_mem_atomic64(i_mapping_pptr, fake_i_mapping_ptr));
-    
-    uint64_t r = 0;
-    RETURN_IF_ERROR(get_kernel_shellcode_u64_result([inode_ptr, i_mapping_pptr, i_mapping_ptr, fake_i_mapping_ptr](Assembler* a, GpX & x) -> KModErr {
+   
+    RETURN_IF_ERROR(exec_kernel_shellcode_no_result([inode_ptr, i_mapping_pptr, i_mapping_ptr, fake_i_mapping_ptr](Assembler* a) -> KModErr {
         KModErr err = KModErr::ERR_MODULE_PARAM;
         aarch64_asm_mov_x(a, x10, i_mapping_ptr);
         kernel_module::export_symbol::invalidate_inode_pages2(a, err, x10);
         RETURN_IF_ERROR(err);
         return KModErr::OK;
-    }, r));
+    }));
 
     uint64_t i_size_pptr = inode_ptr + i_size_offset;
     uint64_t fake_i_size_pptr = fake_inode_ptr + i_size_offset;
@@ -124,4 +123,4 @@ SKROOT_MODULE_NAME("系统文件伪造 Demo")
 SKROOT_MODULE_VERSION("1.0.0")
 SKROOT_MODULE_DESC("内核级伪造 /system 只读文件，实现内容无痕篡改；无视任何文件校验，完美过所有侦测手段。")
 SKROOT_MODULE_AUTHOR("SKRoot")
-SKROOT_MODULE_UUID32("xhTxKsI5kHacgHJ04b5VhO4ffiOP4sdc")
+SKROOT_MODULE_ID32("xhTxKsI5kHacgHJ04b5VhO4ffiOP4sdc")

@@ -54,11 +54,12 @@ public:
 };
 
 // SKRoot 模块名片
+// 字段说明见 module_descriptor.h
 SKROOT_MODULE_NAME("阿灵的机型模拟")
 SKROOT_MODULE_VERSION("5.2.5")
 SKROOT_MODULE_DESC("需要手动选择模拟机型，TG频道:@Whitelist520")
 SKROOT_MODULE_AUTHOR("阿灵")
-SKROOT_MODULE_UUID32("z2rYhJP0gOTKK9lYmXS9sanxw6cIZGYD")
+SKROOT_MODULE_ID32("z2rYhJP0gOTKK9lYmXS9sanxw6cIZGYD")
 SKROOT_MODULE_ON_INSTALL(module_on_install)
 SKROOT_MODULE_WEB_UI(MyWebHttpHandler)
 SKROOT_MODULE_UPDATE_JSON("https://abcz316.github.io/SKRoot-linuxKernelRoot/module_fake_device/aling_fake_dev_update.json")

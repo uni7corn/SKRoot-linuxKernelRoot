@@ -34,13 +34,12 @@ struct scoped_kpath {
         _buf_kaddr = 0;
         raw = {};
 
-        uint64_t r = 0;
-        get_kernel_shellcode_u64_result([kaddr](Assembler* a, GpX& x) -> KModErr {
+        exec_kernel_shellcode_no_result([kaddr](Assembler* a) -> KModErr {
             KModErr err = KModErr::ERR_MODULE_PARAM;
             kernel_module::export_symbol::path_put(a, err, kaddr);
             RETURN_IF_ERROR(err);
             return KModErr::OK;
-        }, r);
+        });
 
         kernel_module::free_kernel_mem(kaddr);
     }
@@ -67,14 +66,13 @@ KModErr acquire_kpath(const std::string & path_str, scoped_kpath & out_scoped) {
     RETURN_IF_ERROR(kernel_module::alloc_kernel_mem(page_size, buf_kaddr));
     RETURN_IF_ERROR(kernel_module::fill00_kernel_mem(buf_kaddr, page_size));
 
-    uint64_t r = 0;
-    RETURN_IF_ERROR(get_kernel_shellcode_u64_result([buf_kaddr, &path_str](Assembler* a, GpX & x) -> KModErr {
+    RETURN_IF_ERROR(exec_kernel_shellcode_no_result([buf_kaddr, &path_str](Assembler* a) -> KModErr {
         KModErr err = KModErr::ERR_MODULE_PARAM;
         aarch64_asm_set_x_cstr_ptr(a, x10, path_str);
         kernel_module::export_symbol::kern_path(a, err, x10, LookupFlags::LOOKUP_FOLLOW, buf_kaddr);
         RETURN_IF_ERROR(err);
         return KModErr::OK;
-    }, r));
+    }));
 
     kpath st_kp = {0};
     RETURN_IF_ERROR(kernel_module::read_kernel_mem(buf_kaddr, &st_kp, sizeof(st_kp)));

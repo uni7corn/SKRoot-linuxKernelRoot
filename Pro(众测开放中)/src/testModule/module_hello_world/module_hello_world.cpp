@@ -46,8 +46,9 @@ int skroot_module_main(const char* root_key, const char* module_private_dir) {
 }
 
 // SKRoot 模块名片
-SKROOT_MODULE_NAME("演示模块名称")	// 在此填写模块名称
-SKROOT_MODULE_VERSION("1.0.0")		// 在此填写模块版本号
-SKROOT_MODULE_DESC("演示模块描述")	// 在此填写模块描述文本
-SKROOT_MODULE_AUTHOR("演示作者名字") // 在此填写模块作者
-SKROOT_MODULE_UUID32("3608c9af28db4dcfc05c32bbc584753e") // 在此填写模块UUID，32个随机字符 [0-9a-zA-Z]
+// 字段说明见 module_descriptor.h
+SKROOT_MODULE_NAME("演示模块名称")
+SKROOT_MODULE_VERSION("1.0.0")
+SKROOT_MODULE_DESC("演示模块描述")
+SKROOT_MODULE_AUTHOR("演示作者名字")
+SKROOT_MODULE_ID32("3608c9af28db4dcfc05c32bbc584753e")
