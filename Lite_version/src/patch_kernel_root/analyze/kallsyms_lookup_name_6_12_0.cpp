@@ -47,8 +47,8 @@ bool KallsymsLookupName_6_12_0::init() {
 	size_t kallsyms_num_offset = 0;
 
 	if (find_kallsyms_offsets_list(offset_list_start, offset_list_end)) {
-		std::cout << std::hex << "fisrt kallsyms_offset_start: 0x" << offset_list_start << std::endl;
-		std::cout << std::hex << "fisrt kallsyms_offset_end: 0x" << offset_list_end << std::endl;
+		std::cout << std::hex << "kallsyms_offset_start: 0x" << offset_list_start << std::endl;
+		std::cout << std::hex << "kallsyms_offset_end: 0x" << offset_list_end << std::endl;
 
 		kallsyms_relative_base_offset = find_kallsyms_relative_base_offset(offset_list_end);
 		if (!kallsyms_relative_base_offset) {

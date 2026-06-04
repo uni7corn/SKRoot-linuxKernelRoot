@@ -251,7 +251,7 @@ void test_implant_app(const char* target_pid_cmdline) {
 int main(int argc, char* argv[]) {
 	printf(
 		"=======================================\n"
-		"本工具名称: SKRoot(Lite) - Linux内核级完美隐藏ROOT演示\n\n"
+		"本工具名称: SKRoot(Lite) - Linux内核级完美隐藏ROOT方案\n\n"
 		"本工具功能列表：\n"
 
 		"1. 测试ROOT权限\n"
@@ -278,8 +278,6 @@ int main(int argc, char* argv[]) {
 		"8. 寄生目标APP\n"
 		"\tUsage: testRoot implantApp <process-name>\n\n"
 
-		"本工具特点：\n"
-		"新一代 SkRoot，完美隐藏Root功能，兼容安卓 APP 直接JNI调用，稳定不闪退。\n"
 		"------------------------------------------------------\n"
 		"如需帮助，请使用对应的命令，或者查看上面的菜单。\n\n");
 	++argv;

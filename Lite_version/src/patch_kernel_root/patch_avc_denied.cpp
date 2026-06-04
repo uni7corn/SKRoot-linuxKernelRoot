@@ -1,6 +1,7 @@
 ﻿#include "patch_avc_denied.h"
 #include "analyze/base_func.h"
 #include "3rdparty/aarch64_asm_helper.h"
+#include "3rdparty/aarch64_asm_canary_bypass_guard.h"
 using namespace asmjit;
 using namespace asmjit::a64;
 using namespace asmjit::a64::Predicate;
@@ -27,7 +28,10 @@ size_t PatchAvcDenied::patch_avc_denied(const SymbolRegion& hook_func_start_regi
 	auto a = asm_ctx.assembler();
 
 	Label label_end = a->newLabel();
-	emit_safe_bl(a, hook_func_start_addr, current_avc_check_bl_func);
+	{
+		CanaryBypassGuard  canary_guard(a);
+		emit_safe_bl(a, hook_func_start_addr, current_avc_check_bl_func);
+	}
 	a->cbz(x10, label_end);
 	a->mov(w0, wzr);
 	a->bind(label_end);

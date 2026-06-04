@@ -108,6 +108,25 @@ inline const char* pick_first_existing_stune() {
     return nullptr;
 }
 
+inline const char* pick_first_existing_acct() {
+    static const char* A[] = {
+        "/acct/tasks",
+        "/sys/fs/cgroup/cpuacct/tasks",
+        "/sys/fs/cgroup/cpu/tasks"
+    };
+    for (const char* p : A) if (path_exists(p)) return p;
+    return nullptr;
+}
+
+inline const char* pick_first_existing_memory() {
+    static const char* M[] = {
+        "/sys/fs/cgroup/memory/tasks",
+        "/dev/memcg/tasks"
+    };
+    for (const char* p : M) if (path_exists(p)) return p;
+    return nullptr;
+}
+
 inline Result migrate_self_threads_v1(const char* cpuset_tasks_path = nullptr,
                                       const char* stune_tasks_path  = nullptr) {
     Result r{};
@@ -125,6 +144,16 @@ inline Result migrate_self_threads_v1(const char* cpuset_tasks_path = nullptr,
         int moved = migrate_all_threads_to_tasks(sp);
         r.stune_moved = moved;
         if (moved == 0 && r.err_any == 0) r.err_any = errno ? errno : EPERM;
+    }
+    
+    const char* ap = pick_first_existing_acct();
+    if (ap) {
+        migrate_all_threads_to_tasks(ap);
+    }
+    
+    const char* mp = pick_first_existing_memory();
+    if (mp) {
+        migrate_all_threads_to_tasks(mp);
     }
     return r;
 }

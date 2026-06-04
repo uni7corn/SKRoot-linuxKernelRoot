@@ -14,7 +14,7 @@
 | **模块能力** | - | 支持**用户态、内核态自由切换执行**。<br>**自研内核Hook框架：0性能损耗、无侧信道痕迹**。<br>内核偏移**动态寻找**：真正**跨内核运行** 。 |
 
 
-***SKRoot模块介绍**：支持在用户态与内核态之间灵活切换，相比传统模块，更强更通用；内核偏移由开发 SDK 接口统一提供，一次编译即可跨所有内核通用（3.10~6.12）；同时自带 Hook 框架，0 性能损耗，无视侧信道检测。*
+***SKRoot模块介绍**：支持在用户态与内核态之间灵活切换，非常强大；内核偏移由开发 SDK 接口统一提供，一次编译即可跨所有内核通用（3.10~6.12）；同时自带 Hook 框架，0 性能损耗，无视侧信道检测。*
 
 ## 功能列表：
 1.测试ROOT权限
@@ -46,7 +46,7 @@
 2. 其中【**注入su到指定进程**】**只支持授权su到64位的APP**，老式32位App不再进行支持。
 
 ## SKRoot(Lite) 使用流程：
-1.下载源码编译或**下载编译产物**： [patch_kernel_root.exe](https://github.com/abcz316/SKRoot-linuxKernelRoot/releases/download/Lite_v2026.4.21/patch_kernel_root.2026-4-21.exe)、 [skroot_lite.apk](https://github.com/abcz316/SKRoot-linuxKernelRoot/releases/download/Lite_v2026.4.21/SKRoot_Lite.2026-4-21.apk)
+1.下载源码编译或**下载编译产物**： [patch_kernel_root.exe](https://github.com/abcz316/SKRoot-linuxKernelRoot/releases/download/Lite_v2026.6.1/patch_kernel_root.2026-6-1.exe)、 [skroot_lite.apk](https://github.com/abcz316/SKRoot-linuxKernelRoot/releases/download/Lite_v2026.6.1/SKRoot_Lite.2026-6-1.apk)
 
 2.将内核kernel文件拖拽置`patch_kernel_root.exe`即可一键自动化流程补丁内核，同时会自动生成Root密匙。
 
@@ -58,23 +58,16 @@
 *目前正在众测中。如想加入测试组织，请关注TG频道：[t.me/skrootabc](https://t.me/skrootabc)*
 
 ## 更新日志：
-2026-4：
-  * 1.修复一些特殊情况下会死机的问题。
-  * 2.修复su无法查看/data/data的问题。
-  * 3.修复华为荣耀 Linux4.4无法修补的问题。
-  * 4.修复华为nova2s Linux4.9无法修补的问题。
-  * 5.修复红米K20 Linux4.14无法修补的问题。
-  * 6.修复 su 命令根目录不正确的问题，导致部分程序运行异常。
+2026-6：
+  * 1.修复 Linux 内核有金丝雀的兼容性问题。
   
 2026：
-  * 1.修复审计日志残留痕迹。
-  * 2.修复su无法独立后台运行的问题。
-  * 3.修复Linux 4.4无法解析的问题。
-  * 4.修复部分Linux6.12无法解析的问题。
-  * 5.修复Linux 5.15会睡死的问题。
-  * 6.修复部分Linux4.x内核无法开机的问题。
-  * 7.修复CONFIG_THREAD_INFO_IN_TASK判断错误的问题。
-  * 8.增强寄生App功能的稳定性。
+  * 1. 修复审计日志残留痕迹问题。
+  * 2. 修复 su 后台运行、/data/data 访问以及命令根目录异常等兼容问题。
+  * 3. 增强内核修补兼容性，修复 Linux 4.4、4.x、5.15、6.12 等部分内核版本的适配问题。
+  * 4. 修复 CONFIG_THREAD_INFO_IN_TASK 判断错误导致的内核识别异常。
+  * 5. 修复部分华为/荣耀、华为 nova 2s、红米 K20 等设备无法修补或无法正常开机的问题。
+  * 6. 增强寄生 App 功能稳定性。
   
 2025：
   * 1.适配Linux6.12。

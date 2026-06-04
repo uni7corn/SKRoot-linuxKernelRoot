@@ -1,6 +1,7 @@
 ﻿#include "patch_audit_log_start.h"
 #include "analyze/base_func.h"
 #include "3rdparty/aarch64_asm_helper.h"
+#include "3rdparty/aarch64_asm_canary_bypass_guard.h"
 using namespace asmjit;
 using namespace asmjit::a64;
 using namespace asmjit::a64::Predicate;
@@ -21,9 +22,11 @@ size_t PatchAuditLogStart::patch_audit_log_start(const SymbolRegion& hook_func_s
 
 	aarch64_asm_ctx asm_ctx = init_aarch64_asm();
 	auto a = asm_ctx.assembler();
-
 	Label label_end = a->newLabel();
-	emit_safe_bl(a, hook_func_start_addr, current_avc_check_bl_func);
+	{
+		CanaryBypassGuard  canary_guard(a);
+		emit_safe_bl(a, hook_func_start_addr, current_avc_check_bl_func);
+	}
 	a->cbz(x10, label_end);
 	a->mov(w0, wzr);
 	emit_ret_by_entry_insn(a, m_audit_log_start_orig_entry_insn);
@@ -31,6 +34,7 @@ size_t PatchAuditLogStart::patch_audit_log_start(const SymbolRegion& hook_func_s
 	a->mov(x0, x0);
 	aarch64_asm_b(a, (int32_t)(hook_jump_back_addr - (hook_func_start_addr + a->offset())));
 	std::cout << print_aarch64_asm(a) << std::endl;
+
 	std::vector<uint8_t> bytes = aarch64_asm_to_bytes(a);
 	if (bytes.size() == 0) return 0;
 	std::string str_bytes = bytes2hex((const unsigned char*)bytes.data(), bytes.size());
@@ -48,7 +52,6 @@ size_t PatchAuditLogStart::patch_audit_log_start(const SymbolRegion& hook_func_s
 		std::cout << "[发生错误] patch_audit_log_start failed: not enough kernel space." << std::endl;
 		return 0;
 	}
-
 	vec_out_patch_bytes_data.push_back({ str_bytes, hook_func_start_addr });
 	patch_jump(m_audit_log_start, hook_func_start_addr, vec_out_patch_bytes_data);
 	return shellcode_size;

@@ -120,6 +120,11 @@ std::unordered_map<std::string, uint64_t> KernelSymbolParser::kallsyms_lookup_na
     return result;
 }
 
+std::unordered_map<std::string, uint64_t> KernelSymbolParser::get_all_symbols() {
+	if (!m_active_lookup || !m_active_lookup->is_inited()) return {};
+	return m_active_lookup->kallsyms_on_each_symbol();
+}
+
 bool KernelSymbolParser::try_init_lookup(IKallsymsLookup& lookup) {
 	if (!lookup.init()) return false;
 	m_active_lookup = &lookup;

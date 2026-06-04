@@ -45,7 +45,6 @@ size_t PatchCurrentAvcCheck::patch_current_avc_check_bl_func(const SymbolRegion&
 	a->mov(x10, Imm(1));
 	a->bind(label_end);
 	a->ret(x30);
-
 	std::cout << print_aarch64_asm(a) << std::endl;
 
 	std::vector<uint8_t> bytes = aarch64_asm_to_bytes(a);

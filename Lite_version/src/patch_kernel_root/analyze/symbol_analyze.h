@@ -58,6 +58,7 @@ public:
 public:
 	bool analyze_kernel_symbol();
 	KernelSymbolOffset get_symbol_offset();
+	std::unordered_map<std::string, uint64_t> get_all_symbols();
 private:
 	bool find_symbol_offset();
 	void printf_symbol_offset();

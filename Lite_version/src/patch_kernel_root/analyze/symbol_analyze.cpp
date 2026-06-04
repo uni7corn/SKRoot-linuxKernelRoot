@@ -23,6 +23,10 @@ KernelSymbolOffset SymbolAnalyze::get_symbol_offset() {
 	return m_sym_offset;
 }
 
+std::unordered_map<std::string, uint64_t> SymbolAnalyze::get_all_symbols() {
+	return m_sym_parser.get_all_symbols();
+}
+
 bool SymbolAnalyze::find_symbol_offset() {
 	auto find_addr = [this](std::initializer_list<std::pair<const char *, bool>> names) -> uint64_t {
 		for (auto &n : names) {

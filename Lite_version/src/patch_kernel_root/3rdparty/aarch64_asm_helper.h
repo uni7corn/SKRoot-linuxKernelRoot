@@ -534,9 +534,26 @@ void aarch64_asm_ic_iallu(Assembler* a) {
 
 /******************************************************************
  * DSB ISH
+ * Inner Shareable，等待前面的读写内存访问完成
  *****************************************************************/
 void aarch64_asm_dsb_ish(Assembler* a) {
-	a->dsb(Imm(Predicate::DB::kISH));
+    a->dsb(Imm(Predicate::DB::kISH));     // 0b1011
+}
+
+/******************************************************************
+ * DSB ISHST
+ * Inner Shareable，只等待前面的写内存访问完成
+ *****************************************************************/
+void aarch64_asm_dsb_ishst(Assembler* a) {
+    a->dsb(Imm(Predicate::DB::kISHST));   // 0b1010
+}
+
+/******************************************************************
+ * DSB SY
+ * Full system，最强同步屏障
+ *****************************************************************/
+void aarch64_asm_dsb_sy(Assembler* a) {
+    a->dsb(Imm(Predicate::DB::kSY));      // 0b1111
 }
 
 /******************************************************************
@@ -558,6 +575,13 @@ void aarch64_asm_at_s1e1r(Assembler* a, GpX virtReg) {
  *****************************************************************/
 void aarch64_asm_mrs_par_el1(Assembler* a, GpX x) {
     a->mrs(x, Imm(Predicate::SysReg::encode(3, 0, 7, 4, 0)));
+}
+
+/******************************************************************
+ * TLBI VMALLE1IS
+ *****************************************************************/
+void aarch64_asm_tlbi_vmalle1is(asmjit::a64::Assembler* a) {
+    a->sys(asmjit::imm(0), asmjit::imm(8), asmjit::imm(3), asmjit::imm(0));
 }
 
 /******************************************************************

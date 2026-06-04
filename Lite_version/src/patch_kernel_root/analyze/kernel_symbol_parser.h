@@ -20,7 +20,7 @@ public:
 	uint64_t kallsyms_lookup_name(const char* name);
 	uint64_t kallsyms_symbol_size(uint64_t cur_addr);
 	std::unordered_map<std::string, uint64_t> kallsyms_lookup_names_like(const char* name);
-
+	std::unordered_map<std::string, uint64_t> get_all_symbols();
 private:
 	bool try_init_lookup(IKallsymsLookup& lookup);
 	uint64_t check_convert_b_insn(uint64_t symbol_offset);

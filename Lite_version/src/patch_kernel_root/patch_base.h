@@ -3,7 +3,7 @@
 #include <vector>
 #include "patch_kernel_root.h"
 #include "3rdparty/aarch64_asm_helper.h"
-#include "3rdparty/aarch64_reg_protect_guard.h"
+#include "3rdparty/aarch64_asm_reg_protect_guard.h"
 #include "analyze/symbol_analyze.h"
 #include "analyze/init_cred_searcher.h"
 

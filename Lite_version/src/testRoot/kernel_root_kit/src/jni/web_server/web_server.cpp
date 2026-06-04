@@ -413,12 +413,6 @@ int main(int argc, char* argv[]) {
         writeToLog("web_server root error");
 		return 0;
 	}
-
-	if (setsid() < 0) {
-		setpgid(0, 0); 
-	}
-	signal(SIGPIPE, SIG_IGN);
-
     std::string str_port = std::to_string(PORT);
     const char* options[] = {
         "listening_ports", str_port.c_str(),

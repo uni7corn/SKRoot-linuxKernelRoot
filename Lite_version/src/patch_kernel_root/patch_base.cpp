@@ -113,12 +113,16 @@ void PatchBase::emit_ret_by_entry_insn(Assembler* a, uint32_t entry_insn) {
         aarch64_asm_autiaz(a);
         a->ret(x30);
     } else if (aarch64_insn_is_paciasp(entry_insn)) {
-        aarch64_asm_retaa(a);
+		aarch64_asm_autiasp(a);
+		a->ret(x30);
+		//aarch64_asm_retaa(a);
     } else if (aarch64_insn_is_pacibz(entry_insn)) {
         aarch64_asm_autibz(a);
         a->ret(x30);
     } else if (aarch64_insn_is_pacibsp(entry_insn)) {
-        aarch64_asm_retab(a);
+		aarch64_asm_autibsp(a);
+		a->ret(x30);
+        //aarch64_asm_retab(a);
     } else {
         a->ret(x30);
     }
