@@ -173,7 +173,7 @@ KModErr Test_install_kernel_function_after_hook() {
 
 int main(int argc, char *argv[]) {
  	//TODO: 在此修改你的Root key值。
-	fake_skroot_module_main("vzXtDKDAltAGxHtMGRZZfVouy90dgNqFsLM6UGeqb6OgH0VX");
+	fake_skroot_module_main("zDw14U77idQNQVIpgNe3unWkevmLZIzXBZFnEAVkugLuBCuw");
 
  	// 单元测试：内核模块基础能力
 	int idx = 1;
@@ -272,6 +272,7 @@ int main(int argc, char *argv[]) {
 	TEST(idx++, Test_get_block_device_bd_disk_offset);		// 获取 block_device 结构体中 bd_disk 字段的偏移量
 	TEST(idx++, Test_get_gendisk_part0_offset1);			// 获取 gendisk 结构体中 part0 字段的偏移量
 	TEST(idx++, Test_get_gendisk_part0_offset2);			// 获取 gendisk 结构体中 part0 字段的偏移量
+	TEST(idx++, Test_get_seq_operations_show_offset);		// 获取 seq_operations 结构体中 show 字段的偏移量
  	TEST(idx++, Test_set_current_caps);						// 设置进程能力集
  	TEST(idx++, Test_set_current_process_name);				// 设置进程名
 

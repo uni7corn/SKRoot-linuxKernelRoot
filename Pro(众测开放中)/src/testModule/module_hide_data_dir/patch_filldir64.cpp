@@ -16,7 +16,7 @@ using namespace asmjit::a64::Predicate;
     X30（LR）：链接寄存器
     SP：栈指针
 
-在HOOK内核函数中：
+在Hook内核函数中：
 1.必须要保存、恢复的寄存器：x0–x7、X19–X28、X29-X30
 2.能自由修改、无需额外保存／恢复的寄存器是：x9–x15 或 x16–x17（IP0/IP1）
 3.尽量避开使用的寄存器：x18

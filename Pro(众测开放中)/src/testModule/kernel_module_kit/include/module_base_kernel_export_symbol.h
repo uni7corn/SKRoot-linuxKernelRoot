@@ -177,6 +177,20 @@ void access_process_vm(Assembler* a, KModErr& out_err, GpX tsk, GpX addr, GpX bu
 void access_process_vm(Assembler* a, KModErr& out_err, GpX tsk, GpX addr, GpX buf, uint32_t len, GpW write);
 }
 
+// 原型：void seq_printf(struct seq_file *m, const char *f, ...); 无返回值
+template <typename... Regs>
+void seq_printf(Assembler* a, KModErr& out_err, GpX m, GpX f, Regs... regs) {
+    auto orig = mk_args(std::forward<Regs>(regs)...);
+    void seq_printf(Assembler* a, KModErr& out_err, GpX m, GpX f, const Arm64Arg* regs, int regs_count);
+    seq_printf(a, out_err, m, f, orig.data(), static_cast<int>(orig.size()));
+}
+template <typename... Regs>
+void seq_printf(Assembler* a, KModErr& out_err, GpX m, const char *f, Regs... regs) {
+    auto orig = mk_args(std::forward<Regs>(regs)...);
+    void seq_printf(Assembler* a, KModErr& out_err, GpX m, const char *f, const Arm64Arg* regs, int regs_count);
+    seq_printf(a, out_err, m, f, orig.data(), static_cast<int>(orig.size()));
+}
+
 namespace linux_above_5_6_0 {
 // 原型: int pin_user_pages_fast(unsigned long start, int nr_pages, unsigned int gup_flags, struct page **pages); 返回值为 W0 寄存器
 void pin_user_pages_fast(Assembler* a, KModErr& out_err, GpX start, GpW nr_pages, GpW gup_flags, GpX pages);

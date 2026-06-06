@@ -499,6 +499,35 @@ inline void access_process_vm(Assembler* a, KModErr& out_err, GpX tsk, GpX addr,
 }
 }
 
+inline void seq_printf(Assembler* a, KModErr & out_err, GpX m, GpX f, const Arm64Arg* regs, int regs_count) {
+	std::vector<Arm64Arg> __regs_vec(regs, regs + regs_count);
+	__regs_vec.insert(__regs_vec.begin(), to_arg(f));
+	__regs_vec.insert(__regs_vec.begin(), to_arg(m));
+	CallHelper::callSymbolCandidates(a, out_err,
+        (std::vector<std::string>{"seq_printf"}),
+		NeedReturnX0::No,
+        __regs_vec
+    );
+}
+
+inline void seq_printf(Assembler* a, KModErr & out_err, GpX m, const char *f, const Arm64Arg* regs, int regs_count) {
+	std::vector<Arm64Arg> __regs_vec(regs, regs + regs_count);
+	IdleRegPool pool = IdleRegPool::makeFromVec(__regs_vec);
+	GpX xM = pool.acquireX();
+	GpX xF = pool.acquireX();
+	RegProtectGuard g1(a, xM, xF);
+	a->mov(xM, m);
+	aarch64_asm_set_x_cstr_ptr(a, xF, f);
+	std::vector<Arm64Arg> new_regs = __regs_vec;
+	new_regs.insert(new_regs.begin(), to_arg(xF));
+	new_regs.insert(new_regs.begin(), to_arg(xM));
+	CallHelper::callSymbolCandidates(a, out_err,
+        (std::vector<std::string>{"seq_printf"}),
+		NeedReturnX0::No,
+        new_regs
+    );
+}
+
 namespace linux_above_5_6_0 {
 inline void pin_user_pages_fast(Assembler* a, KModErr& out_err, GpX start, GpW nr_pages, GpW gup_flags, GpX pages) {
 	if (is_kernel_version_less("5.6.0")) {

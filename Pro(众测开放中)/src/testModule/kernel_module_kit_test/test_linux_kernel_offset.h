@@ -518,6 +518,14 @@ KModErr Test_get_gendisk_part0_offset2() {
     return KModErr::OK;
 }
 
+KModErr Test_get_seq_operations_show_offset() {
+    REQUIRE_ROOT_OR_RETURN();
+    uint32_t offset = 0;
+    RETURN_IF_ERROR(kernel_module::get_seq_operations_show_offset(offset));
+    printf("Output offset: 0x%x\n", offset);
+    return KModErr::OK;
+}
+
 KModErr Test_set_current_caps() {
     kernel_module::caps_info caps;
     KModErr err = kernel_module::get_current_caps(caps);

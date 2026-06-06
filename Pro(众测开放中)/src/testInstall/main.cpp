@@ -111,9 +111,10 @@ void test_remove_module(const char* mod_uuid) {
 }
 
 static void print_sep(char c) {
-    for (int i = 0; i < 32; ++i) std::putchar(c);
+    for (int i = 0; i < 30; ++i) std::putchar(c);
     std::putchar('\n');
 }
+
 static void print_desc_info(const skroot_env::module_desc& desc) {
     printf("----- SKRoot Module Meta -----\n");
     printf("Name    : %s\n", desc.name);
@@ -131,29 +132,40 @@ static void print_desc_info(const skroot_env::module_desc& desc) {
 		if(desc.web_ui) std::printf("  [+] Web UI\n");
 		if(online_update) std::printf("  [+] Online Update\n");
     }
-    printf("------------------------------\n");
+    print_sep('-');
+}
+
+static const char* module_run_state_to_string(skroot_env::ModuleRunState state) {
+    using State = skroot_env::ModuleRunState;
+    switch (state) {
+        case State::NotRunning:
+            return "NotRunning / 未运行";
+        case State::Running:
+            return "Running / 运行中";
+        case State::Abnormal:
+            return "Abnormal / 运行异常";
+        case State::RemovedPendingReboot:
+            return "RemovedPendingReboot / 已删除，待重启";
+        default:
+            return "Unknown / 未知状态";
+    }
+}
+
+static void print_module_record(const skroot_env::module_record& record) {
+    print_desc_info(record.desc);
+    printf("Runtime:\n");
+    printf("  State   : %s (%u)\n", module_run_state_to_string(record.state), static_cast<uint32_t>(record.state));
+    print_sep('-');
 }
 
 void test_show_module_list() {
-	std::vector<skroot_env::module_desc> list1, list2, list3;
-	KModErr err1 = skroot_env::get_all_modules_list(ROOT_KEY, list1, skroot_env::ModuleListMode::All);
-	KModErr err2 = skroot_env::get_all_modules_list(ROOT_KEY, list2, skroot_env::ModuleListMode::RunningOnly);
-	KModErr err3 = skroot_env::get_all_modules_list(ROOT_KEY, list3, skroot_env::ModuleListMode::AbnormalOnly);
-    printf("get_all_modules_list(All) err: %s, cnt:%zd\n", to_string(err1).c_str(), list1.size());
-    printf("get_all_modules_list(RunningOnly) err: %s, cnt:%zd\n", to_string(err2).c_str(), list2.size());
-    printf("get_all_modules_list(AbnormalOnly) err: %s, cnt:%zd\n", to_string(err3).c_str(), list3.size());
-	if(is_ok(err1)) {
-		printf("All modules list:\n");
-		for(auto & m : list1) print_desc_info(m);
-	}
-	if(is_ok(err2)) {
-		printf("Running modules list:\n");
-		for(auto & m : list2) printf("name:%s, uuid:%s\n", m.name, m.uuid);
-	}
-	if(is_ok(err2)) {
-		printf("Abnormal modules list:\n");
-		for(auto & m : list3) printf("name:%s, uuid:%s\n", m.name, m.uuid);
-	}
+    std::vector<skroot_env::module_record> list;
+    KModErr err = skroot_env::get_all_modules_list(ROOT_KEY, list);
+    printf("get_all_modules_list err: %s, cnt:%zd\n", to_string(err).c_str(), list.size());
+    if (is_failed(err)) return;
+    for (auto& record : list) {
+        print_module_record(record);
+    }
 }
 
 void test_parse_module(const char* zip_file_path) {
@@ -175,7 +187,7 @@ void test_open_module_web_ui(const char* mod_uuid) {
 int main(int argc, char* argv[]) {
 	printf(
 		"=======================================================\n"
-		"本工具名称: SKRoot(Pro) - Linux内核级完美隐藏ROOT演示\n"
+		"本工具名称: SKRoot(Pro) - Linux内核级完美隐藏ROOT方案\n"
 		"用法总览:\n"
 		"testInstall <command> [args...]\n"
 		"---------------------- 基础环境 ----------------------\n");
@@ -212,7 +224,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	//TODO: 在此修改你的Root key值。
-	strncpy(ROOT_KEY, "vzXtDKDAltAGxHtMGRZZfVouy90dgNqFsLM6UGeqb6OgH0VX", sizeof(ROOT_KEY) - 1);
+	strncpy(ROOT_KEY, "zDw14U77idQNQVIpgNe3unWkevmLZIzXBZFnEAVkugLuBCuw", sizeof(ROOT_KEY) - 1);
 
 	std::map<std::string, std::function<void()>> command_map = {
 		{"install", []() { test_install_skroot(); }},

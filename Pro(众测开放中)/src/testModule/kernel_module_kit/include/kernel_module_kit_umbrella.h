@@ -16,6 +16,7 @@
 #include "kernel_offsets/file_struct.h"
 #include "kernel_offsets/proc_ops.h"
 #include "kernel_offsets/seq_file.h"
+#include "kernel_offsets/seq_operations.h"
 #include "kernel_offsets/file_operations.h"
 #include "kernel_offsets/inode_operations.h"
 #include "kernel_offsets/miscdevice.h"
