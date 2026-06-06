@@ -42,9 +42,9 @@ int skroot_module_main(const char* root_key, const char* module_private_dir) {
 
 // SKRoot 模块名片
 // 字段说明见 module_descriptor.h
-SKROOT_MODULE_NAME("防标记改麒麟9000s")
+SKROOT_MODULE_NAME("伪装CPU信息为麒麟9000s")
 SKROOT_MODULE_VERSION("1.0.0")
-SKROOT_MODULE_DESC("内核级伪装/proc/cpuinfo，无挂载")
+SKROOT_MODULE_DESC("内核级伪装/proc/cpuinfo为麒麟9000s，无挂载")
 SKROOT_MODULE_AUTHOR("SKRoot & Auto")
 SKROOT_MODULE_ID32("DrAofKWAYs3XO0Js4YBzB3ecqMQVdzkH")
 SKROOT_MODULE_UPDATE_JSON("https://abcz316.github.io/SKRoot-linuxKernelRoot/module_fake_device/auto_fake_cpuinfo_update.json")
