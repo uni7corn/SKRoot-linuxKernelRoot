@@ -239,6 +239,100 @@ body {
   cursor: default;
 }
 
+
+body.modal-open {
+  overflow: hidden;
+}
+
+.reboot-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background: rgba(17, 24, 39, 0.26);
+  backdrop-filter: blur(14px) saturate(1.06);
+  -webkit-backdrop-filter: blur(14px) saturate(1.06);
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+.reboot-mask.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.reboot-dialog {
+  width: min(100%, 330px);
+  border-radius: 26px;
+  padding: 24px 20px 18px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.985);
+  border: 1px solid rgba(244, 114, 94, 0.14);
+  box-shadow: 0 24px 66px rgba(15, 23, 42, 0.24), 0 0 0 1px rgba(255,255,255,0.86) inset;
+  transform: translateY(14px) scale(0.96);
+  transition: transform 0.24s cubic-bezier(.2,.9,.2,1);
+}
+
+.reboot-mask.show .reboot-dialog {
+  transform: translateY(0) scale(1);
+}
+
+.reboot-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(244, 114, 94, 0.12);
+  color: #d45d54;
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.reboot-success {
+  color: #111111;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.reboot-highlight {
+  margin-top: 10px;
+  color: #a33a31;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.reboot-ok-btn {
+  width: 100%;
+  margin-top: 18px;
+  border: none;
+  border-radius: 16px;
+  padding: 14px 14px;
+  background: linear-gradient(180deg, #f87171 0%, #ef6057 100%);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(239, 96, 87, 0.20);
+  transition: 0.18s ease;
+}
+
+.reboot-ok-btn:active {
+  transform: scale(0.98);
+  filter: brightness(0.98);
+}
+
 @media (max-width: 420px) {
   body { padding: 12px 10px; }
   .title { font-size: 20px; }

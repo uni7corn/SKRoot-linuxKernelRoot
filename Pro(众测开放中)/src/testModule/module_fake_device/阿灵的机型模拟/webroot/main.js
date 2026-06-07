@@ -4,6 +4,8 @@ const resultCount = document.getElementById('resultCount');
 const currentMain = document.getElementById('currentMain');
 const currentCode = document.getElementById('currentCode');
 const saveBtn = document.getElementById('saveBtn');
+const rebootMask = document.getElementById('rebootMask');
+const rebootOkBtn = document.getElementById('rebootOkBtn');
 
 // 本地机型列表：name 用来显示，sh 用来读写配置
 const models = [
@@ -126,6 +128,22 @@ function scrollToSelected() {
   active.scrollIntoView({ block: 'center', behavior: 'auto' });
 }
 
+function showRebootNotice() {
+  if (!rebootMask) return;
+
+  rebootMask.classList.add('show');
+  rebootMask.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+}
+
+function hideRebootNotice() {
+  if (!rebootMask) return;
+
+  rebootMask.classList.remove('show');
+  rebootMask.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+}
+
 async function handleSave() {
   if (!selected) {
     showToast('请先选择机型');
@@ -139,7 +157,8 @@ async function handleSave() {
     // 这里传 sh
     const resp = await RequestApi.setCurrentSh(selected);
     if (resp != "OK") throw new Error(resp);
-    showToast('保存成功，重启生效');
+    showToast('保存成功');
+    window.setTimeout(showRebootNotice, 1500);
   } catch (err) {
     console.error(err);
     showToast('保存失败', 'error');
@@ -174,6 +193,16 @@ searchInput.addEventListener('input', function () {
 });
 
 saveBtn.addEventListener('click', handleSave);
+
+if (rebootOkBtn) {
+  rebootOkBtn.addEventListener('click', hideRebootNotice);
+}
+
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') {
+    hideRebootNotice();
+  }
+});
 
 bindListEvents();
 initData();

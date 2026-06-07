@@ -48,13 +48,19 @@
   </div>
 
   <div class="toast" id="toast">
-    <div class="toast-inner">保存成功，重启生效！</div>
+    <div class="toast-inner">保存成功</div>
   </div>
 
-  <script>
+  <div class="reboot-mask" id="rebootMask" aria-hidden="true">
+    <div class="reboot-dialog" role="dialog" aria-modal="true" aria-labelledby="rebootTitle">
+      <div class="reboot-icon">!</div>
+      <div class="reboot-success" id="rebootTitle">请注意</div>
+      <div class="reboot-highlight">重启手机后才会生效</div>
+      <button id="rebootOkBtn" class="reboot-ok-btn" type="button">知道了</button>
+    </div>
+  </div>
 
-  </script>
-    <script src="request.js"></script>
+  <script src="request.js"></script>
   <script src="toast.js"></script>
   <script src="main.js"></script>
 </body>
