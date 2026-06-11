@@ -53,7 +53,7 @@
 3.安装并启动`skroot_lite.apk`或者`testRoot`，输入Root密匙值，即可正常使用SKRoot。
 
 ## SKRoot(Pro) 使用流程：
-*已全部开发完成，其中 “SKRootPro 模块开发 SDK” 已公开，其余组件将在稳定后逐步公开。*
+*已全部开发完成，其中 “[SKRootPro 模块开发 SDK](https://github.com/abcz316/SKRoot-linuxKernelRoot/tree/master/Pro(%E4%BC%97%E6%B5%8B%E5%BC%80%E6%94%BE%E4%B8%AD)/src/testModule)”、“[SKRoot 模块开发指南.pdf](https://github.com/abcz316/SKRoot-linuxKernelRoot/blob/master/Pro(%E4%BC%97%E6%B5%8B%E5%BC%80%E6%94%BE%E4%B8%AD)/src/testModule/SKRoot%E6%A8%A1%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97.pdf)” 已公开，其余组件将在稳定后逐步公开。*
 
 *目前正在众测中。如想加入测试组织，请关注TG频道：[t.me/skrootabc](https://t.me/skrootabc)*
 
@@ -62,12 +62,12 @@
   * 1.修复 Linux 内核有金丝雀的兼容性问题。
   
 2026：
-  * 1. 修复审计日志残留痕迹问题。
-  * 2. 修复 su 后台运行、/data/data 访问以及命令根目录异常等兼容问题。
-  * 3. 增强内核修补兼容性，修复 Linux 4.4、4.x、5.15、6.12 等部分内核版本的适配问题。
-  * 4. 修复 CONFIG_THREAD_INFO_IN_TASK 判断错误导致的内核识别异常。
-  * 5. 修复部分华为/荣耀、华为 nova 2s、红米 K20 等设备无法修补或无法正常开机的问题。
-  * 6. 增强寄生 App 功能稳定性。
+  * 1.修复审计日志残留痕迹问题。
+  * 2.修复 su 后台运行、/data/data 访问以及命令根目录异常等兼容问题。
+  * 3.增强内核修补兼容性，修复 Linux 4.4、4.x、5.15、6.12 等部分内核版本的适配问题。
+  * 4.修复 CONFIG_THREAD_INFO_IN_TASK 判断错误导致的内核识别异常。
+  * 5.修复部分华为/荣耀、华为 nova 2s、红米 K20 等设备无法修补或无法正常开机的问题。
+  * 6.增强寄生 App 功能稳定性。
   
 2025：
   * 1.适配Linux6.12。
