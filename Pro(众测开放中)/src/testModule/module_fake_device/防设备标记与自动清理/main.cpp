@@ -299,7 +299,7 @@ private:
 // 字段说明见 module_descriptor.h
 SKROOT_MODULE_NAME("防设备标记&自动清理")
 SKROOT_MODULE_VERSION("5.0.6")
-SKROOT_MODULE_DESC("需手动添加目标包名。判断开启成功：/mnt/vendor/persist/data (高通)目录下文件为空、无法写入文件，表示拦截已生效。本模块采用内核拦截技术，不改目录权限。支持天玑，天玑安装后显示新路径。")
+SKROOT_MODULE_DESC("需手动添加目标包名。判断开启成功：/mnt/vendor/persist/data (高通)目录下文件为空、无法写入文件，表示拦截已生效。本模块采用内核拦截技术，不改目录权限。支持天玑。防标记工作时，指纹支付App可能报异常。")
 SKROOT_MODULE_AUTHOR("SKRoot & 蜃 & Cycle1337")
 SKROOT_MODULE_ID32("Vk0EFJTuG2aBLQqc6WLHVPHnhfiZ8VKG")
 SKROOT_MODULE_WEB_UI(MyWebHttpHandler)

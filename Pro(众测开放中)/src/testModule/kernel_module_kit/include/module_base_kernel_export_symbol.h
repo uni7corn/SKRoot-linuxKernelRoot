@@ -288,6 +288,9 @@ void proc_create_data(Assembler* a, KModErr& out_err, GpX name, GpW mode, GpX pa
 // 原型：void proc_remove(struct proc_dir_entry *de); 无返回值
 void proc_remove(Assembler* a, KModErr& out_err, GpX de);
 
+// 原型：int vfs_fstat(unsigned int fd, struct kstat *stat); 返回值为 W0 寄存器
+void vfs_fstat(Assembler* a, KModErr& out_err, GpW fd, GpX stat);
+
 // 原型：int misc_register(struct miscdevice *misc); 返回值为 W0 寄存器
 // 原型：void misc_deregister(struct miscdevice *misc); 无返回值
 void misc_register(Assembler* a, KModErr& out_err, GpX misc);
@@ -382,6 +385,7 @@ void vmap(Assembler* a, KModErr& out_err, GpX pages, GpW count, GpX flags, GpX p
 
 // 原型：void vunmap(const void *addr); 无返回值
 void vunmap(Assembler* a, KModErr& out_err, GpX addr);
+
 
 // 原型：struct block_device *I_BDEV(struct inode *inode); 返回值为 X0 寄存器
 void I_BDEV(Assembler* a, KModErr& out_err, GpX inode);

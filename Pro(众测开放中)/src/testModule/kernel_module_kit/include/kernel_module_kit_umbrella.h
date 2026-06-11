@@ -27,6 +27,7 @@
 #include "kernel_offsets/gendisk.h"
 #include "kernel_offsets/pte_fn_t.h"
 #include "kernel_offsets/page.h"
+#include "kernel_offsets/kstat.h"
 #include "module_base_kernel_mem.h"
 #include "module_base_kernel_func_executor.h"
 #include "module_base_kernel_func_hook.h"

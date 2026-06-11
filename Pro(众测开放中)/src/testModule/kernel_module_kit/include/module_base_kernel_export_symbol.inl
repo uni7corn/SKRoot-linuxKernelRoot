@@ -669,6 +669,20 @@ inline void proc_remove(Assembler* a, KModErr& out_err, GpX de) {
 	out_err = CallHelper::callNameAuto(a, "proc_remove", NeedReturnX0::No, de);
 }
 
+#define STATX_BASIC_STATS	0x000007ffU	/* The stuff in the normal stat struct */
+inline void vfs_fstat(Assembler* a, KModErr& out_err, GpW fd, GpX stat) {
+	if(kernel_module::is_kernel_version_less("4.11.0")) {
+		out_err = CallHelper::callNameAuto(a, "vfs_fstat", NeedReturnX0::Yes, fd, stat);
+		return;
+	} else if(kernel_module::is_kernel_version_less("5.10.0")) {
+		out_err = CallHelper::callNameAuto(a, "vfs_statx_fd", NeedReturnX0::Yes, fd, stat, (uint32_t)STATX_BASIC_STATS, (uint32_t)0);
+		return;
+	} else {
+		out_err = CallHelper::callNameAuto(a, "vfs_fstat", NeedReturnX0::Yes, fd, stat);
+		return;
+	}
+}
+
 inline void misc_register(Assembler* a, KModErr& out_err, GpX misc) {
 	out_err = CallHelper::callNameAuto(a, "misc_register", NeedReturnX0::Yes, misc);
 }
