@@ -1,0 +1,305 @@
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #f2f2f7;
+  color: #1c1c1e;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  padding: 18px 14px;
+}
+
+.wrap {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.panel {
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid rgba(60, 60, 67, 0.08);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 20px 18px 18px;
+  background: linear-gradient(180deg, #f7faff 0%, #eef5ff 100%);
+  border-bottom: 1px solid rgba(0, 122, 255, 0.09);
+}
+
+.header-icon {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 16px;
+  color: #007aff;
+  background: linear-gradient(180deg, #ffffff 0%, #f2f7ff 100%);
+  border: 1px solid rgba(0, 122, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 7px 18px rgba(0, 122, 255, 0.10);
+}
+
+.header-text {
+  min-width: 0;
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8e8e93;
+  font-weight: 600;
+}
+
+.title {
+  margin-top: 5px;
+  color: #111111;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.subtitle {
+  margin-top: 7px;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.panel-body {
+  padding: 16px 14px 16px;
+  background: #ffffff;
+}
+
+.info-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 22px;
+  border: 1px solid rgba(0, 122, 255, 0.10);
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.card-label {
+  color: #8e8e93;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.current-date {
+  margin-top: 6px;
+  color: #111111;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.status-pill {
+  flex-shrink: 0;
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: rgba(0, 122, 255, 0.08);
+  border: 1px solid rgba(0, 122, 255, 0.10);
+  color: #007aff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.edit-card {
+  margin-top: 12px;
+  padding: 16px;
+  border-radius: 22px;
+  background: #fafafd;
+  border: 1px solid rgba(60, 60, 67, 0.08);
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 10px;
+  color: #3a3a3c;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.date-input {
+  width: 100%;
+  border: 1px solid rgba(0, 122, 255, 0.14);
+  background: #ffffff;
+  color: #111111;
+  padding: 13px 14px;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  outline: none;
+  transition: 0.18s ease;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.date-input:focus {
+  border-color: rgba(0, 122, 255, 0.35);
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.08);
+}
+
+.date-input::placeholder {
+  color: #c3c6cc;
+}
+
+.panel-footer {
+  padding: 14px;
+  border-top: 1px solid rgba(60, 60, 67, 0.08);
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.save-btn {
+  width: 100%;
+  border: none;
+  border-radius: 17px;
+  padding: 15px 14px;
+  background: #007aff;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.18s ease;
+  box-shadow: 0 8px 18px rgba(0, 122, 255, 0.22);
+}
+
+.save-btn:hover {
+  filter: brightness(0.98);
+}
+
+.save-btn:active {
+  transform: scale(0.99);
+}
+
+.save-btn:disabled {
+  opacity: 0.72;
+  cursor: default;
+  transform: none;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+.reboot-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background: rgba(17, 24, 39, 0.26);
+  backdrop-filter: blur(14px) saturate(1.06);
+  -webkit-backdrop-filter: blur(14px) saturate(1.06);
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+.reboot-mask.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.reboot-dialog {
+  width: min(100%, 330px);
+  border-radius: 26px;
+  padding: 24px 20px 18px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.985);
+  border: 1px solid rgba(244, 114, 94, 0.14);
+  box-shadow: 0 24px 66px rgba(15, 23, 42, 0.24), 0 0 0 1px rgba(255,255,255,0.86) inset;
+  transform: translateY(14px) scale(0.96);
+  transition: transform 0.24s cubic-bezier(.2,.9,.2,1);
+}
+
+.reboot-mask.show .reboot-dialog {
+  transform: translateY(0) scale(1);
+}
+
+.reboot-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(244, 114, 94, 0.12);
+  color: #d45d54;
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.reboot-success {
+  color: #111111;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.reboot-highlight {
+  margin-top: 10px;
+  color: #a33a31;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.reboot-ok-btn {
+  width: 100%;
+  margin-top: 18px;
+  border: none;
+  border-radius: 16px;
+  padding: 14px 14px;
+  background: linear-gradient(180deg, #f87171 0%, #ef6057 100%);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(239, 96, 87, 0.20);
+  transition: 0.18s ease;
+}
+
+.reboot-ok-btn:active {
+  transform: scale(0.98);
+  filter: brightness(0.98);
+}
+
+@media (max-width: 420px) {
+  body { padding: 12px 10px; }
+  .panel-header { padding: 18px 16px 16px; }
+  .title { font-size: 22px; }
+  .subtitle { font-size: 12px; }
+  .current-date { font-size: 18px; }
+  .date-input { font-size: 17px; }
+}

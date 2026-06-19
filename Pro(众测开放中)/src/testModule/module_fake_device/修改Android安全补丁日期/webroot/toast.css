@@ -1,0 +1,90 @@
+.toast {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, calc(-50% + 8px)) scale(0.96);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.22s ease;
+  z-index: 9999;
+}
+
+.toast::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  border-radius: 28px;
+  filter: blur(14px);
+  z-index: -1;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.toast-inner {
+  min-width: 156px;
+  text-align: center;
+  border-radius: 20px;
+  padding: 16px 18px 14px;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(255,255,255,0.82) inset;
+  backdrop-filter: blur(20px) saturate(1.14);
+  -webkit-backdrop-filter: blur(20px) saturate(1.14);
+}
+
+.toast-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toast-text {
+  line-height: 1.2;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.24);
+}
+
+.toast.toast-success::before {
+  background: rgba(185, 245, 204, 0.22);
+}
+
+.toast.toast-success .toast-inner {
+  background: linear-gradient(180deg, rgba(230, 249, 236, 0.995) 0%, rgba(214, 243, 223, 0.988) 100%);
+  border: 1px solid rgba(52, 199, 89, 0.34);
+  color: #175f34;
+  box-shadow: 0 24px 60px rgba(52, 199, 89, 0.22), 0 10px 22px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(255,255,255,0.82) inset;
+}
+
+.toast.toast-success .toast-icon {
+  background: rgba(52, 199, 89, 0.18);
+  border: 1px solid rgba(52, 199, 89, 0.22);
+}
+
+.toast.toast-success .toast-text {
+  color: #175f34;
+}
+
+.toast.toast-error::before {
+  background: rgba(255, 190, 180, 0.24);
+}
+
+.toast.toast-error .toast-inner {
+  background: linear-gradient(180deg, rgba(255, 243, 241, 0.995) 0%, rgba(255, 231, 227, 0.99) 100%);
+  border: 1px solid rgba(255, 59, 48, 0.28);
+  color: #8f1d17;
+  box-shadow: 0 24px 60px rgba(255, 59, 48, 0.18), 0 10px 22px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(255,255,255,0.82) inset;
+}
+
+.toast.toast-error .toast-icon {
+  background: rgba(255, 59, 48, 0.14);
+  border: 1px solid rgba(255, 59, 48, 0.20);
+}
+
+.toast.toast-error .toast-text {
+  color: #8f1d17;
+}

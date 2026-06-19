@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>修改设备安全补丁日期</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="toast.css">
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="header-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 3.6L18.2 5.9V10.6C18.2 14.8 15.7 18.2 12 19.8C8.3 18.2 5.8 14.8 5.8 10.6V5.9L12 3.6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M9.2 12.1L11.2 14.1L15 9.9" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="header-text">
+          <div class="eyebrow">Security Patch</div>
+          <div class="title">设置安全补丁日期</div>
+          <div class="subtitle">自动同步多个系统分区相关属性</div>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <div class="info-card">
+          <div>
+            <div class="card-label">当前日期</div>
+            <div id="currentPatchDate" class="current-date">读取中...</div>
+          </div>
+          <div class="status-pill">当前值</div>
+        </div>
+
+        <div class="edit-card">
+          <label class="field-label" for="patchDateInput">修改为</label>
+          <div class="input-wrap">
+            <input
+              id="patchDateInput"
+              class="date-input"
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
+              placeholder="2026-01-01"
+              pattern="[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-footer">
+        <button id="saveBtn" class="save-btn">保存配置</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <div class="toast-inner">保存成功</div>
+  </div>
+
+  <div class="reboot-mask" id="rebootMask" aria-hidden="true">
+    <div class="reboot-dialog" role="dialog" aria-modal="true" aria-labelledby="rebootTitle">
+      <div class="reboot-icon">!</div>
+      <div class="reboot-success" id="rebootTitle">请注意</div>
+      <div class="reboot-highlight">重启手机后才会生效</div>
+      <button id="rebootOkBtn" class="reboot-ok-btn" type="button">知道了</button>
+    </div>
+  </div>
+
+  <script src="request.js"></script>
+  <script src="toast.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
